@@ -3040,9 +3040,13 @@ Puedes desactivarlo más adelante desde el menú "Tareas después de capturar".<
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>La región de captura ({0}x{1}) es mayor que el tamaño máximo admitido por {2} ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>La región de captura ({0}x{1}) es mayor que el tamaño máximo admitido por {2} ({3}x{3}).
-
-¿Desea grabar con {4} en su lugar?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Reducir a {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Grabar con {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
   </data>
 </root>

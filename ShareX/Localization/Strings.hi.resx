@@ -3041,9 +3041,13 @@
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>कैप्चर क्षेत्र ({0}x{1}) {2} द्वारा समर्थित अधिकतम आकार ({3}x{3}) से बड़ा है।</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>कैप्चर क्षेत्र ({0}x{1}) {2} द्वारा समर्थित अधिकतम आकार ({3}x{3}) से बड़ा है।
-
-क्या आप इसके बजाय {4} से रिकॉर्ड करना चाहते हैं?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>{0}x{1} तक छोटा करें</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>{0} से रिकॉर्ड करें</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>रद्द करें</value>
   </data>
 </root>

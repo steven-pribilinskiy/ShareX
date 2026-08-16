@@ -3041,9 +3041,13 @@ Anda dapat menonaktifkannya nanti dari menu "Tugas setelah tangkapan".</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>Area tangkapan ({0}x{1}) lebih besar dari ukuran maksimum yang didukung oleh {2} ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>Area tangkapan ({0}x{1}) lebih besar dari ukuran maksimum yang didukung oleh {2} ({3}x{3}).
-
-Apakah Anda ingin merekam menggunakan {4} sebagai gantinya?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Perkecil ke {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Rekam dengan {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Batal</value>
   </data>
 </root>

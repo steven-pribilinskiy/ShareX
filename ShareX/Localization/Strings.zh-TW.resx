@@ -3041,9 +3041,13 @@
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>擷取區域 ({0}x{1}) 超過 {2} 支援的最大尺寸 ({3}x{3})。</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>擷取區域 ({0}x{1}) 超過 {2} 支援的最大尺寸 ({3}x{3})。
-
-是否改用 {4} 進行錄製？</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>縮小為 {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>使用 {0} 錄製</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>取消</value>
   </data>
 </root>

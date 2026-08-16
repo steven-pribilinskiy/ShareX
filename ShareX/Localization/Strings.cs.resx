@@ -3041,9 +3041,13 @@ Později je můžete zakázat v nabídce „Úlohy po zachycení“.</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>Oblast záznamu ({0}x{1}) je větší než maximální velikost podporovaná kodekem {2} ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>Oblast záznamu ({0}x{1}) je větší než maximální velikost podporovaná kodekem {2} ({3}x{3}).
-
-Chcete místo toho nahrávat pomocí {4}?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Zmenšit na {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Nahrávat pomocí {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Zrušit</value>
   </data>
 </root>

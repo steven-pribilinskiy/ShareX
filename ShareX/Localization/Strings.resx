@@ -3041,9 +3041,13 @@ You can later disable it from "After capture tasks" menu.</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>The capture region ({0}x{1}) is larger than the maximum size supported by {2} ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>The capture region ({0}x{1}) is larger than the maximum size supported by {2} ({3}x{3}).
-
-Would you like to record using {4} instead?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Downscale to {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Record with {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
 </root>

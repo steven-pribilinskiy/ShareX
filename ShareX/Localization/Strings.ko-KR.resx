@@ -3041,9 +3041,13 @@ You can later disable it from "After 캡처 tasks" 메뉴.</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>캡처 영역({0}x{1})이 {2}에서 지원하는 최대 크기({3}x{3})보다 큽니다.</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>캡처 영역({0}x{1})이 {2}에서 지원하는 최대 크기({3}x{3})보다 큽니다.
-
-대신 {4}(으)로 녹화하시겠습니까?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>{0}x{1}(으)로 축소</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>{0}(으)로 녹화</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>취소</value>
   </data>
 </root>

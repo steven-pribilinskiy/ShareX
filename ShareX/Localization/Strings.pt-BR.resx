@@ -3041,9 +3041,13 @@ Você pode desativar posteriormente no menu "Tarefas após a captura".</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>A região de captura ({0}x{1}) é maior que o tamanho máximo suportado por {2} ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>A região de captura ({0}x{1}) é maior que o tamanho máximo suportado por {2} ({3}x{3}).
-
-Deseja gravar usando {4} em vez disso?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Reduzir para {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Gravar com {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
   </data>
 </root>

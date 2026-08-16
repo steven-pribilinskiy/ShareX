@@ -3041,9 +3041,13 @@ Du kan inaktivera dem senare från menyn "Uppgifter efter bildtagning".</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>Inspelningsområdet ({0}x{1}) är större än den maximala storlek som stöds av {2} ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>Inspelningsområdet ({0}x{1}) är större än den maximala storlek som stöds av {2} ({3}x{3}).
-
-Vill du spela in med {4} i stället?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Skala ner till {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Spela in med {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Avbryt</value>
   </data>
 </root>

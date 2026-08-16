@@ -82,6 +82,11 @@ public enum MessageBoxDefaultButton
     Button4
 }
 
+/// <summary>
+/// A single button with its own label, for dialogs where "Yes" / "No" would not say enough.
+/// </summary>
+public readonly record struct MessageBoxButton(DialogResult Result, string Text);
+
 public static class MessageBox
 {
     public static DialogResult Show(string? text) => Show(text, string.Empty);
@@ -99,9 +104,21 @@ public static class MessageBox
         MessageBoxIcon icon, MessageBoxDefaultButton defaultButton) =>
         Show(null, text, caption, buttons, icon, defaultButton);
 
+    public static DialogResult Show(string? text, string? caption, IReadOnlyList<MessageBoxButton> buttons,
+        MessageBoxIcon icon = MessageBoxIcon.None, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1,
+        DialogResult cancelResult = DialogResult.Cancel) =>
+        Show(null, text, caption, buttons, icon, defaultButton, cancelResult);
+
     public static DialogResult Show(Window? owner, string? text, string? caption,
         MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.None,
-        MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1)
+        MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1) =>
+        Show(owner, text, caption, MessageBoxWindow.GetButtonDefinitions(buttons), icon, defaultButton,
+            MessageBoxWindow.GetCancelResult(buttons));
+
+    public static DialogResult Show(Window? owner, string? text, string? caption,
+        IReadOnlyList<MessageBoxButton> buttons, MessageBoxIcon icon = MessageBoxIcon.None,
+        MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1,
+        DialogResult cancelResult = DialogResult.Cancel)
     {
         AvaloniaBootstrapper.EnsureInitialized();
 
@@ -109,7 +126,7 @@ public static class MessageBox
         {
             DialogResult result = DialogResult.None;
             DispatcherFrame frame = new();
-            ShowCore(owner, text, caption, buttons, icon, defaultButton, value =>
+            ShowCore(owner, text, caption, buttons, icon, defaultButton, cancelResult, value =>
             {
                 result = value;
                 frame.Continue = false;
@@ -123,7 +140,7 @@ public static class MessageBox
         {
             try
             {
-                ShowCore(owner, text, caption, buttons, icon, defaultButton,
+                ShowCore(owner, text, caption, buttons, icon, defaultButton, cancelResult,
                     value => completion.TrySetResult(value));
             }
             catch (Exception exception)
@@ -134,10 +151,10 @@ public static class MessageBox
         return completion.Task.GetAwaiter().GetResult();
     }
 
-    private static void ShowCore(Window? owner, string? text, string? caption, MessageBoxButtons buttons,
-        MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, Action<DialogResult> completed)
+    private static void ShowCore(Window? owner, string? text, string? caption, IReadOnlyList<MessageBoxButton> buttons,
+        MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, DialogResult cancelResult, Action<DialogResult> completed)
     {
-        MessageBoxWindow window = new(text, caption, buttons, icon, defaultButton);
+        MessageBoxWindow window = new(text, caption, buttons, icon, defaultButton, cancelResult);
         window.Closed += (_, _) => completed(window.Result);
 
         owner ??= FindOwner();
@@ -173,8 +190,8 @@ internal partial class MessageBoxWindow : Window
 
     public DialogResult Result { get; private set; }
 
-    public MessageBoxWindow(string? text, string? caption, MessageBoxButtons buttons,
-        MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
+    public MessageBoxWindow(string? text, string? caption, IReadOnlyList<MessageBoxButton> buttons,
+        MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, DialogResult cancelResult)
     {
         InitializeComponent();
         RequestedThemeVariant = ThemeManager.GetCurrentTheme();
@@ -183,11 +200,13 @@ internal partial class MessageBoxWindow : Window
         MessageText.Text = text ?? string.Empty;
         ConfigureIcon(icon);
 
-        (DialogResult Result, string Text)[] buttonDefinitions = GetButtonDefinitions(buttons);
-        int defaultButtonIndex = Math.Min((int)defaultButton, buttonDefinitions.Length - 1);
-        _cancelResult = GetCancelResult(buttons);
+        IReadOnlyList<MessageBoxButton> buttonDefinitions = buttons is { Count: > 0 }
+            ? buttons
+            : [new MessageBoxButton(DialogResult.OK, Strings.MessageBox_OK)];
+        int defaultButtonIndex = Math.Min((int)defaultButton, buttonDefinitions.Count - 1);
+        _cancelResult = cancelResult;
 
-        for (int index = 0; index < buttonDefinitions.Length; index++)
+        for (int index = 0; index < buttonDefinitions.Count; index++)
         {
             (DialogResult result, string buttonText) = buttonDefinitions[index];
             Button button = new()
@@ -245,45 +264,45 @@ internal partial class MessageBoxWindow : Window
     private IBrush GetAccentBrush() =>
         this.FindResource("ShareX.Brush.Accent.Start") as IBrush ?? Brushes.DodgerBlue;
 
-    private static (DialogResult Result, string Text)[] GetButtonDefinitions(MessageBoxButtons buttons) => buttons switch
+    internal static MessageBoxButton[] GetButtonDefinitions(MessageBoxButtons buttons) => buttons switch
     {
         MessageBoxButtons.OKCancel =>
         [
-            (DialogResult.OK, Strings.MessageBox_OK),
-            (DialogResult.Cancel, Strings.MessageBox_Cancel)
+            new(DialogResult.OK, Strings.MessageBox_OK),
+            new(DialogResult.Cancel, Strings.MessageBox_Cancel)
         ],
         MessageBoxButtons.AbortRetryIgnore =>
         [
-            (DialogResult.Abort, Strings.MessageBox_Abort),
-            (DialogResult.Retry, Strings.MessageBox_Retry),
-            (DialogResult.Ignore, Strings.MessageBox_Ignore)
+            new(DialogResult.Abort, Strings.MessageBox_Abort),
+            new(DialogResult.Retry, Strings.MessageBox_Retry),
+            new(DialogResult.Ignore, Strings.MessageBox_Ignore)
         ],
         MessageBoxButtons.YesNoCancel =>
         [
-            (DialogResult.Yes, Strings.MessageBox_Yes),
-            (DialogResult.No, Strings.MessageBox_No),
-            (DialogResult.Cancel, Strings.MessageBox_Cancel)
+            new(DialogResult.Yes, Strings.MessageBox_Yes),
+            new(DialogResult.No, Strings.MessageBox_No),
+            new(DialogResult.Cancel, Strings.MessageBox_Cancel)
         ],
         MessageBoxButtons.YesNo =>
         [
-            (DialogResult.Yes, Strings.MessageBox_Yes),
-            (DialogResult.No, Strings.MessageBox_No)
+            new(DialogResult.Yes, Strings.MessageBox_Yes),
+            new(DialogResult.No, Strings.MessageBox_No)
         ],
         MessageBoxButtons.RetryCancel =>
         [
-            (DialogResult.Retry, Strings.MessageBox_Retry),
-            (DialogResult.Cancel, Strings.MessageBox_Cancel)
+            new(DialogResult.Retry, Strings.MessageBox_Retry),
+            new(DialogResult.Cancel, Strings.MessageBox_Cancel)
         ],
         MessageBoxButtons.CancelTryContinue =>
         [
-            (DialogResult.Cancel, Strings.MessageBox_Cancel),
-            (DialogResult.TryAgain, Strings.MessageBox_Try_again),
-            (DialogResult.Continue, Strings.MessageBox_Continue)
+            new(DialogResult.Cancel, Strings.MessageBox_Cancel),
+            new(DialogResult.TryAgain, Strings.MessageBox_Try_again),
+            new(DialogResult.Continue, Strings.MessageBox_Continue)
         ],
-        _ => [(DialogResult.OK, Strings.MessageBox_OK)]
+        _ => [new(DialogResult.OK, Strings.MessageBox_OK)]
     };
 
-    private static DialogResult GetCancelResult(MessageBoxButtons buttons) => buttons switch
+    internal static DialogResult GetCancelResult(MessageBoxButtons buttons) => buttons switch
     {
         MessageBoxButtons.OK => DialogResult.OK,
         MessageBoxButtons.OKCancel or MessageBoxButtons.YesNoCancel or MessageBoxButtons.RetryCancel or

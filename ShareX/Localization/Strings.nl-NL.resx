@@ -3041,9 +3041,13 @@ You can later disable it from "After opname taken" menu.</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>Het opnamegebied ({0}x{1}) is groter dan de maximale grootte die door {2} wordt ondersteund ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>Het opnamegebied ({0}x{1}) is groter dan de maximale grootte die door {2} wordt ondersteund ({3}x{3}).
-
-Wilt u in plaats daarvan opnemen met {4}?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Verkleinen naar {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Opnemen met {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Annuleren</value>
   </data>
 </root>

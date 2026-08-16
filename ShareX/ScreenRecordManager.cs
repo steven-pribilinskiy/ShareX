@@ -28,6 +28,7 @@ using ShareX.Localization;
 using ShareX.ScreenCaptureLib;
 using ShareX.Tools;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
@@ -37,6 +38,7 @@ using MessageBox = ShareX.AvaloniaUI.MessageBox;
 using MessageBoxButtons = ShareX.AvaloniaUI.MessageBoxButtons;
 using MessageBoxIcon = ShareX.AvaloniaUI.MessageBoxIcon;
 using MessageBoxResult = ShareX.AvaloniaUI.DialogResult;
+using MessageBoxButton = ShareX.AvaloniaUI.MessageBoxButton;
 
 namespace ShareX
 {
@@ -187,33 +189,55 @@ namespace ShareX
             }
 
             FFmpegOptions ffmpegOptions = taskSettings.CaptureSettings.FFmpegOptions;
+            bool downscaleToCodecLimit = false;
 
-            if (!ffmpegOptions.IsVideoSizeSupported(captureRectangle.Width, captureRectangle.Height))
+            // ddagrab clips the region to a single monitor, so that is the size the encoder actually sees.
+            Size encodedSize = ffmpegOptions.VideoSource.Equals(FFmpegCaptureDevice.DDAGrab.Value, StringComparison.OrdinalIgnoreCase)
+                ? ScreenRecordingOptions.GetDDAGrabCaptureArea(captureRectangle, out _).Size
+                : captureRectangle.Size;
+
+            if (!ffmpegOptions.IsVideoSizeSupported(encodedSize.Width, encodedSize.Height))
             {
-                string title = "ShareX - " + Strings.FFmpeg_FFmpeg_error;
+                Size downscaledSize = ffmpegOptions.GetSizeWithinLimit(encodedSize.Width, encodedSize.Height);
                 FFmpegVideoCodec fallbackVideoCodec = FFmpegVideoCodec.hevc_nvenc;
 
-                if (ffmpegOptions.VideoCodec == fallbackVideoCodec ||
-                    !FFmpegOptions.IsVideoSizeSupported(fallbackVideoCodec, captureRectangle.Width, captureRectangle.Height))
-                {
-                    MessageBox.Show(string.Format(Strings.ScreenRecordManager_RegionExceedsCodecLimit, captureRectangle.Width, captureRectangle.Height,
-                        ffmpegOptions.VideoCodec.GetDescription(), ffmpegOptions.MaxVideoDimension), title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                List<MessageBoxButton> buttons =
+                [
+                    new MessageBoxButton(MessageBoxResult.Yes,
+                        string.Format(Strings.ScreenRecordManager_DownscaleTo, downscaledSize.Width, downscaledSize.Height))
+                ];
 
-                    return;
+                if (ffmpegOptions.VideoCodec != fallbackVideoCodec &&
+                    FFmpegOptions.IsVideoSizeSupported(fallbackVideoCodec, encodedSize.Width, encodedSize.Height))
+                {
+                    buttons.Add(new MessageBoxButton(MessageBoxResult.No,
+                        string.Format(Strings.ScreenRecordManager_RecordWith, fallbackVideoCodec.GetDescription())));
                 }
 
-                if (MessageBox.Show(string.Format(Strings.ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec, captureRectangle.Width, captureRectangle.Height,
-                    ffmpegOptions.VideoCodec.GetDescription(), ffmpegOptions.MaxVideoDimension, fallbackVideoCodec.GetDescription()), title,
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != MessageBoxResult.Yes)
+                buttons.Add(new MessageBoxButton(MessageBoxResult.Cancel, Strings.ScreenRecordManager_Cancel));
+
+                string message = string.Format(Strings.ScreenRecordManager_RegionExceedsCodecLimit, encodedSize.Width,
+                    encodedSize.Height, ffmpegOptions.VideoCodec.GetDescription(), ffmpegOptions.MaxVideoDimension);
+
+                switch (MessageBox.Show(message, "ShareX - " + Strings.FFmpeg_FFmpeg_error, buttons, MessageBoxIcon.Warning))
                 {
-                    return;
+                    case MessageBoxResult.Yes:
+                        DebugHelper.WriteLine("Capture region {0}x{1} exceeds the {2} limit of {3}, downscaling to {4}x{5} for this recording.",
+                            encodedSize.Width, encodedSize.Height, ffmpegOptions.VideoCodec.GetDescription(),
+                            ffmpegOptions.MaxVideoDimension, downscaledSize.Width, downscaledSize.Height);
+
+                        downscaleToCodecLimit = true;
+                        break;
+                    case MessageBoxResult.No:
+                        DebugHelper.WriteLine("Capture region {0}x{1} exceeds the {2} limit of {3}, switching to \"{4}\" for this recording.",
+                            encodedSize.Width, encodedSize.Height, ffmpegOptions.VideoCodec.GetDescription(),
+                            ffmpegOptions.MaxVideoDimension, fallbackVideoCodec.GetDescription());
+
+                        ffmpegOptions.VideoCodec = fallbackVideoCodec;
+                        break;
+                    default:
+                        return;
                 }
-
-                DebugHelper.WriteLine("Capture region {0}x{1} exceeds the {2} limit of {3}, switching to \"{4}\" for this recording.",
-                    captureRectangle.Width, captureRectangle.Height, ffmpegOptions.VideoCodec.GetDescription(), ffmpegOptions.MaxVideoDimension,
-                    fallbackVideoCodec.GetDescription());
-
-                ffmpegOptions.VideoCodec = fallbackVideoCodec;
             }
 
             ApplicationState.Settings.ScreenRecordRegion = captureRectangle;
@@ -333,7 +357,8 @@ namespace ShareX
                                 Duration = duration,
                                 OutputPath = path,
                                 CaptureArea = captureRectangle,
-                                DrawCursor = taskSettings.CaptureSettings.ScreenRecordShowCursor
+                                DrawCursor = taskSettings.CaptureSettings.ScreenRecordShowCursor,
+                                DownscaleToCodecLimit = downscaleToCodecLimit
                             };
 
                             Screenshot screenshot = TaskHelpers.GetScreenshot(taskSettings);

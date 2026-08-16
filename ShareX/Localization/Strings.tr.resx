@@ -3041,9 +3041,13 @@ Daha sonra "Yakalama sonrası" menüsünden devre dışı bırakabilirsiniz.</va
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>Yakalama alanı ({0}x{1}), {2} tarafından desteklenen en büyük boyuttan ({3}x{3}) daha büyük.</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>Yakalama alanı ({0}x{1}), {2} tarafından desteklenen en büyük boyuttan ({3}x{3}) daha büyük.
-
-Bunun yerine {4} ile kayıt yapmak ister misiniz?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>{0}x{1} boyutuna küçült</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>{0} ile kaydet</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>İptal</value>
   </data>
 </root>

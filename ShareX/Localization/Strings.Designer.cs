@@ -5571,9 +5571,19 @@ namespace ShareX.Localization {
                 return ResourceManager.GetString("ScreenRecordManager_RegionExceedsCodecLimit", resourceCulture);
             }
         }
-        public static string ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec {
+        public static string ScreenRecordManager_DownscaleTo {
             get {
-                return ResourceManager.GetString("ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec", resourceCulture);
+                return ResourceManager.GetString("ScreenRecordManager_DownscaleTo", resourceCulture);
+            }
+        }
+        public static string ScreenRecordManager_RecordWith {
+            get {
+                return ResourceManager.GetString("ScreenRecordManager_RecordWith", resourceCulture);
+            }
+        }
+        public static string ScreenRecordManager_Cancel {
+            get {
+                return ResourceManager.GetString("ScreenRecordManager_Cancel", resourceCulture);
             }
         }
     }

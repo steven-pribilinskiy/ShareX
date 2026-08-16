@@ -3041,9 +3041,13 @@
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>منطقة الالتقاط ({0}x{1}) أكبر من الحجم الأقصى الذي يدعمه {2} ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>منطقة الالتقاط ({0}x{1}) أكبر من الحجم الأقصى الذي يدعمه {2} ({3}x{3}).
-
-هل تريد التسجيل باستخدام {4} بدلاً من ذلك؟</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>تصغير إلى {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>التسجيل باستخدام {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>إلغاء</value>
   </data>
 </root>

@@ -3041,9 +3041,13 @@
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>Область захоплення ({0}x{1}) перевищує максимальний розмір, який підтримує {2} ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>Область захоплення ({0}x{1}) перевищує максимальний розмір, який підтримує {2} ({3}x{3}).
-
-Записати за допомогою {4}?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Зменшити до {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Записати за допомогою {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
   </data>
 </root>

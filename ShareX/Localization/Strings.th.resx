@@ -3041,9 +3041,13 @@
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>พื้นที่ที่จับภาพ ({0}x{1}) มีขนาดใหญ่กว่าขนาดสูงสุดที่ {2} รองรับ ({3}x{3})</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>พื้นที่ที่จับภาพ ({0}x{1}) มีขนาดใหญ่กว่าขนาดสูงสุดที่ {2} รองรับ ({3}x{3})
-
-คุณต้องการบันทึกด้วย {4} แทนหรือไม่?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>ย่อเป็น {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>บันทึกด้วย {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>ยกเลิก</value>
   </data>
 </root>

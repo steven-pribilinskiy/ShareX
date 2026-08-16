@@ -3041,9 +3041,13 @@ You can later disable it from "After ضبط tasks" منو.</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>ناحیه ضبط ({0}x{1}) از حداکثر اندازه پشتیبانی‌شده توسط {2} ({3}x{3}) بزرگ‌تر است.</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>ناحیه ضبط ({0}x{1}) از حداکثر اندازه پشتیبانی‌شده توسط {2} ({3}x{3}) بزرگ‌تر است.
-
-آیا می‌خواهید به جای آن با {4} ضبط کنید؟</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>کوچک کردن به {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>ضبط با {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>لغو</value>
   </data>
 </root>

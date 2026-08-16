@@ -3041,9 +3041,13 @@ You can later disable it from "Rögzítés után tasks" menü.</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>A rögzítési terület ({0}x{1}) nagyobb, mint a(z) {2} által támogatott legnagyobb méret ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>A rögzítési terület ({0}x{1}) nagyobb, mint a(z) {2} által támogatott legnagyobb méret ({3}x{3}).
-
-Szeretne helyette a(z) {4} kodekkel rögzíteni?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Kicsinyítés {0}x{1} méretre</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Rögzítés ezzel: {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Mégse</value>
   </data>
 </root>

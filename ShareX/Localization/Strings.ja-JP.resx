@@ -3041,9 +3041,13 @@
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>キャプチャ領域 ({0}x{1}) が {2} でサポートされる最大サイズ ({3}x{3}) を超えています。</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>キャプチャ領域 ({0}x{1}) が {2} でサポートされる最大サイズ ({3}x{3}) を超えています。
-
-代わりに {4} で録画しますか?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>{0}x{1} に縮小</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>{0} で録画</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
   </data>
 </root>

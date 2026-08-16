@@ -3041,9 +3041,13 @@ Możesz je później wyłączyć w menu "Zadania po przechwyceniu".</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>Obszar przechwytywania ({0}x{1}) jest większy niż maksymalny rozmiar obsługiwany przez {2} ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>Obszar przechwytywania ({0}x{1}) jest większy niż maksymalny rozmiar obsługiwany przez {2} ({3}x{3}).
-
-Czy chcesz nagrywać przy użyciu {4} zamiast tego?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Zmniejsz do {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Nagrywaj przy użyciu {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Anuluj</value>
   </data>
 </root>

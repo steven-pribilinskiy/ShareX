@@ -3041,9 +3041,13 @@ Sau đó, bạn có thể tắt nó từ menu "Sau khi chụp tác vụ".</value
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>Vùng chụp ({0}x{1}) lớn hơn kích thước tối đa mà {2} hỗ trợ ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>Vùng chụp ({0}x{1}) lớn hơn kích thước tối đa mà {2} hỗ trợ ({3}x{3}).
-
-Bạn có muốn ghi bằng {4} thay thế không?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Thu nhỏ xuống {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Ghi bằng {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Hủy</value>
   </data>
 </root>

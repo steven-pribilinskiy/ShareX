@@ -3041,9 +3041,13 @@ Du kan deaktivere dem senere fra menuen ”Opgaver efter optagelse”.</value>
   <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
     <value>Optagelsesområdet ({0}x{1}) er større end den maksimale størrelse, som {2} understøtter ({3}x{3}).</value>
   </data>
-  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
-    <value>Optagelsesområdet ({0}x{1}) er større end den maksimale størrelse, som {2} understøtter ({3}x{3}).
-
-Vil du optage med {4} i stedet?</value>
+  <data name="ScreenRecordManager_DownscaleTo" xml:space="preserve">
+    <value>Skaler ned til {0}x{1}</value>
+  </data>
+  <data name="ScreenRecordManager_RecordWith" xml:space="preserve">
+    <value>Optag med {0}</value>
+  </data>
+  <data name="ScreenRecordManager_Cancel" xml:space="preserve">
+    <value>Annuller</value>
   </data>
 </root>

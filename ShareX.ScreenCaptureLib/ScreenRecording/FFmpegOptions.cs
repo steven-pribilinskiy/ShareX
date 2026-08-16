@@ -25,6 +25,7 @@
 
 using ShareX.HelpersLib;
 using System;
+using System.Drawing;
 
 namespace ShareX.ScreenCaptureLib
 {
@@ -157,6 +158,25 @@ namespace ShareX.ScreenCaptureLib
 
             return maxDimension <= 0 || (width <= maxDimension && height <= maxDimension);
         }
+
+        public Size GetSizeWithinLimit(int width, int height) => GetSizeWithinLimit(VideoCodec, width, height);
+
+        // Largest size that fits the encoder, keeping aspect ratio. Never enlarges.
+        // Both dimensions are rounded down to even numbers, which yuv420p requires.
+        public static Size GetSizeWithinLimit(FFmpegVideoCodec videoCodec, int width, int height)
+        {
+            if (IsVideoSizeSupported(videoCodec, width, height))
+            {
+                return new Size(width, height);
+            }
+
+            int maxDimension = GetMaxVideoDimension(videoCodec);
+            double ratio = Math.Min((double)maxDimension / width, (double)maxDimension / height);
+
+            return new Size(MakeEven((int)Math.Round(width * ratio)), MakeEven((int)Math.Round(height * ratio)));
+        }
+
+        private static int MakeEven(int value) => Math.Max(2, value - (value % 2));
 
         // TEMP: For backward compatibility
         public void FixSources()
