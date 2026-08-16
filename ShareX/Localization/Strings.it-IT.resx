@@ -3038,4 +3038,12 @@ You can later disable it from "After acquisizione tasks" menu.</value>
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Your system admin disabled the caricamento feature.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>L'area di acquisizione ({0}x{1}) è più grande della dimensione massima supportata da {2} ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>L'area di acquisizione ({0}x{1}) è più grande della dimensione massima supportata da {2} ({3}x{3}).
+
+Vuoi registrare con {4} al suo posto?</value>
+  </data>
 </root>

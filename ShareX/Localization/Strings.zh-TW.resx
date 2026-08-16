@@ -3038,4 +3038,12 @@
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>你的系統管理員已停用上傳功能。</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>擷取區域 ({0}x{1}) 超過 {2} 支援的最大尺寸 ({3}x{3})。</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>擷取區域 ({0}x{1}) 超過 {2} 支援的最大尺寸 ({3}x{3})。
+
+是否改用 {4} 進行錄製？</value>
+  </data>
 </root>

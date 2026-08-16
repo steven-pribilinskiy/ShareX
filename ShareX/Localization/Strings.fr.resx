@@ -3038,4 +3038,12 @@ Vous pourrez les désactiver plus tard depuis le manu "Tâches après la capture
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Votre administrateur système a désactivé la fonctionnalité de mise en ligne.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>La zone de capture ({0}x{1}) dépasse la taille maximale prise en charge par {2} ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>La zone de capture ({0}x{1}) dépasse la taille maximale prise en charge par {2} ({3}x{3}).
+
+Voulez-vous enregistrer avec {4} à la place ?</value>
+  </data>
 </root>

@@ -3038,4 +3038,12 @@ Sau đó, bạn có thể tắt nó từ menu "Sau khi chụp tác vụ".</value
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Quản trị viên hệ thống của bạn đã tắt tính năng tải lên.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>Vùng chụp ({0}x{1}) lớn hơn kích thước tối đa mà {2} hỗ trợ ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>Vùng chụp ({0}x{1}) lớn hơn kích thước tối đa mà {2} hỗ trợ ({3}x{3}).
+
+Bạn có muốn ghi bằng {4} thay thế không?</value>
+  </data>
 </root>

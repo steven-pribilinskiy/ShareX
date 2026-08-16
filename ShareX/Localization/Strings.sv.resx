@@ -3038,4 +3038,12 @@ Du kan inaktivera dem senare från menyn "Uppgifter efter bildtagning".</value>
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Din systemadministratör har inaktiverat uppladdningsfunktionen.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>Inspelningsområdet ({0}x{1}) är större än den maximala storlek som stöds av {2} ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>Inspelningsområdet ({0}x{1}) är större än den maximala storlek som stöds av {2} ({3}x{3}).
+
+Vill du spela in med {4} i stället?</value>
+  </data>
 </root>

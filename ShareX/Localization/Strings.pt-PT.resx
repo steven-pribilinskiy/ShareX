@@ -3038,4 +3038,12 @@ Pode desativá-los mais tarde no menu "Tarefas após captura".</value>
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>O administrador do sistema desativou a funcionalidade de carregamento.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>A região de captura ({0}x{1}) é maior do que o tamanho máximo suportado por {2} ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>A região de captura ({0}x{1}) é maior do que o tamanho máximo suportado por {2} ({3}x{3}).
+
+Pretende gravar utilizando {4} em vez disso?</value>
+  </data>
 </root>

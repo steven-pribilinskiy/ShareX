@@ -3038,4 +3038,12 @@
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>مسؤول النظام قام بإيقاف وظيفة الرفع.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>منطقة الالتقاط ({0}x{1}) أكبر من الحجم الأقصى الذي يدعمه {2} ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>منطقة الالتقاط ({0}x{1}) أكبر من الحجم الأقصى الذي يدعمه {2} ({3}x{3}).
+
+هل تريد التسجيل باستخدام {4} بدلاً من ذلك؟</value>
+  </data>
 </root>

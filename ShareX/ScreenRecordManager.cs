@@ -36,6 +36,7 @@ using NativeRecordingOptions = ShareX.ScreenRecordingLib.RecordingOptions;
 using MessageBox = ShareX.AvaloniaUI.MessageBox;
 using MessageBoxButtons = ShareX.AvaloniaUI.MessageBoxButtons;
 using MessageBoxIcon = ShareX.AvaloniaUI.MessageBoxIcon;
+using MessageBoxResult = ShareX.AvaloniaUI.DialogResult;
 
 namespace ShareX
 {
@@ -183,6 +184,36 @@ namespace ShareX
             if (IsRecording || !captureRectangle.IsValid() || screenRecorder != null || nativeRecorder != null)
             {
                 return;
+            }
+
+            FFmpegOptions ffmpegOptions = taskSettings.CaptureSettings.FFmpegOptions;
+
+            if (!ffmpegOptions.IsVideoSizeSupported(captureRectangle.Width, captureRectangle.Height))
+            {
+                string title = "ShareX - " + Strings.FFmpeg_FFmpeg_error;
+                FFmpegVideoCodec fallbackVideoCodec = FFmpegVideoCodec.hevc_nvenc;
+
+                if (ffmpegOptions.VideoCodec == fallbackVideoCodec ||
+                    !FFmpegOptions.IsVideoSizeSupported(fallbackVideoCodec, captureRectangle.Width, captureRectangle.Height))
+                {
+                    MessageBox.Show(string.Format(Strings.ScreenRecordManager_RegionExceedsCodecLimit, captureRectangle.Width, captureRectangle.Height,
+                        ffmpegOptions.VideoCodec.GetDescription(), ffmpegOptions.MaxVideoDimension), title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                if (MessageBox.Show(string.Format(Strings.ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec, captureRectangle.Width, captureRectangle.Height,
+                    ffmpegOptions.VideoCodec.GetDescription(), ffmpegOptions.MaxVideoDimension, fallbackVideoCodec.GetDescription()), title,
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                DebugHelper.WriteLine("Capture region {0}x{1} exceeds the {2} limit of {3}, switching to \"{4}\" for this recording.",
+                    captureRectangle.Width, captureRectangle.Height, ffmpegOptions.VideoCodec.GetDescription(), ffmpegOptions.MaxVideoDimension,
+                    fallbackVideoCodec.GetDescription());
+
+                ffmpegOptions.VideoCodec = fallbackVideoCodec;
             }
 
             ApplicationState.Settings.ScreenRecordRegion = captureRectangle;

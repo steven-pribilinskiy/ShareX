@@ -3038,4 +3038,12 @@ You can later disable it from "After ضبط tasks" منو.</value>
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Your system admin disabled the بارگذاری feature.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>ناحیه ضبط ({0}x{1}) از حداکثر اندازه پشتیبانی‌شده توسط {2} ({3}x{3}) بزرگ‌تر است.</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>ناحیه ضبط ({0}x{1}) از حداکثر اندازه پشتیبانی‌شده توسط {2} ({3}x{3}) بزرگ‌تر است.
+
+آیا می‌خواهید به جای آن با {4} ضبط کنید؟</value>
+  </data>
 </root>

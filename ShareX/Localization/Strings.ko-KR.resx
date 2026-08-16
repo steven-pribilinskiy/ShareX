@@ -3038,4 +3038,12 @@ You can later disable it from "After 캡처 tasks" 메뉴.</value>
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Your system admin disabled the 업로드 feature.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>캡처 영역({0}x{1})이 {2}에서 지원하는 최대 크기({3}x{3})보다 큽니다.</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>캡처 영역({0}x{1})이 {2}에서 지원하는 최대 크기({3}x{3})보다 큽니다.
+
+대신 {4}(으)로 녹화하시겠습니까?</value>
+  </data>
 </root>

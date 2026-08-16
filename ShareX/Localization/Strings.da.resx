@@ -3038,4 +3038,12 @@ Du kan deaktivere dem senere fra menuen ”Opgaver efter optagelse”.</value>
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Din systemadministrator har deaktiveret uploadfunktionen.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>Optagelsesområdet ({0}x{1}) er større end den maksimale størrelse, som {2} understøtter ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>Optagelsesområdet ({0}x{1}) er større end den maksimale størrelse, som {2} understøtter ({3}x{3}).
+
+Vil du optage med {4} i stedet?</value>
+  </data>
 </root>

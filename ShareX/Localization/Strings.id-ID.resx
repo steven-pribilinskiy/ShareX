@@ -3038,4 +3038,12 @@ Anda dapat menonaktifkannya nanti dari menu "Tugas setelah tangkapan".</value>
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Admin sistem Anda menonaktifkan fitur unggah.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>Area tangkapan ({0}x{1}) lebih besar dari ukuran maksimum yang didukung oleh {2} ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>Area tangkapan ({0}x{1}) lebih besar dari ukuran maksimum yang didukung oleh {2} ({3}x{3}).
+
+Apakah Anda ingin merekam menggunakan {4} sebagai gantinya?</value>
+  </data>
 </root>

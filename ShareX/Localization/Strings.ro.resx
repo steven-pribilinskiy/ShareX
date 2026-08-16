@@ -3038,4 +3038,12 @@ Puteți să le dezactivați ulterior din meniul "Sarcini după captură".</value
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Administratorul de sistem a dezactivat funcția de încărcare.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>Regiunea de captură ({0}x{1}) este mai mare decât dimensiunea maximă acceptată de {2} ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>Regiunea de captură ({0}x{1}) este mai mare decât dimensiunea maximă acceptată de {2} ({3}x{3}).
+
+Doriți să înregistrați folosind {4} în schimb?</value>
+  </data>
 </root>

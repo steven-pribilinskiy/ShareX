@@ -138,6 +138,26 @@ namespace ShareX.ScreenCaptureLib
 
         public bool IsEvenSizeRequired => !IsAnimatedImage;
 
+        public int MaxVideoDimension => GetMaxVideoDimension(VideoCodec);
+
+        public bool IsVideoSizeSupported(int width, int height) => IsVideoSizeSupported(VideoCodec, width, height);
+
+        // Maximum width/height the encoder accepts. 0 means there is no known limit.
+        public static int GetMaxVideoDimension(FFmpegVideoCodec videoCodec) => videoCodec switch
+        {
+            // NVENC caps H.264 at 4096x4096 on every GPU generation, while HEVC allows 8192x8192.
+            FFmpegVideoCodec.h264_nvenc => 4096,
+            FFmpegVideoCodec.hevc_nvenc => 8192,
+            _ => 0
+        };
+
+        public static bool IsVideoSizeSupported(FFmpegVideoCodec videoCodec, int width, int height)
+        {
+            int maxDimension = GetMaxVideoDimension(videoCodec);
+
+            return maxDimension <= 0 || (width <= maxDimension && height <= maxDimension);
+        }
+
         // TEMP: For backward compatibility
         public void FixSources()
         {

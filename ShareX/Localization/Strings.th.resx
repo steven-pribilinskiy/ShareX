@@ -3038,4 +3038,12 @@
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>ผู้ดูแลระบบของคุณปิดใช้งานคุณลักษณะการอัปโหลด</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>พื้นที่ที่จับภาพ ({0}x{1}) มีขนาดใหญ่กว่าขนาดสูงสุดที่ {2} รองรับ ({3}x{3})</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>พื้นที่ที่จับภาพ ({0}x{1}) มีขนาดใหญ่กว่าขนาดสูงสุดที่ {2} รองรับ ({3}x{3})
+
+คุณต้องการบันทึกด้วย {4} แทนหรือไม่?</value>
+  </data>
 </root>

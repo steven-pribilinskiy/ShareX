@@ -3038,4 +3038,12 @@ Możesz je później wyłączyć w menu "Zadania po przechwyceniu".</value>
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Administrator systemu wyłączył funkcję przesyłania.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>Obszar przechwytywania ({0}x{1}) jest większy niż maksymalny rozmiar obsługiwany przez {2} ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>Obszar przechwytywania ({0}x{1}) jest większy niż maksymalny rozmiar obsługiwany przez {2} ({3}x{3}).
+
+Czy chcesz nagrywać przy użyciu {4} zamiast tego?</value>
+  </data>
 </root>

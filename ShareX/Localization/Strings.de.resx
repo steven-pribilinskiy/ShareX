@@ -3037,4 +3037,12 @@ Sie können sie später im Menü „Aufgaben nach der Aufnahme“ deaktivieren.<
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>Ihr Systemadministrator hat diese Funktion ausgeschaltet.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>Der Aufnahmebereich ({0}x{1}) ist größer als die von {2} maximal unterstützte Größe ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>Der Aufnahmebereich ({0}x{1}) ist größer als die von {2} maximal unterstützte Größe ({3}x{3}).
+
+Möchten Sie stattdessen mit {4} aufnehmen?</value>
+  </data>
 </root>

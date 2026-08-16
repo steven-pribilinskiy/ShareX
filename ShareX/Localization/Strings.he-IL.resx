@@ -3038,4 +3038,12 @@
   <data name="YourSystemAdminDisabledTheUploadFeature" xml:space="preserve">
     <value>מנהל המערכת שלך השבית את תכונת ההעלאה.</value>
   </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimit" xml:space="preserve">
+    <value>אזור הלכידה ({0}x{1}) גדול מהגודל המרבי הנתמך על ידי {2} ({3}x{3}).</value>
+  </data>
+  <data name="ScreenRecordManager_RegionExceedsCodecLimitSwitchCodec" xml:space="preserve">
+    <value>אזור הלכידה ({0}x{1}) גדול מהגודל המרבי הנתמך על ידי {2} ({3}x{3}).
+
+האם ברצונך להקליט באמצעות {4} במקום זאת?</value>
+  </data>
 </root>
