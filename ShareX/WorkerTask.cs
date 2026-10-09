@@ -735,7 +735,7 @@ namespace ShareX
 
                 if (Info.TaskSettings.AfterCaptureJob.HasFlag(AfterCaptureTasks.CopyFileToClipboard))
                 {
-                    ClipboardHelpers.CopyFile(Info.FilePath);
+                    ClipboardHelpers.CopyFile(Info.FilePath, true);
                 }
                 else if (Info.TaskSettings.AfterCaptureJob.HasFlag(AfterCaptureTasks.CopyFilePathToClipboard))
                 {

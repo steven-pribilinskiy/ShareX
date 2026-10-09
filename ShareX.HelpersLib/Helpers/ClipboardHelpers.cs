@@ -87,20 +87,20 @@ namespace ShareX.HelpersLib
             catch (Exception e) { DebugHelper.WriteException(e, "Clipboard copy image failed."); return false; }
         }
 
-        public static bool CopyFile(string path)
+        public static bool CopyFile(string path, bool includePathAsText = false)
         {
             if (!string.IsNullOrEmpty(path))
             {
-                return CopyFile(new string[] { path });
+                return CopyFile(new string[] { path }, includePathAsText);
             }
 
             return false;
         }
 
-        public static bool CopyFile(string[] paths)
+        public static bool CopyFile(string[] paths, bool includePathAsText = false)
         {
             if (paths == null || paths.Length == 0) return false;
-            try { return AvaloniaClipboard.SetFiles(paths); }
+            try { return AvaloniaClipboard.SetFiles(paths, includePathAsText ? string.Join(Environment.NewLine, paths) : null); }
             catch (Exception e) { DebugHelper.WriteException(e, "Clipboard copy file failed."); return false; }
         }
 

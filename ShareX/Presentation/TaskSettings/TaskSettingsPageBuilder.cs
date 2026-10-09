@@ -1365,7 +1365,8 @@ internal sealed class TaskSettingsPageBuilder
 
         if (copyImage && fileStep != null)
         {
-            lines.Add(string.Format(Strings.TaskSettingsWindow_ClipboardHint_Replaced, DescribeClipboardContent(fileStep.Value)));
+            lines.Add(string.Format(Strings.TaskSettingsWindow_ClipboardHint_Replaced,
+                AfterCaptureTasks.CopyImageToClipboard.GetLocalizedDescription(), fileStep.Value.GetLocalizedDescription()));
         }
 
         if (copyImage || fileStep != null)

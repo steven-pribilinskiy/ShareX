@@ -52,7 +52,9 @@ internal static class AvaloniaClipboard
     public static string[] GetFiles() => DesktopServices.Run(async () =>
         (await Clipboard.TryGetFilesAsync())?.Select(x => x.TryGetLocalPath()).Where(x => !string.IsNullOrEmpty(x)).ToArray());
 
-    public static bool SetFiles(string[] paths) => DesktopServices.Run(async () =>
+    // With text, the files and the text go out as one clipboard entry, so a file target (Explorer,
+    // chat apps) pastes the files and a text target (terminal) pastes the text.
+    public static bool SetFiles(string[] paths, string text = null) => DesktopServices.Run(async () =>
     {
         IStorageProvider storage = DesktopServices.GetWindow().StorageProvider;
         List<IStorageItem> files = new();
@@ -63,7 +65,22 @@ internal static class AvaloniaClipboard
             if (file != null) files.Add(file);
         }
         if (files.Count == 0) return false;
-        await Clipboard.SetFilesAsync(files);
+        if (string.IsNullOrEmpty(text))
+        {
+            await Clipboard.SetFilesAsync(files);
+        }
+        else
+        {
+            DataTransfer transfer = new();
+            for (int i = 0; i < files.Count; i++)
+            {
+                DataTransferItem item = new();
+                item.SetFile(files[i]);
+                if (i == 0) item.SetText(text);
+                transfer.Add(item);
+            }
+            await Clipboard.SetDataAsync(transfer);
+        }
         await Clipboard.FlushAsync();
         return true;
     });
