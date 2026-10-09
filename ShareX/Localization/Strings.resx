@@ -3050,4 +3050,28 @@ You can later disable it from "After capture tasks" menu.</value>
   <data name="ScreenRecordManager_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="TaskSettingsWindow_ClipboardHint_Result" xml:space="preserve">
+    <value>After capture, the clipboard holds {0}.</value>
+  </data>
+  <data name="TaskSettingsWindow_ClipboardHint_Image" xml:space="preserve">
+    <value>the image</value>
+  </data>
+  <data name="TaskSettingsWindow_ClipboardHint_File" xml:space="preserve">
+    <value>the saved file</value>
+  </data>
+  <data name="TaskSettingsWindow_ClipboardHint_FilePath" xml:space="preserve">
+    <value>the file path as text</value>
+  </data>
+  <data name="TaskSettingsWindow_ClipboardHint_FolderPath" xml:space="preserve">
+    <value>the folder path as text</value>
+  </data>
+  <data name="TaskSettingsWindow_ClipboardHint_Replaced" xml:space="preserve">
+    <value>The clipboard holds one thing at a time, so the copied image is replaced by {0}. With clipboard history on, the image is still one entry back (Win+V).</value>
+  </data>
+  <data name="TaskSettingsWindow_ClipboardHint_OnlyOneFileStep" xml:space="preserve">
+    <value>Only one of these runs: "{0}". Ignored: "{1}".</value>
+  </data>
+  <data name="TaskSettingsWindow_ClipboardHint_NeedsSavedFile" xml:space="preserve">
+    <value>"{0}" only runs when the image is saved to a file.</value>
+  </data>
 </root>

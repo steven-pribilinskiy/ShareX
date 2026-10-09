@@ -5586,5 +5586,45 @@ namespace ShareX.Localization {
                 return ResourceManager.GetString("ScreenRecordManager_Cancel", resourceCulture);
             }
         }
+        public static string TaskSettingsWindow_ClipboardHint_Result {
+            get {
+                return ResourceManager.GetString("TaskSettingsWindow_ClipboardHint_Result", resourceCulture);
+            }
+        }
+        public static string TaskSettingsWindow_ClipboardHint_Image {
+            get {
+                return ResourceManager.GetString("TaskSettingsWindow_ClipboardHint_Image", resourceCulture);
+            }
+        }
+        public static string TaskSettingsWindow_ClipboardHint_File {
+            get {
+                return ResourceManager.GetString("TaskSettingsWindow_ClipboardHint_File", resourceCulture);
+            }
+        }
+        public static string TaskSettingsWindow_ClipboardHint_FilePath {
+            get {
+                return ResourceManager.GetString("TaskSettingsWindow_ClipboardHint_FilePath", resourceCulture);
+            }
+        }
+        public static string TaskSettingsWindow_ClipboardHint_FolderPath {
+            get {
+                return ResourceManager.GetString("TaskSettingsWindow_ClipboardHint_FolderPath", resourceCulture);
+            }
+        }
+        public static string TaskSettingsWindow_ClipboardHint_Replaced {
+            get {
+                return ResourceManager.GetString("TaskSettingsWindow_ClipboardHint_Replaced", resourceCulture);
+            }
+        }
+        public static string TaskSettingsWindow_ClipboardHint_OnlyOneFileStep {
+            get {
+                return ResourceManager.GetString("TaskSettingsWindow_ClipboardHint_OnlyOneFileStep", resourceCulture);
+            }
+        }
+        public static string TaskSettingsWindow_ClipboardHint_NeedsSavedFile {
+            get {
+                return ResourceManager.GetString("TaskSettingsWindow_ClipboardHint_NeedsSavedFile", resourceCulture);
+            }
+        }
     }
 }

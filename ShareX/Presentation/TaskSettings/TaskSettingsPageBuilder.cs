@@ -177,12 +177,23 @@ internal sealed class TaskSettingsPageBuilder
             () => !_settings.UseDefaultDestinations,
             value => _settings.UseDefaultDestinations = !value);
 
+        TextBlock afterCaptureClipboardHint = Hint(string.Empty);
+
+        void UpdateAfterCaptureClipboardHint()
+        {
+            string text = DescribeAfterCaptureClipboard(_settings.AfterCaptureJob);
+            afterCaptureClipboardHint.Text = text;
+            afterCaptureClipboardHint.IsVisible = !string.IsNullOrEmpty(text);
+        }
+
         Control afterCapture = TaskFlagsMenu(
             () => _settings.AfterCaptureJob,
             value => _settings.AfterCaptureJob = value,
             MainMenuBuilder.GetAfterCaptureTaskMenuOptions(),
-            LucideIcons.image_up);
+            LucideIcons.image_up,
+            UpdateAfterCaptureClipboardHint);
         BindEnabled(afterCapture, afterCaptureOverride);
+        UpdateAfterCaptureClipboardHint();
 
         Control afterUpload = TaskFlagsMenu(
             () => _settings.AfterUploadJob,
@@ -237,7 +248,7 @@ internal sealed class TaskSettingsPageBuilder
         return Page("task", Strings.TaskSettingsWindow_Task, LucideIcons.keyboard,
             Card(Strings.TaskSettingsWindow_Task, Row(Strings.TaskSettingsWindow_TaskLabel, TaskMenu(() => _settings.Job, value => _settings.Job = value)),
                 Row(Strings.TaskSettingsWindow_Description, Text(() => _settings.Description, value => _settings.Description = value))),
-            Card(Strings.TaskSettingsWindow_AfterCaptureTasks, Check(Strings.TaskSettingsWindow_OverrideAfterCaptureTasks, afterCaptureOverride), afterCapture),
+            Card(Strings.TaskSettingsWindow_AfterCaptureTasks, Check(Strings.TaskSettingsWindow_OverrideAfterCaptureTasks, afterCaptureOverride), afterCapture, afterCaptureClipboardHint),
             Card(Strings.TaskSettingsWindow_AfterUploadTasks, Check(Strings.TaskSettingsWindow_OverrideAfterUploadTasks, afterUploadOverride), afterUpload),
             Card(Strings.TaskSettingsWindow_Destinations, Check(Strings.TaskSettingsWindow_OverrideDestinations, destinationsOverride), destinations),
             Card(Strings.TaskSettingsWindow_UploaderAccounts, accountControls.ToArray()),
@@ -1317,6 +1328,64 @@ internal sealed class TaskSettingsPageBuilder
         VerticalAlignment = VerticalAlignment.Center
     };
 
+    // Mirrors the clipboard steps in WorkerTask: the image is copied first, then at most one of
+    // file / file path / folder path (in that priority), and only once a file has been saved.
+    // Every copy replaces the whole clipboard, so only the last step survives.
+    private static string DescribeAfterCaptureClipboard(AfterCaptureTasks job)
+    {
+        bool copyImage = job.HasFlag(AfterCaptureTasks.CopyImageToClipboard);
+        AfterCaptureTasks[] fileSteps = new[]
+        {
+            AfterCaptureTasks.CopyFileToClipboard,
+            AfterCaptureTasks.CopyFilePathToClipboard,
+            AfterCaptureTasks.CopyFolderPathToClipboard
+        }.Where(step => job.HasFlag(step)).ToArray();
+
+        if (!copyImage && fileSteps.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        List<string> lines = [];
+        bool savesFile = job.HasFlagAny(AfterCaptureTasks.SaveImageToFile, AfterCaptureTasks.SaveImageToFileWithDialog);
+        AfterCaptureTasks? fileStep = fileSteps.Length > 0 ? fileSteps[0] : null;
+
+        if (fileSteps.Length > 1)
+        {
+            lines.Add(string.Format(Strings.TaskSettingsWindow_ClipboardHint_OnlyOneFileStep,
+                fileSteps[0].GetLocalizedDescription(),
+                string.Join("\", \"", fileSteps.Skip(1).Select(step => step.GetLocalizedDescription()))));
+        }
+
+        if (fileStep != null && !savesFile)
+        {
+            lines.Add(string.Format(Strings.TaskSettingsWindow_ClipboardHint_NeedsSavedFile, fileStep.Value.GetLocalizedDescription()));
+            fileStep = null;
+        }
+
+        if (copyImage && fileStep != null)
+        {
+            lines.Add(string.Format(Strings.TaskSettingsWindow_ClipboardHint_Replaced, DescribeClipboardContent(fileStep.Value)));
+        }
+
+        if (copyImage || fileStep != null)
+        {
+            string content = fileStep != null ? DescribeClipboardContent(fileStep.Value) : DescribeClipboardContent(AfterCaptureTasks.CopyImageToClipboard);
+            lines.Insert(0, string.Format(Strings.TaskSettingsWindow_ClipboardHint_Result, content));
+        }
+
+        return string.Join(Environment.NewLine, lines);
+    }
+
+    private static string DescribeClipboardContent(AfterCaptureTasks step) => step switch
+    {
+        AfterCaptureTasks.CopyImageToClipboard => Strings.TaskSettingsWindow_ClipboardHint_Image,
+        AfterCaptureTasks.CopyFileToClipboard => Strings.TaskSettingsWindow_ClipboardHint_File,
+        AfterCaptureTasks.CopyFilePathToClipboard => Strings.TaskSettingsWindow_ClipboardHint_FilePath,
+        AfterCaptureTasks.CopyFolderPathToClipboard => Strings.TaskSettingsWindow_ClipboardHint_FolderPath,
+        _ => step.GetLocalizedDescription()
+    };
+
     private static TextBlock Hint(string text)
     {
         TextBlock hint = new() { Text = text };
@@ -1592,7 +1661,8 @@ internal sealed class TaskSettingsPageBuilder
         Func<T> getter,
         Action<T> setter,
         IReadOnlyList<(T Task, string Header, string Icon)> options,
-        string emptyIcon) where T : struct, Enum
+        string emptyIcon,
+        Action? changed = null) where T : struct, Enum
     {
         IReadOnlyDictionary<T, (string Header, string Icon)> taskOptions = options
             .ToDictionary(option => option.Task, option => (option.Header, option.Icon));
@@ -1680,6 +1750,7 @@ internal sealed class TaskSettingsPageBuilder
                         lastSelectedTask = task;
                     }
                     UpdateSelectedTasks();
+                    changed?.Invoke();
                 };
                 items.Add(item);
             }
