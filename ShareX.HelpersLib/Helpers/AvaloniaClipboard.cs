@@ -108,7 +108,14 @@ internal static class AvaloniaClipboard
             if (OperatingSystem.IsWindows())
                 item.Set(DataFormat.CreateBytesPlatformFormat("CF_DIB"), dib);
             if (!string.IsNullOrEmpty(html))
-                item.Set(DataFormat.CreateStringPlatformFormat(OperatingSystem.IsWindows() ? ClipboardDataFormats.Html : "text/html"), html);
+            {
+                // Windows "HTML Format" (CF_HTML) is UTF-8 with byte offsets in its header; a string
+                // format would be written as UTF-16 and read back by other apps as garbage.
+                if (OperatingSystem.IsWindows())
+                    item.Set(DataFormat.CreateBytesPlatformFormat(ClipboardDataFormats.Html), System.Text.Encoding.UTF8.GetBytes(html));
+                else
+                    item.Set(DataFormat.CreateStringPlatformFormat("text/html"), html);
+            }
             transfer.Add(item);
             return new OwnedImageTransfer(transfer, bitmap);
         }
