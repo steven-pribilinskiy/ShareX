@@ -60,10 +60,20 @@ internal sealed class DesktopTrayIconService : ITrayIconService
         get => _windowsIcon?.Visible ?? _avaloniaIcon!.IsVisible;
         set { if (_windowsIcon != null) _windowsIcon.Visible = value; else _avaloniaIcon!.IsVisible = value; }
     }
+    private string _toolTipText = string.Empty;
+
+    // The caller sets the title line; the build line is appended and its "time ago" refreshed on hover.
     public string ToolTipText
     {
-        get => _windowsIcon?.ToolTipText ?? _avaloniaIcon!.ToolTipText ?? string.Empty;
-        set { if (_windowsIcon != null) _windowsIcon.ToolTipText = value; else _avaloniaIcon!.ToolTipText = value; }
+        get => _toolTipText;
+        set { _toolTipText = value ?? string.Empty; RefreshToolTip(); }
+    }
+
+    private void RefreshToolTip()
+    {
+        string buildInfo = ApplicationInfo.BuildInfoText;
+        string text = string.IsNullOrEmpty(buildInfo) ? _toolTipText : _toolTipText + "\n" + buildInfo;
+        if (_windowsIcon != null) _windowsIcon.ToolTipText = text; else _avaloniaIcon!.ToolTipText = text;
     }
 
     public DesktopTrayIconService(IHotkeyHost host, byte[] icon, string text, bool visible)
@@ -79,6 +89,7 @@ internal sealed class DesktopTrayIconService : ITrayIconService
             _windowsIcon = new WindowsTrayIcon(host);
             _windowsIcon.MouseDown += OnMouseDown;
             _windowsIcon.MouseUp += OnMouseUp;
+            _windowsIcon.MouseMove += RefreshToolTip;
         }
         else
         {

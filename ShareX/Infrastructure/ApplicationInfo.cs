@@ -27,6 +27,10 @@
 
 using ShareX.HelpersLib;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace ShareX;
@@ -85,6 +89,39 @@ internal static class ApplicationInfo
 
             return title;
         }
+    }
+
+    // Stamped by the AddBuildInfoMetadata target in ShareX.csproj. A trailing "+" on the commit
+    // means the build had uncommitted changes.
+    internal static string? BuildCommit => GetAssemblyMetadata("BuildCommit");
+
+    internal static DateTime? BuildTimeUtc =>
+        DateTime.TryParse(GetAssemblyMetadata("BuildTimeUtc"), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime time) ? time : null;
+
+    internal static string BuildInfoText
+    {
+        get
+        {
+            List<string> parts = [];
+            if (!string.IsNullOrEmpty(BuildCommit)) parts.Add(BuildCommit);
+            if (BuildTimeUtc is DateTime buildTime) parts.Add("built " + FormatTimeAgo(DateTime.UtcNow - buildTime));
+            return string.Join(" · ", parts);
+        }
+    }
+
+    private static string? GetAssemblyMetadata(string key) => typeof(ApplicationInfo).Assembly
+        .GetCustomAttributes<AssemblyMetadataAttribute>().FirstOrDefault(x => x.Key == key)?.Value;
+
+    private static string FormatTimeAgo(TimeSpan elapsed)
+    {
+        static string Unit(int count, string unit) => $"{count} {unit}{(count == 1 ? "" : "s")} ago";
+
+        if (elapsed.TotalMinutes < 1) return "just now";
+        if (elapsed.TotalHours < 1) return Unit((int)elapsed.TotalMinutes, "minute");
+        if (elapsed.TotalDays < 1) return Unit((int)elapsed.TotalHours, "hour");
+        if (elapsed.TotalDays < 30) return Unit((int)elapsed.TotalDays, "day");
+        if (elapsed.TotalDays < 365) return Unit((int)(elapsed.TotalDays / 30), "month");
+        return Unit((int)(elapsed.TotalDays / 365), "year");
     }
 
     internal static string TitleShort => ApplicationState.SettingsOrNull is { DevMode: true } ? Title : Name;

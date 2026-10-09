@@ -41,6 +41,7 @@ public sealed class WindowsTrayIcon : IDisposable
     private string toolTipText;
     private bool visible, added;
     public event Action<InputMouseButton> MouseDown, MouseUp;
+    public event Action MouseMove;
 
     public WindowsTrayIcon(IHotkeyHost host)
     {
@@ -58,7 +59,14 @@ public sealed class WindowsTrayIcon : IDisposable
     public string ToolTipText
     {
         get => toolTipText;
-        set { toolTipText = value.Truncate(63); Update(); }
+        set
+        {
+            // NOTIFYICONDATA.szTip holds 128 characters including the terminator.
+            string text = value.Truncate(127);
+            if (text == toolTipText) return;
+            toolTipText = text;
+            Update();
+        }
     }
 
     public static TimeSpan DoubleClickTime => TimeSpan.FromMilliseconds(GetDoubleClickTime());
@@ -116,6 +124,7 @@ public sealed class WindowsTrayIcon : IDisposable
             0x207 or 0x208 or 0x209 => InputMouseButton.Middle,
             _ => InputMouseButton.None
         };
+        if (mouseMessage == 0x200) MouseMove?.Invoke(); // WM_MOUSEMOVE, sent while hovering before the tooltip shows
         if (mouseMessage is 0x201 or 0x203 or 0x204 or 0x206 or 0x207 or 0x209) MouseDown?.Invoke(button);
         if (mouseMessage is 0x202 or 0x205 or 0x208) MouseUp?.Invoke(button);
         message.Handled = true;

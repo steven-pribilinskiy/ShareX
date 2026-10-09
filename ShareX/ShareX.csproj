@@ -57,4 +57,22 @@
   <ItemGroup>
     <RuntimeHostConfigurationOption Include="System.Globalization.UseNls" Value="true" />
   </ItemGroup>
+  <!-- Stamp the build with its commit and time so a running build can be identified (shown in the tray tooltip). -->
+  <Target Name="AddBuildInfoMetadata" BeforeTargets="GetAssemblyAttributes">
+    <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" StandardOutputImportance="low" IgnoreExitCode="true" WorkingDirectory="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="BuildCommit" />
+      <Output TaskParameter="ExitCode" PropertyName="BuildCommitExitCode" />
+    </Exec>
+    <Exec Command="git status --porcelain --untracked-files=no" ConsoleToMSBuild="true" StandardOutputImportance="low" IgnoreExitCode="true" WorkingDirectory="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="BuildChanges" />
+    </Exec>
+    <PropertyGroup>
+      <BuildCommit Condition="'$(BuildCommitExitCode)' != '0'"></BuildCommit>
+      <BuildCommit Condition="'$(BuildCommit)' != '' And '$(BuildChanges)' != ''">$(BuildCommit)+</BuildCommit>
+    </PropertyGroup>
+    <ItemGroup>
+      <AssemblyMetadata Include="BuildCommit" Value="$(BuildCommit)" Condition="'$(BuildCommit)' != ''" />
+      <AssemblyMetadata Include="BuildTimeUtc" Value="$([System.DateTime]::UtcNow.ToString('o'))" />
+    </ItemGroup>
+  </Target>
 </Project>
