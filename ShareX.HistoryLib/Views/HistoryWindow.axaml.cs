@@ -8,6 +8,17 @@
     modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation; either version 2
     of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -16,7 +27,6 @@
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -72,6 +82,12 @@ public partial class HistoryWindow : Window
         _services = new HistoryWindowServices();
         InitializeComponent();
         RequestedThemeVariant = ThemeManager.GetCurrentTheme();
+        HistoryList.AddHandler(PointerPressedEvent, OnHistoryPointerPressed,
+            RoutingStrategies.Bubble, handledEventsToo: true);
+        HistoryList.AddHandler(PointerMovedEvent, OnHistoryPointerMoved,
+            RoutingStrategies.Bubble, handledEventsToo: true);
+        HistoryList.AddHandler(PointerReleasedEvent, OnHistoryPointerReleased,
+            RoutingStrategies.Bubble, handledEventsToo: true);
         _filterTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(220) };
         _filterTimer.Tick += OnFilterTimerTick;
     }
@@ -226,7 +242,7 @@ public partial class HistoryWindow : Window
             List<HistoryItem> items = await _historyManager.GetHistoryItemsAsync();
             items.Reverse();
 
-            (string[] types, string[] hosts) = await Task.Run(() =>
+            (string[] types, string[] hosts, string[] processNames) = await Task.Run(() =>
             {
                 string[] availableTypes = items.Select(item => item.Type)
                     .Where(type => !string.IsNullOrWhiteSpace(type))
@@ -238,7 +254,7 @@ public partial class HistoryWindow : Window
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .OrderBy(host => host)
                     .ToArray()!;
-                return (availableTypes, availableHosts);
+                return (availableTypes, availableHosts, HistoryHelpers.GetProcessNames(items));
             });
 
             _allHistoryItems = items;
@@ -246,6 +262,7 @@ public partial class HistoryWindow : Window
             _suppressFilterChanges = true;
             TypeFilterComboBox.ItemsSource = types;
             HostFilterComboBox.ItemsSource = hosts;
+            SearchTextBox.ItemsSource = processNames;
             _suppressFilterChanges = false;
             await ApplyFilterAsync();
         }
@@ -851,6 +868,7 @@ public partial class HistoryWindow : Window
         item.ShortenedURL = EditShortUrlTextBox.Text;
         item.Tags = ParseTags(EditTagsTextBox.Text);
         _historyManager.Edit(item);
+        SearchTextBox.ItemsSource = HistoryHelpers.GetProcessNames(_allHistoryItems);
         RefreshVisibleItem(item);
         CloseModal();
     }
@@ -918,6 +936,7 @@ public partial class HistoryWindow : Window
                 _historyManager.Delete(items);
                 HashSet<long> ids = items.Select(item => item.Id).ToHashSet();
                 _allHistoryItems.RemoveAll(item => ids.Contains(item.Id));
+                SearchTextBox.ItemsSource = HistoryHelpers.GetProcessNames(_allHistoryItems);
                 await ApplyFilterAsync();
             });
     }

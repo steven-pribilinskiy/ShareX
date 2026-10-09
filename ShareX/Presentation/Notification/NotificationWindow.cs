@@ -13,13 +13,18 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
 
 #nullable enable
 
-using ShareX.Localization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -29,17 +34,16 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using ShareX.AvaloniaUI.Imaging;
 using ShareX.AvaloniaUI.Theming;
 using ShareX.HelpersLib;
+using ShareX.Localization;
 using System;
 using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using DrawingBitmap = System.Drawing.Bitmap;
+using DrawingBitmap = SkiaSharp.SKBitmap;
 using DrawingColor = System.Drawing.Color;
-using DrawingContentAlignment = System.Drawing.ContentAlignment;
-using FormsCursor = System.Windows.Forms.Cursor;
+using DrawingContentAlignment = ShareX.HelpersLib.ImageContentAlignment;
 using MessageBox = ShareX.AvaloniaUI.MessageBox;
 using MessageBoxButtons = ShareX.AvaloniaUI.MessageBoxButtons;
 using MessageBoxResult = ShareX.AvaloniaUI.DialogResult;
@@ -96,7 +100,7 @@ public partial class NotificationWindow : Window
 
         if (config.Image == null)
         {
-            config.Image = ImageHelpers.LoadImage(config.FilePath);
+            config.Image = SkiaImageHelpers.LoadImage(config.FilePath);
         }
 
         if (config.Image == null && string.IsNullOrEmpty(config.Text))
@@ -177,7 +181,7 @@ public partial class NotificationWindow : Window
 
         if (source == null && !string.IsNullOrEmpty(config.FilePath))
         {
-            source = ImageHelpers.LoadImage(config.FilePath);
+            source = SkiaImageHelpers.LoadImage(config.FilePath);
             config.Image = source;
         }
 
@@ -189,18 +193,15 @@ public partial class NotificationWindow : Window
             return;
         }
 
-        using MemoryStream stream = new();
-        source.Save(stream, ImageFormat.Png);
-        stream.Position = 0;
-        _previewBitmap = new Bitmap(stream);
-        PreviewImage.Source = _previewBitmap;
-        PreviewImage.IsVisible = true;
-
         double maxWidth = Math.Max(1, config.Size.Width);
         double maxHeight = Math.Max(1, config.Size.Height);
         double scale = Math.Min(1, Math.Min(maxWidth / source.Width, maxHeight / source.Height));
         PreviewImage.Width = Math.Max(1, Math.Round(source.Width * scale));
         PreviewImage.Height = Math.Max(1, Math.Round(source.Height * scale));
+        _previewBitmap = BitmapConversionHelpers.CreatePreview(source,
+            PixelSize.FromSize(new Size(PreviewImage.Width, PreviewImage.Height), RenderScaling));
+        PreviewImage.Source = _previewBitmap;
+        PreviewImage.IsVisible = true;
         PreviewImage.Clip = new RectangleGeometry(
             new Rect(0, 0, PreviewImage.Width, PreviewImage.Height), 3, 3);
     }
@@ -310,12 +311,18 @@ public partial class NotificationWindow : Window
 
     private void PositionWindow()
     {
-        if (_config == null || Screens.Primary == null)
+        if (_config == null)
         {
             return;
         }
 
-        Screen screen = Screens.Primary;
+        System.Drawing.Point cursor = CaptureHelpers.GetCursorPosition();
+        Screen? screen = Screens.ScreenFromPoint(new PixelPoint(cursor.X, cursor.Y)) ?? Screens.Primary;
+        if (screen == null)
+        {
+            return;
+        }
+
         PixelRect area = screen.WorkingArea;
         PixelSize size = PixelSize.FromSize(Bounds.Size, screen.Scaling);
         int offset = Math.Max(0, _config.Offset) - (int)Math.Round(ShadowMargin * screen.Scaling);
@@ -399,7 +406,7 @@ public partial class NotificationWindow : Window
         PixelPoint topLeft = NotificationCard.PointToScreen(default);
         PixelPoint bottomRight = NotificationCard.PointToScreen(
             new Point(NotificationCard.Bounds.Width, NotificationCard.Bounds.Height));
-        System.Drawing.Point cursor = FormsCursor.Position;
+        System.Drawing.Point cursor = CaptureHelpers.GetCursorPosition();
         bool isInside = cursor.X >= topLeft.X && cursor.X < bottomRight.X &&
             cursor.Y >= topLeft.Y && cursor.Y < bottomRight.Y;
 
@@ -622,13 +629,13 @@ public partial class NotificationWindow : Window
             }
         }
 
-        if (Program.MainForm != null && Program.MainForm.InvokeRequired)
+        if (Dispatcher.UIThread.CheckAccess())
         {
-            Program.MainForm.BeginInvoke((Action)Execute);
+            Execute();
         }
         else
         {
-            Execute();
+            Dispatcher.UIThread.Post(Execute);
         }
     }
 

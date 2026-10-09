@@ -8,6 +8,17 @@
     modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation; either version 2
     of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -66,7 +77,7 @@ public sealed partial class MetadataViewModel : ViewModelBase
     public bool HasGroups => Groups.Count > 0;
     public bool CanOpen => !IsBusy;
     public bool CanCopy => !IsBusy && _allEntries.Count > 0;
-    public bool CanStrip => !IsBusy && File.Exists(FilePath);
+    public bool CanStrip => !IsBusy && MetadataService.CanStripMetadata(FilePath);
     public string MetadataCountText => _allEntries.Count == 1 ? Localization.Strings.MetadataViewModel_One_tag : string.Format(Localization.Strings.MetadataViewModel_Tag_count, _allEntries.Count);
 
     public MetadataViewModel(string? filePath = null, Action? playNotificationSound = null)
@@ -125,8 +136,12 @@ public sealed partial class MetadataViewModel : ViewModelBase
 
         try
         {
-            string output = await MetadataService.ReadMetadataAsync(FilePath);
-            _allEntries.AddRange(ParseMetadata(output));
+            IReadOnlyList<MetadataValue> values = await MetadataService.ReadMetadataAsync(FilePath);
+            _allEntries.AddRange(values.Select(value =>
+            {
+                Match urlMatch = UrlRegex().Match(value.Value);
+                return new MetadataEntry(value.Group, value.Tag, value.Value, urlMatch.Success ? urlMatch.Value : null);
+            }));
             EmptyMessage = _allEntries.Count > 0
                 ? Localization.Strings.MetadataViewModel_No_search_matches
                 : Localization.Strings.MetadataViewModel_No_metadata;
@@ -234,29 +249,6 @@ public sealed partial class MetadataViewModel : ViewModelBase
         OnPropertyChanged(nameof(CanCopy));
         OnPropertyChanged(nameof(CanStrip));
         OnPropertyChanged(nameof(MetadataCountText));
-    }
-
-    private static IEnumerable<MetadataEntry> ParseMetadata(string metadata)
-    {
-        foreach (string line in metadata.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries))
-        {
-            string[] parts = line.Split('\t', 3);
-            if (parts.Length < 2)
-            {
-                continue;
-            }
-
-            string group = parts[0].Trim();
-            if (group.Equals("ExifTool", StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            string tag = parts[1].Trim();
-            string value = parts.Length == 3 ? parts[2].Trim() : string.Empty;
-            Match urlMatch = UrlRegex().Match(value);
-            yield return new MetadataEntry(group, tag, value, urlMatch.Success ? urlMatch.Value : null);
-        }
     }
 
     private static string BuildMetadataText(IEnumerable<MetadataEntry> entries)

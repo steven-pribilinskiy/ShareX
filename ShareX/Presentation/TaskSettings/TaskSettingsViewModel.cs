@@ -3,6 +3,22 @@
 /*
     ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -72,7 +88,9 @@ public sealed class TaskSettingsViewModel : INotifyPropertyChanged
             Child("upload-file-naming", Strings.TaskSettingsWindow_FileNaming, LucideIcons.file_pen),
             Child("upload-clipboard", Strings.TaskSettingsWindow_ClipboardUpload, LucideIcons.clipboard),
             Child("upload-filters", Strings.TaskSettingsWindow_UploaderFilters, LucideIcons.filter)));
-        NavigationItems.Add(Parent("tools", Strings.TaskSettingsWindow_Tools, LucideIcons.wrench));
+        NavigationItems.Add(Parent("tools", Strings.TaskSettingsWindow_Tools, LucideIcons.wrench,
+            Child("tools-image-editor", Strings.TaskSettingsWindow_ImageEditor, LucideIcons.image),
+            Child("tools-mouse-highlighter", Strings.MouseHighlighter, LucideIcons.mouse_pointer_click)));
         NavigationItems.Add(Parent("actions", Strings.TaskSettingsWindow_Actions, LucideIcons.zap));
         NavigationItems.Add(Parent("watch-folders", Strings.TaskSettingsWindow_WatchFolders, LucideIcons.folder_search));
         NavigationItems.Add(Parent("advanced", Strings.TaskSettingsWindow_Advanced, LucideIcons.sliders_horizontal));
@@ -84,6 +102,11 @@ public sealed class TaskSettingsViewModel : INotifyPropertyChanged
 
     private static SettingsNavigationItem Parent(string id, string title, string icon, params SettingsNavigationItem[] children) =>
         new(id, title, icon, children: children);
+
+    public void SelectPage(string id)
+    {
+        SelectedNavigationItem = NavigationItems.SelectMany(item => item.Children.Prepend(item)).First(item => item.Id == id);
+    }
 
     private static SettingsNavigationItem Child(string id, string title, string icon) => new(id, title, icon);
 }

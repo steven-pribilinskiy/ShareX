@@ -3,6 +3,22 @@
 /*
     ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -14,7 +30,6 @@ using Avalonia.Interactivity;
 using ShareX.AvaloniaUI.Theming;
 using ShareX.HelpersLib;
 using System;
-using System.Threading.Tasks;
 
 namespace ShareX.UploadersLib;
 
@@ -63,7 +78,7 @@ public partial class OAuthListenerWindow : Window
 
             if (connected && !_isClosed)
             {
-                OAuthUserInfo? userInfo = await Task.Run(_oauth.GetUserInfo);
+                OAuthUserInfo? userInfo = await _oauth.GetUserInfoAsync();
                 SubmittedResult = new OAuthListenerWindowResult(_oauth.AuthInfo, userInfo);
             }
         }
@@ -94,10 +109,10 @@ public partial class OAuthListenerWindow : Window
         public string State { get; set; } = string.Empty;
         public string Scope { get; set; } = string.Empty;
 
-        public string GetAuthorizationURL() => string.Empty;
-        public bool GetAccessToken(string code) => false;
-        public bool RefreshAccessToken() => false;
-        public bool CheckAuthorization() => false;
-        public OAuthUserInfo? GetUserInfo() => null;
+        public Task<string> GetAuthorizationURLAsync(CancellationToken cancellationToken = default) => Task.FromResult(string.Empty);
+        public Task<bool> GetAccessTokenAsync(string code, CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public Task<bool> RefreshAccessTokenAsync(CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public Task<bool> CheckAuthorizationAsync(CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public Task<OAuthUserInfo?> GetUserInfoAsync(CancellationToken cancellationToken = default) => Task.FromResult<OAuthUserInfo?>(null);
     }
 }

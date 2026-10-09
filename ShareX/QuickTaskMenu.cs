@@ -27,7 +27,6 @@
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -61,7 +60,7 @@ public sealed class QuickTaskMenu
         menu.Items.Add(continueItem);
         menu.Items.Add(new Separator());
 
-        if (Program.Settings?.QuickTaskPresets is { Count: > 0 } presets)
+        if (ApplicationState.SettingsOrNull?.QuickTaskPresets is { Count: > 0 } presets)
         {
             foreach (QuickTaskInfo taskInfo in presets)
             {

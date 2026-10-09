@@ -3,6 +3,22 @@
 /*
     ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -162,7 +178,7 @@ public partial class CustomUploaderSettingsWindow : Window
 
     private async void OnTestTextClick(object? sender, RoutedEventArgs e)
     {
-        string? text = await PromptForTextAsync();
+        string? text = await TextUploadWindow.ShowAsync(Strings.CustomUploaderSettingsWindow_TextUploadSample);
         if (text != null) await RunTestAsync(CustomUploaderDestinationType.TextUploader, _viewModel?.CustomTextUploaderSelected ?? -1, text);
     }
 
@@ -180,49 +196,6 @@ public partial class CustomUploaderSettingsWindow : Window
         if (_viewModel == null) return;
         UploadResult? result = await _viewModel.TestAsync(type, index, text);
         if (result != null) ResponseWindow.ShowInstance(result);
-    }
-
-    private async Task<string?> PromptForTextAsync()
-    {
-        TextBox input = new()
-        {
-            AcceptsReturn = true,
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            MinHeight = 130,
-            Text = Strings.CustomUploaderSettingsWindow_TextUploadSample
-        };
-        Window dialog = new()
-        {
-            Title = Strings.CustomUploaderSettingsWindow_TextUploadTestTitle,
-            Width = 520,
-            Height = 250,
-            MinWidth = 420,
-            MinHeight = 220,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            RequestedThemeVariant = ThemeManager.GetCurrentTheme()
-        };
-        Button upload = new() { Content = Strings.CustomUploaderSettingsWindow_Upload, MinWidth = 80 };
-        Button cancel = new() { Content = Strings.CustomUploaderSettingsWindow_Cancel, MinWidth = 80 };
-        upload.Click += (_, _) => dialog.Close(input.Text ?? string.Empty);
-        cancel.Click += (_, _) => dialog.Close(null);
-        dialog.Content = new StackPanel
-        {
-            Margin = new Avalonia.Thickness(12),
-            Spacing = 8,
-            Children =
-            {
-                new TextBlock { Text = Strings.CustomUploaderSettingsWindow_TextToUpload },
-                input,
-                new StackPanel
-                {
-                    Orientation = Avalonia.Layout.Orientation.Horizontal,
-                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
-                    Spacing = 6,
-                    Children = { upload, cancel }
-                }
-            }
-        };
-        return await dialog.ShowDialog<string?>(this);
     }
 
     private async Task<string?> PickFolderAsync(string title)

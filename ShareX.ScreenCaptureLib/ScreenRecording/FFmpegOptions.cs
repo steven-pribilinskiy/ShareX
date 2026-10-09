@@ -25,6 +25,7 @@
 
 using ShareX.HelpersLib;
 using System;
+using System.Drawing;
 
 namespace ShareX.ScreenCaptureLib
 {
@@ -137,6 +138,45 @@ namespace ShareX.ScreenCaptureLib
         public bool IsAnimatedImage => VideoCodec == FFmpegVideoCodec.gif || VideoCodec == FFmpegVideoCodec.libwebp || VideoCodec == FFmpegVideoCodec.apng;
 
         public bool IsEvenSizeRequired => !IsAnimatedImage;
+
+        public int MaxVideoDimension => GetMaxVideoDimension(VideoCodec);
+
+        public bool IsVideoSizeSupported(int width, int height) => IsVideoSizeSupported(VideoCodec, width, height);
+
+        // Maximum width/height the encoder accepts. 0 means there is no known limit.
+        public static int GetMaxVideoDimension(FFmpegVideoCodec videoCodec) => videoCodec switch
+        {
+            // NVENC caps H.264 at 4096x4096 on every GPU generation, while HEVC allows 8192x8192.
+            FFmpegVideoCodec.h264_nvenc => 4096,
+            FFmpegVideoCodec.hevc_nvenc => 8192,
+            _ => 0
+        };
+
+        public static bool IsVideoSizeSupported(FFmpegVideoCodec videoCodec, int width, int height)
+        {
+            int maxDimension = GetMaxVideoDimension(videoCodec);
+
+            return maxDimension <= 0 || (width <= maxDimension && height <= maxDimension);
+        }
+
+        public Size GetSizeWithinLimit(int width, int height) => GetSizeWithinLimit(VideoCodec, width, height);
+
+        // Largest size that fits the encoder, keeping aspect ratio. Never enlarges.
+        // Both dimensions are rounded down to even numbers, which yuv420p requires.
+        public static Size GetSizeWithinLimit(FFmpegVideoCodec videoCodec, int width, int height)
+        {
+            if (IsVideoSizeSupported(videoCodec, width, height))
+            {
+                return new Size(width, height);
+            }
+
+            int maxDimension = GetMaxVideoDimension(videoCodec);
+            double ratio = Math.Min((double)maxDimension / width, (double)maxDimension / height);
+
+            return new Size(MakeEven((int)Math.Round(width * ratio)), MakeEven((int)Math.Round(height * ratio)));
+        }
+
+        private static int MakeEven(int value) => Math.Max(2, value - (value % 2));
 
         // TEMP: For backward compatibility
         public void FixSources()

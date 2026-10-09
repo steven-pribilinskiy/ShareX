@@ -1,8 +1,24 @@
 #region License Information (GPL v3)
 
 /*
-    ShareX - A program developed by ShareX Team
+    ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -11,22 +27,17 @@
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Platform;
-using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using ShareX.AvaloniaUI.Theming;
 using ShareX.HelpersLib;
 using ShareX.Localization;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using DrawingPoint = System.Drawing.Point;
-using FormsDataFormats = System.Windows.Forms.DataFormats;
-using FormsDataObject = System.Windows.Forms.DataObject;
 
 namespace ShareX;
 
@@ -40,8 +51,8 @@ public partial class ActionsToolbarWindow : Window
     {
         InitializeComponent();
         RequestedThemeVariant = ThemeManager.GetCurrentTheme();
-        Topmost = Program.Settings.ActionsToolbarStayTopMost;
-        Program.Settings.ActionsToolbarList ??= [];
+        Topmost = ApplicationState.Settings.ActionsToolbarStayTopMost;
+        ApplicationState.Settings.ActionsToolbarList ??= [];
 
         ToolTip.SetTip(TitleHandle, Strings.ActionsToolbarWindow_Tip);
         ToolTip.SetPlacement(TitleHandle, PlacementMode.Top);
@@ -64,7 +75,7 @@ public partial class ActionsToolbarWindow : Window
             ToolbarItems.Children.RemoveAt(1);
         }
 
-        foreach (HotkeyType action in Program.Settings.ActionsToolbarList)
+        foreach (HotkeyType action in ApplicationState.Settings.ActionsToolbarList)
         {
             if (action == HotkeyType.None)
             {
@@ -114,7 +125,7 @@ public partial class ActionsToolbarWindow : Window
             return;
         }
 
-        bool restoreTopmost = Program.Settings.ActionsToolbarStayTopMost;
+        bool restoreTopmost = ApplicationState.Settings.ActionsToolbarStayTopMost;
         if (restoreTopmost)
         {
             Topmost = false;
@@ -128,7 +139,7 @@ public partial class ActionsToolbarWindow : Window
         {
             if (!_closing)
             {
-                Topmost = Program.Settings.ActionsToolbarStayTopMost;
+                Topmost = ApplicationState.Settings.ActionsToolbarStayTopMost;
             }
         }
     }
@@ -149,11 +160,11 @@ public partial class ActionsToolbarWindow : Window
         {
             Header = Strings.ActionsToolbarWindow_LockPosition,
             ToggleType = MenuItemToggleType.CheckBox,
-            IsChecked = Program.Settings.ActionsToolbarLockPosition
+            IsChecked = ApplicationState.Settings.ActionsToolbarLockPosition
         };
         lockPosition.Click += (_, _) =>
         {
-            Program.Settings.ActionsToolbarLockPosition = lockPosition.IsChecked;
+            ApplicationState.Settings.ActionsToolbarLockPosition = lockPosition.IsChecked;
             UpdateTitleCursor();
             SaveSettings();
         };
@@ -163,11 +174,11 @@ public partial class ActionsToolbarWindow : Window
         {
             Header = Strings.ActionsToolbarWindow_StayOnTop,
             ToggleType = MenuItemToggleType.CheckBox,
-            IsChecked = Program.Settings.ActionsToolbarStayTopMost
+            IsChecked = ApplicationState.Settings.ActionsToolbarStayTopMost
         };
         stayTopmost.Click += (_, _) =>
         {
-            Program.Settings.ActionsToolbarStayTopMost = stayTopmost.IsChecked;
+            ApplicationState.Settings.ActionsToolbarStayTopMost = stayTopmost.IsChecked;
             Topmost = stayTopmost.IsChecked;
             SaveSettings();
         };
@@ -177,11 +188,11 @@ public partial class ActionsToolbarWindow : Window
         {
             Header = Strings.ActionsToolbarWindow_OpenAtStartup,
             ToggleType = MenuItemToggleType.CheckBox,
-            IsChecked = Program.Settings.ActionsToolbarRunAtStartup
+            IsChecked = ApplicationState.Settings.ActionsToolbarRunAtStartup
         };
         runAtStartup.Click += (_, _) =>
         {
-            Program.Settings.ActionsToolbarRunAtStartup = runAtStartup.IsChecked;
+            ApplicationState.Settings.ActionsToolbarRunAtStartup = runAtStartup.IsChecked;
             SaveSettings();
         };
         menu.Items.Add(runAtStartup);
@@ -196,7 +207,7 @@ public partial class ActionsToolbarWindow : Window
 
     private async System.Threading.Tasks.Task ShowEditorAsync()
     {
-        bool restoreTopmost = Program.Settings.ActionsToolbarStayTopMost;
+        bool restoreTopmost = ApplicationState.Settings.ActionsToolbarStayTopMost;
         Topmost = false;
 
         try
@@ -217,7 +228,7 @@ public partial class ActionsToolbarWindow : Window
     private void OnTitlePointerPressed(object? sender, PointerPressedEventArgs e)
     {
         PointerUpdateKind kind = e.GetCurrentPoint(TitleHandle).Properties.PointerUpdateKind;
-        if (kind == PointerUpdateKind.LeftButtonPressed && !Program.Settings.ActionsToolbarLockPosition)
+        if (kind == PointerUpdateKind.LeftButtonPressed && !ApplicationState.Settings.ActionsToolbarLockPosition)
         {
             BeginMoveDrag(e);
             e.Handled = true;
@@ -231,7 +242,7 @@ public partial class ActionsToolbarWindow : Window
 
     private void UpdateTitleCursor()
     {
-        TitleHandle.Cursor = new Cursor(Program.Settings.ActionsToolbarLockPosition
+        TitleHandle.Cursor = new Cursor(ApplicationState.Settings.ActionsToolbarLockPosition
             ? StandardCursorType.Arrow
             : StandardCursorType.SizeAll);
     }
@@ -246,7 +257,7 @@ public partial class ActionsToolbarWindow : Window
 
     private void RestorePosition()
     {
-        DrawingPoint saved = Program.Settings.ActionsToolbarPosition;
+        DrawingPoint saved = ApplicationState.Settings.ActionsToolbarPosition;
         if (!saved.IsEmpty)
         {
             PixelPoint point = new(saved.X, saved.Y);
@@ -305,7 +316,7 @@ public partial class ActionsToolbarWindow : Window
             _adjustingPosition = false;
         }
 
-        Program.Settings.ActionsToolbarPosition = new DrawingPoint(adjusted.X, adjusted.Y);
+        ApplicationState.Settings.ActionsToolbarPosition = new DrawingPoint(adjusted.X, adjusted.Y);
     }
 
     private void OnDragEnter(object? sender, DragEventArgs e) => UpdateDragState(e);
@@ -331,25 +342,7 @@ public partial class ActionsToolbarWindow : Window
     {
         DropOverlay.IsVisible = false;
 
-        FormsDataObject dataObject = new();
-        string[] files = e.DataTransfer.TryGetFiles()?
-            .Select(file => file.TryGetLocalPath())
-            .Where(path => !string.IsNullOrEmpty(path))
-            .Cast<string>()
-            .ToArray() ?? [];
-
-        if (files.Length > 0)
-        {
-            dataObject.SetData(FormsDataFormats.FileDrop, files);
-        }
-
-        string? text = e.DataTransfer.TryGetText();
-        if (!string.IsNullOrEmpty(text))
-        {
-            dataObject.SetText(text);
-        }
-
-        UploadManager.DragDropUpload(dataObject);
+        UploadManager.DragDropUpload(e.DataTransfer);
         e.DragEffects = DragDropEffects.Copy;
         e.Handled = true;
     }

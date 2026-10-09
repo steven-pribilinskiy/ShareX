@@ -86,9 +86,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private bool _showFileMenu;
 
         [ObservableProperty]
-        private bool _showOptionsButton = true;
-
-        [ObservableProperty]
         private bool _showTaskButtons = true;
 
         [ObservableProperty]
@@ -295,9 +292,20 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             get => _previewImage;
             set
             {
-                if (SetProperty(ref _previewImage, value))
+                if (_disposed)
                 {
-                    OnPreviewImageChanged(value);
+                    value?.Dispose();
+                    return;
+                }
+                if (ReferenceEquals(_previewImage, value)) return;
+                var previous = _previewImage;
+                try
+                {
+                    if (SetProperty(ref _previewImage, value)) OnPreviewImageChanged(value);
+                }
+                finally
+                {
+                    previous?.Dispose();
                 }
             }
         }
@@ -969,6 +977,14 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             UpdateCoreHistoryState(editorCore.CanUndo, editorCore.CanRedo);
         }
 
+        internal void DetachEditorCore(EditorCore editorCore)
+        {
+            if (ReferenceEquals(_editorCore, editorCore))
+            {
+                _editorCore = null;
+            }
+        }
+
         public void RequestZoomToFitOnNextImageLoad()
         {
             _zoomToFitOnNextImageLoad = Options.ZoomToFitOnOpen;
@@ -1076,9 +1092,13 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         // Static stroke widths
         public static int[] StrokeWidths => new[] { 2, 4, 6, 8, 10 };
 
+        public event EventHandler<EditorTool>? ToolSelectionRequested;
+
         [RelayCommand]
         private void SelectTool(EditorTool tool)
         {
+            ToolSelectionRequested?.Invoke(this, tool);
+
             if (tool == EditorTool.Image)
             {
                 DeselectRequested?.Invoke(this, EventArgs.Empty);

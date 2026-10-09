@@ -24,17 +24,16 @@
 #endregion License Information (GPL v3)
 
 using ShareX.HelpersLib;
+using SkiaSharp;
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Vortice.Direct3D;
 using Vortice.Direct3D11;
 using Vortice.DXGI;
 using Vortice.Mathematics;
 using Vortice.WIC;
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using Bitmap = SkiaSharp.SKBitmap;
 
 namespace ShareX.ScreenCaptureLib
 {
@@ -286,22 +285,20 @@ namespace ShareX.ScreenCaptureLib
             toneMapper.InitializeForSdrTarget(sourceBitmap, Vortice.WIC.PixelFormat.Format32bppBGRA,
                 BitmapToneMappingMode.ToneMappingMode_Default);
 
-            Bitmap bitmap = new Bitmap((int)width, (int)height, PixelFormat.Format32bppArgb);
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            Bitmap bitmap = new(new SKImageInfo((int)width, (int)height, SKColorType.Bgra8888, SKAlphaType.Unpremul));
             bool converted = false;
 
             try
             {
-                int destinationStride = Math.Abs(bitmapData.Stride);
+                int destinationStride = Math.Abs(bitmap.RowBytes);
                 uint destinationBufferSize = checked((uint)(destinationStride * bitmap.Height));
                 toneMapper.CopyPixels(new RectI(0, 0, bitmap.Width, bitmap.Height),
-                    (uint)destinationStride, destinationBufferSize, bitmapData.Scan0);
+                    (uint)destinationStride, destinationBufferSize, bitmap.GetPixels());
                 converted = true;
             }
             finally
             {
-                bitmap.UnlockBits(bitmapData);
+                bitmap.NotifyPixelsChanged();
 
                 if (!converted)
                 {
@@ -317,9 +314,7 @@ namespace ShareX.ScreenCaptureLib
         {
             int width = (int)description.Width;
             int height = (int)description.Height;
-            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height),
-                ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            Bitmap bitmap = new(new SKImageInfo((int)width, (int)height, SKColorType.Bgra8888, SKAlphaType.Unpremul));
             bool converted = false;
 
             try
@@ -327,7 +322,7 @@ namespace ShareX.ScreenCaptureLib
                 for (int y = 0; y < height; y++)
                 {
                     byte* sourceRow = (byte*)mapped.DataPointer + y * mapped.RowPitch;
-                    byte* destinationRow = (byte*)bitmapData.Scan0 + y * bitmapData.Stride;
+                    byte* destinationRow = (byte*)bitmap.GetPixels() + y * bitmap.RowBytes;
 
                     for (int x = 0; x < width; x++)
                     {
@@ -367,7 +362,7 @@ namespace ShareX.ScreenCaptureLib
             }
             finally
             {
-                bitmap.UnlockBits(bitmapData);
+                bitmap.NotifyPixelsChanged();
 
                 if (!converted)
                 {
@@ -388,9 +383,7 @@ namespace ShareX.ScreenCaptureLib
         {
             int width = (int)description.Width;
             int height = (int)description.Height;
-            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height),
-                ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            Bitmap bitmap = new(new SKImageInfo((int)width, (int)height, SKColorType.Bgra8888, SKAlphaType.Unpremul));
             bool converted = false;
 
             try
@@ -400,7 +393,7 @@ namespace ShareX.ScreenCaptureLib
                 for (int y = 0; y < height; y++)
                 {
                     byte* sourceRow = (byte*)mapped.DataPointer + y * mapped.RowPitch;
-                    byte* destinationRow = (byte*)bitmapData.Scan0 + y * bitmapData.Stride;
+                    byte* destinationRow = (byte*)bitmap.GetPixels() + y * bitmap.RowBytes;
 
                     for (int x = 0; x < width; x++)
                     {
@@ -438,7 +431,7 @@ namespace ShareX.ScreenCaptureLib
             }
             finally
             {
-                bitmap.UnlockBits(bitmapData);
+                bitmap.NotifyPixelsChanged();
 
                 if (!converted)
                 {
@@ -543,13 +536,13 @@ namespace ShareX.ScreenCaptureLib
             switch (rotation)
             {
                 case ModeRotation.Rotate90:
-                    bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                    SkiaImageHelpers.RotateFlipInPlace(bitmap, 1);
                     break;
                 case ModeRotation.Rotate180:
-                    bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                    SkiaImageHelpers.RotateFlipInPlace(bitmap, 2);
                     break;
                 case ModeRotation.Rotate270:
-                    bitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                    SkiaImageHelpers.RotateFlipInPlace(bitmap, 3);
                     break;
             }
         }
@@ -575,78 +568,49 @@ namespace ShareX.ScreenCaptureLib
                 intersection.Width,
                 intersection.Height);
 
-            if (capturedOutput.SdrReferenceBitmap != null &&
-                Image.GetPixelFormatSize(destination.PixelFormat) == 32)
+            if (capturedOutput.SdrReferenceBitmap != null)
             {
                 CopyToneMappedPixels(destination, destinationRectangle, capturedOutput.ToneMappedBitmap,
                     capturedOutput.SdrReferenceBitmap, sourceRectangle);
                 return;
             }
 
-            using Graphics graphics = Graphics.FromImage(destination);
-            graphics.CompositingMode = CompositingMode.SourceCopy;
-            graphics.DrawImage(capturedOutput.ToneMappedBitmap, destinationRectangle, sourceRectangle, GraphicsUnit.Pixel);
+            using SKCanvas graphics = new(destination);
+            using SKPaint paint = new() { BlendMode = SKBlendMode.Src };
+            graphics.DrawImage(capturedOutput.ToneMappedBitmap, sourceRectangle.ToSKRect(), destinationRectangle.ToSKRect(), paint);
         }
 
         private static unsafe void CopyToneMappedPixels(Bitmap destination, Rectangle destinationRectangle,
             Bitmap toneMappedBitmap, Bitmap sdrReferenceBitmap, Rectangle sourceRectangle)
         {
-            BitmapData destinationData = null;
-            BitmapData toneMappedData = null;
-            BitmapData referenceData = null;
-
-            try
+            using SkiaPixelBuffer destinationData = new(destination, true);
+            using SkiaPixelBuffer toneMappedData = new(toneMappedBitmap, true, PixelAccess.ReadOnly);
+            using SkiaPixelBuffer referenceData = new(sdrReferenceBitmap, true, PixelAccess.ReadOnly);
+            for (int y = 0; y < sourceRectangle.Height; y++)
             {
-                destinationData = destination.LockBits(destinationRectangle, ImageLockMode.ReadWrite,
-                    destination.PixelFormat);
-                toneMappedData = toneMappedBitmap.LockBits(sourceRectangle, ImageLockMode.ReadOnly,
-                    PixelFormat.Format32bppArgb);
-                referenceData = sdrReferenceBitmap.LockBits(sourceRectangle, ImageLockMode.ReadOnly,
-                    PixelFormat.Format32bppArgb);
+                byte* destinationRow = (byte*)destinationData.Pointer + ((y + destinationRectangle.Y) * destination.Width + destinationRectangle.X) * 4;
+                byte* toneMappedRow = (byte*)toneMappedData.Pointer + ((y + sourceRectangle.Y) * toneMappedBitmap.Width + sourceRectangle.X) * 4;
+                byte* referenceRow = (byte*)referenceData.Pointer + ((y + sourceRectangle.Y) * sdrReferenceBitmap.Width + sourceRectangle.X) * 4;
 
-                for (int y = 0; y < sourceRectangle.Height; y++)
+                for (int x = 0; x < sourceRectangle.Width; x++)
                 {
-                    byte* destinationRow = (byte*)destinationData.Scan0 + y * destinationData.Stride;
-                    byte* toneMappedRow = (byte*)toneMappedData.Scan0 + y * toneMappedData.Stride;
-                    byte* referenceRow = (byte*)referenceData.Scan0 + y * referenceData.Stride;
+                    byte* destinationPixel = destinationRow + x * 4;
+                    byte* toneMappedPixel = toneMappedRow + x * 4;
+                    byte* referencePixel = referenceRow + x * 4;
 
-                    for (int x = 0; x < sourceRectangle.Width; x++)
+                    bool extendedRange = referencePixel[3] != 0;
+                    bool legacyCaptureMatchesSdr =
+                        Math.Abs(destinationPixel[0] - referencePixel[0]) <= SdrReferenceTolerance &&
+                        Math.Abs(destinationPixel[1] - referencePixel[1]) <= SdrReferenceTolerance &&
+                        Math.Abs(destinationPixel[2] - referencePixel[2]) <= SdrReferenceTolerance;
+
+                    if (extendedRange || !legacyCaptureMatchesSdr)
                     {
-                        byte* destinationPixel = destinationRow + x * 4;
-                        byte* toneMappedPixel = toneMappedRow + x * 4;
-                        byte* referencePixel = referenceRow + x * 4;
-
-                        bool extendedRange = referencePixel[3] != 0;
-                        bool legacyCaptureMatchesSdr =
-                            Math.Abs(destinationPixel[0] - referencePixel[0]) <= SdrReferenceTolerance &&
-                            Math.Abs(destinationPixel[1] - referencePixel[1]) <= SdrReferenceTolerance &&
-                            Math.Abs(destinationPixel[2] - referencePixel[2]) <= SdrReferenceTolerance;
-
-                        if (extendedRange || !legacyCaptureMatchesSdr)
-                        {
-                            destinationPixel[0] = toneMappedPixel[0];
-                            destinationPixel[1] = toneMappedPixel[1];
-                            destinationPixel[2] = toneMappedPixel[2];
-                            destinationPixel[3] = 255;
-                        }
+                        destinationPixel[0] = toneMappedPixel[0];
+                        destinationPixel[1] = toneMappedPixel[1];
+                        destinationPixel[2] = toneMappedPixel[2];
+                        destinationPixel[3] = 255;
                     }
-                }
-            }
-            finally
-            {
-                if (referenceData != null)
-                {
-                    sdrReferenceBitmap.UnlockBits(referenceData);
-                }
-
-                if (toneMappedData != null)
-                {
-                    toneMappedBitmap.UnlockBits(toneMappedData);
-                }
-
-                if (destinationData != null)
-                {
-                    destination.UnlockBits(destinationData);
                 }
             }
         }

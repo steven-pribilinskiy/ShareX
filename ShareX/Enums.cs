@@ -230,10 +230,6 @@ namespace ShareX
         [Category(EnumExtensions.HotkeyType_Category_ScreenCapture)]
         RectangleRegion,
         [Category(EnumExtensions.HotkeyType_Category_ScreenCapture)]
-        RectangleLight,
-        [Category(EnumExtensions.HotkeyType_Category_ScreenCapture)]
-        RectangleTransparent,
-        [Category(EnumExtensions.HotkeyType_Category_ScreenCapture)]
         CustomRegion,
         [Category(EnumExtensions.HotkeyType_Category_ScreenCapture)]
         LastRegion,
@@ -276,6 +272,8 @@ namespace ShareX
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         Ruler,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        MouseHighlighter,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
         PinToScreen,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         PinToScreenFromScreen,
@@ -304,9 +302,17 @@ namespace ShareX
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         ImageSplitter,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        ImageResizer,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        ImageConverter,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        ImageWatermark,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
         ImageThumbnailer,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         VideoConverter,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        VideoTrimmer,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         VideoThumbnailer,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
@@ -338,6 +344,8 @@ namespace ShareX
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         InspectWindow,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        NetworkMonitor,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
         MonitorTest,
         // Other
         [Category(EnumExtensions.HotkeyType_Category_Other)]
@@ -355,7 +363,9 @@ namespace ShareX
         [Category(EnumExtensions.HotkeyType_Category_Other)]
         ToggleTrayMenu,
         [Category(EnumExtensions.HotkeyType_Category_Other)]
-        ExitShareX
+        ExitShareX,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        AnimatedGifTrimmer
     }
 
     public enum ToastClickAction // Localized
@@ -396,11 +406,6 @@ namespace ShareX
     public enum ThumbnailTitleLocation // Localized
     {
         Top, Bottom
-    }
-
-    public enum RegionCaptureType
-    {
-        Default, Light, Transparent
     }
 
     public enum ScreenTearingTestMode

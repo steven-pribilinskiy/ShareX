@@ -8,6 +8,17 @@
     modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation; either version 2
     of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -16,6 +27,8 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -25,6 +38,7 @@ using ShareX.AvaloniaUI.Theming;
 using ShareX.HelpersLib;
 using ShareX.Localization;
 using ShareX.UploadersLib;
+using ShareX.UploadersLib.FileUploaders;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,14 +47,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using DrawingBitmap = System.Drawing.Bitmap;
+using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
+using DrawingBitmap = SkiaSharp.SKBitmap;
 using DrawingPoint = System.Drawing.Point;
 using DrawingSize = System.Drawing.Size;
-using FormsCursor = System.Windows.Forms.Cursor;
-using FormsDataFormats = System.Windows.Forms.DataFormats;
-using FormsDataObject = System.Windows.Forms.DataObject;
-using FormsOrientation = System.Windows.Forms.Orientation;
-using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
+using ImageOrientation = ShareX.HelpersLib.ImageOrientation;
 using MessageBox = ShareX.AvaloniaUI.MessageBox;
 using MessageBoxButtons = ShareX.AvaloniaUI.MessageBoxButtons;
 using MessageBoxResult = ShareX.AvaloniaUI.DialogResult;
@@ -49,11 +60,12 @@ namespace ShareX;
 
 public partial class MainWindow : Window, INotifyPropertyChanged
 {
-    private readonly MainForm _host;
+    private readonly ITrayIconService _trayIconService;
     private readonly MainMenuBuilder _navigationMenuBuilder;
     private readonly MainMenuBuilder _trayMenuBuilder;
     private readonly UploadInfoManager _uploadInfoManager = new();
     private ContextMenu? _activeContextMenu;
+    private Flyout? _activeGridMenu;
     private Window? _trayMenuAnchor;
     private PointerPressedEventArgs? _thumbnailDragTrigger;
     private Task<IStorageFile?>? _thumbnailDragFileTask;
@@ -71,26 +83,33 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     internal ObservableCollection<ThumbnailItemViewModel> ThumbnailItems { get; } = new();
     internal ObservableCollection<HotkeyTipViewModel> HotkeyTips { get; } = new();
+    public AvaloniaBitmap TitleBarIcon { get; }
     public bool IsEmpty => ThumbnailItems.Count == 0;
+    public bool IsWindowMaximized => WindowState == Avalonia.Controls.WindowState.Maximized;
+    public bool IsDarkTheme => ThemeManager.IsDarkTheme;
+    public string ThemeToggleText => IsDarkTheme
+        ? Strings.ApplicationSettingsWindow_Dark
+        : Strings.ApplicationSettingsWindow_Light;
 
-    public MainWindow() : this(Program.MainForm)
+    public MainWindow() : this(MainWindowIntegration.TrayIconService)
     {
     }
 
-    public MainWindow(MainForm host)
+    internal MainWindow(ITrayIconService trayIconService)
     {
-        _host = host;
-        _navigationMenuBuilder = new MainMenuBuilder(host);
-        _trayMenuBuilder = new MainMenuBuilder(host, trayMenu: true);
+        _trayIconService = trayIconService;
+        _navigationMenuBuilder = new MainMenuBuilder();
+        _trayMenuBuilder = new MainMenuBuilder(trayMenu: true);
 
         InitializeComponent();
-        DataContext = this;
         RequestedThemeVariant = ThemeManager.GetCurrentTheme();
-        Title = Program.Title;
+        Title = ApplicationInfo.Title;
         Icon = CreateWindowIcon();
+        TitleBarIcon = CreateTitleBarIcon();
+        DataContext = this;
 
-        _host.TrayIconService.RightButtonDown += OnTrayIconRightButtonDown;
-        _host.TrayIconService.RightButtonUp += OnTrayIconRightButtonUp;
+        _trayIconService.RightButtonDown += OnTrayIconRightButtonDown;
+        _trayIconService.RightButtonUp += OnTrayIconRightButtonUp;
 
         BuildNavigation();
         ConfigureWindowHeightFromNavigation();
@@ -153,6 +172,38 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         Title = title;
     }
 
+    private void OnThemeToggleClick(object? sender, RoutedEventArgs e)
+    {
+        string theme = ThemeManager.IsDarkTheme ? "Light" : "Dark";
+        ApplicationThemeOptions options = ApplicationState.Settings.ThemeOptions;
+        options.Theme = theme;
+        options.UseSystemTheme = false;
+        SettingManager.SaveApplicationConfigAsync();
+    }
+
+    private void OnTopmostClick(object? sender, RoutedEventArgs e)
+    {
+        Topmost = !Topmost;
+        TaskHelpers.PlayNotificationSoundAsync(NotificationSound.ActionCompleted);
+    }
+
+    private void OnMinimizeClick(object? sender, RoutedEventArgs e)
+    {
+        WindowState = Avalonia.Controls.WindowState.Minimized;
+    }
+
+    private void OnMaximizeRestoreClick(object? sender, RoutedEventArgs e)
+    {
+        WindowState = IsWindowMaximized
+            ? Avalonia.Controls.WindowState.Normal
+            : Avalonia.Controls.WindowState.Maximized;
+    }
+
+    private void OnCloseClick(object? sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
     public void ShowTrayMenu()
     {
         if (_trayMenuAnchor != null)
@@ -164,7 +215,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
         CloseActiveContextMenu();
 
-        System.Drawing.Point cursorPosition = FormsCursor.Position;
+        System.Drawing.Point cursorPosition = CaptureHelpers.GetCursorPosition();
         PixelPoint anchorPosition = new(cursorPosition.X, cursorPosition.Y);
         Window anchor = CreateTrayMenuAnchor(anchorPosition);
         _trayMenuAnchor = anchor;
@@ -183,7 +234,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 menu.Closed -= OnTrayMenuClosed;
                 CloseTrayMenuAnchor();
             }
-            else if (Program.Settings.TrayAutoExpandCaptureMenu && menu.Items.OfType<MenuItem>().FirstOrDefault() is MenuItem captureItem)
+            else if (ApplicationState.Settings.TrayAutoExpandCaptureMenu && menu.Items.OfType<MenuItem>().FirstOrDefault() is MenuItem captureItem)
             {
                 Dispatcher.UIThread.Post(captureItem.Open);
             }
@@ -307,20 +358,26 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void ConfigureWindowHeightFromNavigation()
     {
-        NavigationPanel.Measure(new Avalonia.Size(double.PositiveInfinity, double.PositiveInfinity));
-        double navigationHeight = Math.Ceiling(NavigationPanel.DesiredSize.Height);
+        Avalonia.Size availableSize = new(double.PositiveInfinity, double.PositiveInfinity);
+        NavigationPanel.Measure(availableSize);
+        TitleBar.Measure(availableSize);
 
-        if (navigationHeight <= 0 || double.IsNaN(navigationHeight) || double.IsInfinity(navigationHeight))
+        double navigationHeight = Math.Ceiling(NavigationPanel.DesiredSize.Height);
+        double titleBarHeight = Math.Ceiling(TitleBar.DesiredSize.Height);
+        double frameHeight = WindowFrame.BorderThickness.Top + WindowFrame.BorderThickness.Bottom;
+        double windowHeight = navigationHeight + titleBarHeight + frameHeight;
+
+        if (windowHeight <= 0 || double.IsNaN(windowHeight) || double.IsInfinity(windowHeight))
         {
             return;
         }
 
-        MinHeight = navigationHeight;
+        MinHeight = windowHeight;
 
-        DrawingSize savedSize = Program.Settings.MainFormSize;
-        if (!Program.Settings.RememberMainFormSize || savedSize.IsEmpty)
+        DrawingSize savedSize = ApplicationState.Settings.MainFormSize;
+        if (!ApplicationState.Settings.RememberMainFormSize || savedSize.IsEmpty)
         {
-            Height = navigationHeight;
+            Height = windowHeight;
         }
     }
 
@@ -338,7 +395,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         Grid.SetColumn(label, 2);
         grid.Children.Add(label);
 
-        if (section.CreateChildren != null)
+        if (section.CreateChildren != null || section.CreateCategories != null)
         {
             TextBlock chevron = CreateAccentMenuIcon(LucideIcons.chevron_right, 14);
             chevron.Margin = new Thickness(5, 0, 0, 0);
@@ -363,11 +420,281 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             return;
         }
 
-        if (section.CreateChildren != null)
+        if (section.CreateCategories != null)
+        {
+            Flyout flyout = BuildGridMenu(section.CreateCategories());
+            TryOpenGridMenu(flyout, button);
+        }
+        else if (section.CreateChildren != null)
         {
             ContextMenu menu = BuildContextMenu(section.CreateChildren());
             TryOpenContextMenu(menu, button, PlacementMode.RightEdgeAlignedTop);
         }
+    }
+
+    private Flyout BuildGridMenu(IEnumerable<MainMenuCategory> categories)
+    {
+        Flyout flyout = new()
+        {
+            Placement = PlacementMode.RightEdgeAlignedTop
+        };
+        flyout.FlyoutPresenterClasses.Add("tool-grid-flyout");
+        flyout.Content = BuildGridMenuContent(categories, entry => ExecuteGridMenuEntry(flyout, entry));
+        return flyout;
+    }
+
+    private static Control BuildGridMenuContent(IEnumerable<MainMenuCategory> categories, Action<MainMenuEntry> execute)
+    {
+        IReadOnlyList<MainMenuCategory> categoryList = categories.ToArray();
+        Grid root = new()
+        {
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left
+        };
+
+        Button editButton = new()
+        {
+            Classes = { "tool-grid-edit-button" },
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top
+        };
+        editButton.ZIndex = 1;
+        root.Children.Add(editButton);
+
+        StackPanel content = new()
+        {
+            Orientation = Avalonia.Layout.Orientation.Vertical,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch
+        };
+        root.Children.Add(content);
+
+        bool isEditing = false;
+
+        void RebuildContent()
+        {
+            editButton.Content = CreateGridMenuEditButtonContent(isEditing);
+            PopulateGridMenuCategories(content, categoryList, isEditing, execute);
+        }
+
+        editButton.Click += (_, _) =>
+        {
+            isEditing = !isEditing;
+            RebuildContent();
+        };
+
+        RebuildContent();
+        return root;
+    }
+
+    private static void PopulateGridMenuCategories(StackPanel content, IReadOnlyList<MainMenuCategory> categories,
+        bool isEditing, Action<MainMenuEntry> execute)
+    {
+        content.Children.Clear();
+
+        bool hasCategory = false;
+        foreach (MainMenuCategory category in categories)
+        {
+            IReadOnlyList<MainMenuEntry> entries = category.Entries
+                .Where(x => x.IsVisible && !x.IsSeparator && (isEditing || IsToolVisible(x)))
+                .ToArray();
+            if (entries.Count == 0)
+            {
+                continue;
+            }
+
+            if (hasCategory)
+            {
+                Border separator = new()
+                {
+                    Classes = { "tool-grid-category-separator" }
+                };
+                content.Children.Add(separator);
+            }
+
+            TextBlock categoryHeader = new()
+            {
+                Text = category.Header,
+                Classes = { "tool-grid-category-header" },
+                Margin = new Thickness(7, hasCategory ? 3 : 1, 7, 3)
+            };
+            content.Children.Add(categoryHeader);
+
+            UniformGrid itemGrid = new()
+            {
+                Columns = 3,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch
+            };
+
+            foreach (MainMenuEntry entry in entries)
+            {
+                if (isEditing)
+                {
+                    bool isVisible = IsToolVisible(entry);
+                    ToggleSwitch visibilitySwitch = new()
+                    {
+                        IsChecked = isVisible,
+                        IsHitTestVisible = false,
+                        Focusable = false,
+                        VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+                    };
+                    visibilitySwitch.Classes.Add("tool-grid-visibility-switch");
+                    visibilitySwitch.Resources["ToggleSwitchPreContentMargin"] = new GridLength(0);
+                    visibilitySwitch.Resources["ToggleSwitchPostContentMargin"] = new GridLength(0);
+
+                    ToggleButton visibilityButton = new()
+                    {
+                        Classes = { "tool-grid-button", "tool-grid-visibility-button" },
+                        Content = CreateGridMenuVisibilityContent(entry, visibilitySwitch),
+                        IsChecked = isVisible
+                    };
+                    visibilityButton.Click += (_, _) =>
+                    {
+                        bool showTool = visibilityButton.IsChecked == true;
+                        visibilitySwitch.IsChecked = showTool;
+                        SetToolVisibility(entry, showTool);
+                    };
+                    itemGrid.Children.Add(visibilityButton);
+                }
+                else
+                {
+                    Button button = new()
+                    {
+                        Classes = { "tool-grid-button" },
+                        Content = CreateGridMenuItemContent(entry),
+                        IsEnabled = entry.IsEnabled
+                    };
+                    button.Click += (_, _) => execute(entry);
+                    itemGrid.Children.Add(button);
+                }
+            }
+
+            content.Children.Add(itemGrid);
+            hasCategory = true;
+        }
+    }
+
+    private static Control CreateGridMenuEditButtonContent(bool isEditing)
+    {
+        StackPanel content = new()
+        {
+            Orientation = Avalonia.Layout.Orientation.Horizontal,
+            Spacing = 6
+        };
+        content.Children.Add(CreateAccentMenuIcon(isEditing ? LucideIcons.check : LucideIcons.pencil, 14));
+        content.Children.Add(new TextBlock
+        {
+            Text = isEditing ? Strings.MainMenuBuilder_FinishEditingTools : Strings.MainMenuBuilder_EditTools,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+        });
+        return content;
+    }
+
+    private static Control CreateGridMenuVisibilityContent(MainMenuEntry entry, ToggleSwitch visibilitySwitch)
+    {
+        StackPanel content = new()
+        {
+            Orientation = Avalonia.Layout.Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+        };
+        content.Children.Add(visibilitySwitch);
+        content.Children.Add(CreateGridMenuItemContent(entry));
+        return content;
+    }
+
+    private static bool IsToolVisible(MainMenuEntry entry)
+    {
+        if (string.IsNullOrEmpty(entry.Id))
+        {
+            return true;
+        }
+
+        List<string> hiddenTools = ApplicationState.Settings.HiddenTools ??= new List<string>();
+        return !hiddenTools.Any(x => string.Equals(x, entry.Id, StringComparison.Ordinal));
+    }
+
+    private static void SetToolVisibility(MainMenuEntry entry, bool isVisible)
+    {
+        if (string.IsNullOrEmpty(entry.Id))
+        {
+            return;
+        }
+
+        List<string> hiddenTools = ApplicationState.Settings.HiddenTools ??= new List<string>();
+        bool changed;
+
+        if (isVisible)
+        {
+            changed = hiddenTools.RemoveAll(x => string.Equals(x, entry.Id, StringComparison.Ordinal)) > 0;
+        }
+        else if (!hiddenTools.Any(x => string.Equals(x, entry.Id, StringComparison.Ordinal)))
+        {
+            hiddenTools.Add(entry.Id);
+            changed = true;
+        }
+        else
+        {
+            changed = false;
+        }
+
+        if (changed)
+        {
+            SettingManager.SaveApplicationConfigAsync();
+        }
+    }
+
+    private static Control CreateGridMenuItemContent(MainMenuEntry entry)
+    {
+        StackPanel content = new()
+        {
+            Orientation = Avalonia.Layout.Orientation.Horizontal,
+            Spacing = 8
+        };
+        TextBlock icon = CreateAccentMenuIcon(entry.Icon, 16);
+        icon.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+        content.Children.Add(icon);
+
+        TextBlock label = new()
+        {
+            Text = entry.Header,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            MaxLines = 1,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+        };
+        content.Children.Add(label);
+        return content;
+    }
+
+    private void ExecuteGridMenuEntry(Flyout flyout, MainMenuEntry entry)
+    {
+        flyout.Hide();
+        QueueGridMenuEntry(entry);
+    }
+
+    private void ExecuteGridMenuEntry(ContextMenu menu, MainMenuEntry entry)
+    {
+        menu.Close();
+        QueueGridMenuEntry(entry);
+    }
+
+    private void QueueGridMenuEntry(MainMenuEntry entry)
+    {
+        if (entry.ExecuteAsync == null)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(async () =>
+        {
+            try
+            {
+                await entry.ExecuteAsync();
+                RefreshMenus();
+            }
+            catch (Exception ex)
+            {
+                DebugHelper.WriteException(ex);
+            }
+        }, DispatcherPriority.Background);
     }
 
     private ContextMenu BuildContextMenu(IEnumerable<MainMenuEntry> entries)
@@ -384,7 +711,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private bool TryOpenContextMenu(ContextMenu menu, Control placementTarget, PlacementMode placement)
     {
-        if (_activeContextMenu != null)
+        if (_activeContextMenu != null || _activeGridMenu != null)
         {
             return false;
         }
@@ -406,6 +733,34 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
 
+    private bool TryOpenGridMenu(Flyout flyout, Control placementTarget)
+    {
+        if (_activeContextMenu != null || _activeGridMenu != null)
+        {
+            return false;
+        }
+
+        _activeGridMenu = flyout;
+        flyout.Closed += (_, _) =>
+        {
+            if (ReferenceEquals(_activeGridMenu, flyout))
+            {
+                _activeGridMenu = null;
+            }
+        };
+
+        try
+        {
+            flyout.ShowAt(placementTarget);
+            return true;
+        }
+        catch
+        {
+            _activeGridMenu = null;
+            throw;
+        }
+    }
+
     private void OnActiveContextMenuClosed(object? sender, RoutedEventArgs e)
     {
         if (sender is ContextMenu menu)
@@ -421,6 +776,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void CloseActiveContextMenu()
     {
+        if (_activeGridMenu != null)
+        {
+            Flyout flyout = _activeGridMenu;
+            _activeGridMenu = null;
+            flyout.Hide();
+        }
+
         if (_activeContextMenu == null)
         {
             return;
@@ -446,7 +808,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
             MenuItem item = new()
             {
-                Header = entry.Header,
+                Header = CreateMenuHeader(entry),
+                Tag = entry,
                 InputGesture = entry.InputGesture,
                 IsEnabled = entry.IsEnabled,
                 IsChecked = entry.IsChecked,
@@ -459,6 +822,10 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 }
             };
             item.Classes.Add("compact-menu-item");
+            if (entry.BoldWhenChecked)
+            {
+                item.Classes.Add("bold-when-checked");
+            }
 
             if (entry.BitmapIcon is { Length: > 0 })
             {
@@ -469,15 +836,43 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 item.Icon = CreateAccentMenuIcon(entry.Icon, 16);
             }
 
-            if (entry.CreateChildren != null)
+            if (entry.CreateCategories != null)
+            {
+                AddLazyGridSubmenu(item, entry.CreateCategories, menu);
+            }
+            else if (entry.CreateChildren != null)
             {
                 AddLazySubmenu(item, entry.CreateChildren, menu);
+
+                if (entry.ExecuteAsync != null)
+                {
+                    item.AddHandler(PointerPressedEvent, (_, e) =>
+                    {
+                        PointerPoint point = e.GetCurrentPoint(item);
+                        if (point.Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed &&
+                            new Rect(item.Bounds.Size).Contains(point.Position))
+                        {
+                            item.IsChecked = item.ToggleType switch
+                            {
+                                MenuItemToggleType.CheckBox => !item.IsChecked,
+                                MenuItemToggleType.Radio => true,
+                                _ => item.IsChecked
+                            };
+                            item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent, item));
+                        }
+                    }, RoutingStrategies.Tunnel, handledEventsToo: true);
+                }
             }
 
             if (entry.ExecuteAsync != null)
             {
-                item.Click += (_, _) =>
+                item.Click += (_, e) =>
                 {
+                    if (!ReferenceEquals(e.Source, item))
+                    {
+                        return;
+                    }
+
                     if (!entry.StaysOpenOnClick)
                     {
                         // Modal WinForms dialogs and capture overlays cannot be opened while
@@ -491,7 +886,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                         try
                         {
                             await entry.ExecuteAsync();
-                            if (!entry.StaysOpenOnClick)
+                            if (entry.StaysOpenOnClick)
+                            {
+                                RefreshMenuHeaders(menu.Items);
+                            }
+                            else
                             {
                                 RefreshMenus();
                             }
@@ -506,6 +905,83 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
             yield return item;
         }
+    }
+
+    private void RefreshMenuHeaders(IEnumerable<object?> items)
+    {
+        foreach (MenuItem item in items.OfType<MenuItem>())
+        {
+            if (item.Tag is MainMenuEntry entry)
+            {
+                item.Header = CreateMenuHeader(entry);
+            }
+
+            RefreshMenuHeaders(item.Items);
+        }
+    }
+
+    private object CreateMenuHeader(MainMenuEntry entry)
+    {
+        string header = entry.Header;
+        string? accentText = entry.AccentText;
+        if (string.IsNullOrEmpty(accentText))
+        {
+            return header;
+        }
+
+        int accentIndex = header.IndexOf(accentText, StringComparison.CurrentCulture);
+        if (accentIndex < 0)
+        {
+            return header;
+        }
+
+        Run accentRun = new()
+        {
+            Text = accentText,
+            Foreground = this.FindResource("ShareX.Brush.Accent.Start") as IBrush
+        };
+        InlineCollection inlines = new();
+        inlines.Add(header[..accentIndex]);
+        inlines.Add(accentRun);
+        inlines.Add(header[(accentIndex + accentText.Length)..]);
+
+        return new TextBlock
+        {
+            Inlines = inlines,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+        };
+    }
+
+    private void AddLazyGridSubmenu(MenuItem item, Func<IReadOnlyList<MainMenuCategory>> createCategories, ContextMenu menu)
+    {
+        item.Resources["FlyoutThemeMaxWidth"] = double.PositiveInfinity;
+        item.Resources["MenuFlyoutPresenterThemePadding"] = new Thickness(10);
+        item.Resources["MenuFlyoutScrollerMargin"] = new Thickness(0);
+
+        // Keep the submenu indicator while deferring the grid construction until it is opened.
+        item.Items.Add(new MenuItem { IsVisible = false });
+
+        bool isPopulated = false;
+        item.SubmenuOpened += (_, e) =>
+        {
+            if (isPopulated || !ReferenceEquals(e.Source, item))
+            {
+                return;
+            }
+
+            item.Items.Clear();
+
+            MenuItem gridHost = new()
+            {
+                Header = BuildGridMenuContent(createCategories(), entry => ExecuteGridMenuEntry(menu, entry)),
+                Focusable = false,
+                StaysOpenOnClick = true
+            };
+            gridHost.Classes.Add("tool-grid-submenu-host");
+            item.Items.Add(gridHost);
+
+            isPopulated = true;
+        };
     }
 
     private void AddLazySubmenu(MenuItem item, Func<IReadOnlyList<MainMenuEntry>> createChildren, ContextMenu menu)
@@ -619,8 +1095,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         try
         {
             // WorkerTask owns and disposes the ImageReady bitmap as soon as the event returns.
-            // Give the asynchronous Avalonia decoder its own image to avoid sharing GDI+ state.
-            imageCopy = (DrawingBitmap)image.Clone();
+            // Give the asynchronous Avalonia decoder its own image to avoid sharing mutable bitmap pixels.
+            imageCopy = (DrawingBitmap)image.Copy();
         }
         catch (Exception e)
         {
@@ -652,7 +1128,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private void OnTaskCollectionChanged() => Dispatcher.UIThread.Post(NotifyTaskCollectionChanged);
 
     private void OnThemeChanged(object? sender, Avalonia.Styling.ThemeVariant theme) =>
-        Dispatcher.UIThread.Post(() => RequestedThemeVariant = theme);
+        Dispatcher.UIThread.Post(() =>
+        {
+            RequestedThemeVariant = theme;
+            OnPropertyChanged(nameof(IsDarkTheme));
+            OnPropertyChanged(nameof(ThemeToggleText));
+        });
 
     private void NotifyTaskCollectionChanged()
     {
@@ -663,12 +1144,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         HotkeyTips.Clear();
 
-        if (Program.HotkeysConfig?.Hotkeys == null)
+        if (ApplicationState.HotkeysConfigOrNull?.Hotkeys == null)
         {
             return;
         }
 
-        foreach (HotkeySettings hotkey in Program.HotkeysConfig.Hotkeys.Where(x => x.HotkeyInfo.IsValidHotkey))
+        foreach (HotkeySettings hotkey in ApplicationState.HotkeysConfig.Hotkeys.Where(x => x.HotkeyInfo.IsValidHotkey))
         {
             HotkeyTips.Add(new HotkeyTipViewModel(hotkey));
         }
@@ -814,7 +1295,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
 
         Point position = e.GetPosition(control);
-        DrawingSize dragSize = System.Windows.Forms.SystemInformation.DragSize;
+        Size dragSize = Application.Current?.PlatformSettings?.GetTapSize(PointerType.Mouse) ?? new Size(4, 4);
         if (Math.Abs(position.X - _thumbnailDragStart.X) < dragSize.Width / 2d &&
             Math.Abs(position.Y - _thumbnailDragStart.Y) < dragSize.Height / 2d)
         {
@@ -866,9 +1347,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
             if (!wasDragging &&
                 !_suppressThumbnailClickAction &&
-                Program.Settings.ThumbnailClickAction != ThumbnailViewClickAction.Select)
+                ApplicationState.Settings.ThumbnailClickAction != ThumbnailViewClickAction.Select)
             {
-                ExecuteThumbnailClick(item, Program.Settings.ThumbnailClickAction);
+                ExecuteThumbnailClick(item, ApplicationState.Settings.ThumbnailClickAction);
             }
 
             e.Handled = true;
@@ -943,7 +1424,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         if (sender is Control { DataContext: ThumbnailItemViewModel item } &&
             !_suppressThumbnailClickAction &&
-            Program.Settings.ThumbnailClickAction == ThumbnailViewClickAction.Select)
+            ApplicationState.Settings.ThumbnailClickAction == ThumbnailViewClickAction.Select)
         {
             ExecuteThumbnailClick(item, ThumbnailViewClickAction.OpenFile);
             e.Handled = true;
@@ -1010,6 +1491,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         UploadInfoStatus[] statuses = _uploadInfoManager.SelectedItems ?? Array.Empty<UploadInfoStatus>();
         bool hasSelection = selected != null;
         bool isWorking = selectedTasks.Any(x => x.IsWorking);
+        bool canDeleteRemotely = selectedModels.Length == 1 && !isWorking && CanDeleteAmazonS3Object(selected);
 
         List<MainMenuEntry> entries = new()
         {
@@ -1027,6 +1509,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             Item(Strings.MainWindow_EditImage, LucideIcons.image, _uploadInfoManager.EditImage,
                 hasSelection && !isWorking && selected!.IsImageFile,
                 new KeyGesture(Key.E, KeyModifiers.Control)),
+            Item(Strings.MainWindow_ResizeImage, LucideIcons.maximize_2, _uploadInfoManager.ResizeImages,
+                hasSelection && !isWorking && statuses.Any(x => x.IsImageFile)),
+            Item(Strings.MainWindow_TrimVideo, LucideIcons.scissors, _uploadInfoManager.TrimVideo,
+                hasSelection && !isWorking && selected!.IsVideoFile),
+            Item(Strings.MainWindow_TrimAnimatedGif, LucideIcons.scissors, _uploadInfoManager.TrimAnimatedGif,
+                hasSelection && !isWorking && selected!.IsFileExist &&
+                string.Equals(Path.GetExtension(selected.Info.FilePath), ".gif", StringComparison.OrdinalIgnoreCase)),
             Item(Strings.MainWindow_BeautifyImage, LucideIcons.sparkles, _uploadInfoManager.BeautifyImage,
                 hasSelection && !isWorking && selected!.IsImageFile),
             Item(Strings.MainWindow_AddImageEffects, LucideIcons.wand_sparkles, _uploadInfoManager.AddImageEffects,
@@ -1041,6 +1530,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             Item(Strings.MainWindow_DeleteSelectedFile, LucideIcons.file_x, DeleteSelectedFiles,
                 hasSelection && !isWorking && selected!.IsFileExist,
                 new KeyGesture(Key.Delete, KeyModifiers.Shift)),
+            Item(Strings.MainWindow_DeleteItemRemotely, LucideIcons.cloud_off, DeleteSelectedItemRemotelyAsync,
+                canDeleteRemotely),
             Submenu(Strings.MainWindow_ShortenSelectedUrl, LucideIcons.link_2, BuildUrlShortenerMenu,
                 !SystemOptions.DisableUpload && hasSelection && !isWorking && selected!.IsURLExist),
             Submenu(Strings.MainWindow_ShareSelectedUrl, LucideIcons.share_2, BuildUrlSharingMenu,
@@ -1120,10 +1611,10 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             Item(Strings.MainWindow_Folder, LucideIcons.folder, _uploadInfoManager.CopyFolder, statuses.Any(x => x.IsFilePathValid))
         };
 
-        if (Program.Settings.ClipboardContentFormats?.Count > 0)
+        if (ApplicationState.Settings.ClipboardContentFormats?.Count > 0)
         {
             entries.Add(MainMenuEntry.Separator());
-            foreach (ClipboardFormat format in Program.Settings.ClipboardContentFormats)
+            foreach (ClipboardFormat format in ApplicationState.Settings.ClipboardContentFormats)
             {
                 ClipboardFormat selectedFormat = format;
                 entries.Add(Item(selectedFormat.Description, LucideIcons.clipboard_copy,
@@ -1136,12 +1627,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private static bool HasExternalActions(string filePath) =>
         !string.IsNullOrEmpty(filePath) && File.Exists(filePath) &&
-        Program.DefaultTaskSettings.ExternalPrograms.Any(x => !string.IsNullOrEmpty(x.Name) && x.CheckExtension(filePath));
+        ApplicationState.DefaultTaskSettings.ExternalPrograms.Any(x => !string.IsNullOrEmpty(x.Name) && x.CheckExtension(filePath));
 
     private static IReadOnlyList<MainMenuEntry> BuildExternalActionsMenu(UploadInfoStatus? selected)
     {
         string filePath = selected?.Info.FilePath ?? string.Empty;
-        return Program.DefaultTaskSettings.ExternalPrograms
+        return ApplicationState.DefaultTaskSettings.ExternalPrograms
             .Where(x => !string.IsNullOrEmpty(x.Name) && x.CheckExtension(filePath))
             .Select(action => Item(action.Name.Truncate(50, "..."), LucideIcons.play,
                 async () => await action.RunAsync(filePath))).ToArray();
@@ -1157,8 +1648,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private IReadOnlyList<MainMenuEntry> BuildCombineImagesMenu() => new List<MainMenuEntry>
     {
-            Item(Strings.MainWindow_Horizontally, LucideIcons.rows_2, () => _uploadInfoManager.CombineImages(FormsOrientation.Horizontal)),
-            Item(Strings.MainWindow_Vertically, LucideIcons.columns_2, () => _uploadInfoManager.CombineImages(FormsOrientation.Vertical))
+            Item(Strings.MainWindow_Horizontally, LucideIcons.rows_2, () => _uploadInfoManager.CombineImages(ImageOrientation.Horizontal)),
+            Item(Strings.MainWindow_Vertically, LucideIcons.columns_2, () => _uploadInfoManager.CombineImages(ImageOrientation.Vertical))
     };
 
     private void RemoveSelectedTasks()
@@ -1178,6 +1669,58 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             _uploadInfoManager.DeleteFiles();
             RemoveSelectedTasks();
         }
+    }
+
+    private static bool CanDeleteAmazonS3Object(UploadInfoStatus? selected)
+    {
+        if (selected?.Info is not TaskInfo info ||
+            string.IsNullOrEmpty(info.Result?.URL) ||
+            !info.IsUploadJob ||
+            info.UploadDestination != EDataType.File ||
+            info.TaskSettings.GetFileDestinationByDataType(info.DataType) != FileDestination.AmazonS3)
+        {
+            return false;
+        }
+
+        return ApplicationState.UploadersConfigOrNull != null &&
+            UploadersConfigValidator.Validate(FileDestination.AmazonS3, ApplicationState.UploadersConfig);
+    }
+
+    private async Task DeleteSelectedItemRemotelyAsync()
+    {
+        UploadInfoStatus? selected = _uploadInfoManager.SelectedItem;
+
+        if (!CanDeleteAmazonS3Object(selected))
+        {
+            return;
+        }
+
+        if (MessageBox.Show(Strings.MainWindow_DeleteItemRemotelyConfirmation,
+            "ShareX - " + Strings.MainWindow_RemoteDeletion,
+            MessageBoxButtons.YesNo) != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        bool isSuccess = false;
+
+        try
+        {
+            AmazonS3 uploader = new AmazonS3(ApplicationState.UploadersConfig.AmazonS3Settings);
+
+            if (uploader.TryGetObjectKey(selected!.Info.Result.URL, out string objectKey))
+            {
+                isSuccess = await uploader.DeleteObjectAsync(objectKey);
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.WriteException(ex);
+        }
+
+        TaskHelpers.ShowNotificationTip(
+            isSuccess ? Strings.MainWindow_RemoteDeleteSucceeded : Strings.MainWindow_RemoteDeleteFailed,
+            "ShareX - " + Strings.MainWindow_RemoteDeletion);
     }
 
     private void ClearTasks()
@@ -1322,24 +1865,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             return;
         }
 
-        FormsDataObject dataObject = new();
-        string[] files = e.DataTransfer.TryGetFiles()?
-            .Select(x => x.TryGetLocalPath())
-            .Where(x => !string.IsNullOrEmpty(x))
-            .Cast<string>().ToArray() ?? Array.Empty<string>();
-
-        if (files.Length > 0)
-        {
-            dataObject.SetData(FormsDataFormats.FileDrop, files);
-        }
-
-        string? text = e.DataTransfer.TryGetText();
-        if (!string.IsNullOrEmpty(text))
-        {
-            dataObject.SetText(text);
-        }
-
-        UploadManager.DragDropUpload(dataObject);
+        UploadManager.DragDropUpload(e.DataTransfer);
         e.Handled = true;
     }
 
@@ -1378,7 +1904,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
         if (sender is Border { Tag: string orientationName } &&
             CanCombineThumbnails(source, target) &&
-            Enum.TryParse(orientationName, out FormsOrientation orientation))
+            Enum.TryParse(orientationName, out ImageOrientation orientation))
         {
             string sourcePath = source!.Task.Info.FilePath;
             string targetPath = target!.Task.Info.FilePath;
@@ -1499,16 +2025,16 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        if (!_allowClose && Program.Settings.ShowTray)
+        if (!_allowClose && ApplicationState.Settings.ShowTray)
         {
             e.Cancel = true;
             HideToTray();
             SettingManager.SaveAllSettingsAsync();
 
-            if (Program.Settings.FirstTimeMinimizeToTray)
+            if (ApplicationState.Settings.FirstTimeMinimizeToTray)
             {
                 TaskHelpers.ShowNotificationTip(Strings.ShareXIsMinimizedToTheSystemTray, "ShareX", 8000);
-                Program.Settings.FirstTimeMinimizeToTray = false;
+                ApplicationState.Settings.FirstTimeMinimizeToTray = false;
             }
 
             return;
@@ -1517,7 +2043,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         if (!_allowClose)
         {
             e.Cancel = true;
-            Dispatcher.UIThread.Post(_host.ForceClose);
+            Dispatcher.UIThread.Post(ApplicationLifecycle.ForceClose);
             return;
         }
 
@@ -1542,9 +2068,10 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         ResetThumbnailDrag();
         CloseActiveContextMenu();
         CloseTrayMenuAnchor();
-        _host.TrayIconService.RightButtonDown -= OnTrayIconRightButtonDown;
-        _host.TrayIconService.RightButtonUp -= OnTrayIconRightButtonUp;
-        _host.TrayIconService.Visible = false;
+        _trayIconService.RightButtonDown -= OnTrayIconRightButtonDown;
+        _trayIconService.RightButtonUp -= OnTrayIconRightButtonUp;
+        _trayIconService.Visible = false;
+        TitleBarIcon.Dispose();
 
         foreach (ThumbnailItemViewModel item in ThumbnailItems)
         {
@@ -1557,15 +2084,15 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void RestoreWindowBounds()
     {
-        DrawingSize savedSize = Program.Settings.MainFormSize;
-        if (Program.Settings.RememberMainFormSize && !savedSize.IsEmpty)
+        DrawingSize savedSize = ApplicationState.Settings.MainFormSize;
+        if (ApplicationState.Settings.RememberMainFormSize && !savedSize.IsEmpty)
         {
             Width = Math.Max(MinWidth, savedSize.Width);
             Height = Math.Max(MinHeight, savedSize.Height);
         }
 
-        DrawingPoint savedPosition = Program.Settings.MainFormPosition;
-        if (Program.Settings.RememberMainFormPosition && !savedPosition.IsEmpty)
+        DrawingPoint savedPosition = ApplicationState.Settings.MainFormPosition;
+        if (ApplicationState.Settings.RememberMainFormPosition && !savedPosition.IsEmpty)
         {
             Position = new PixelPoint(savedPosition.X, savedPosition.Y);
             WindowStartupLocation = WindowStartupLocation.Manual;
@@ -1579,16 +2106,33 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             return;
         }
 
-        Program.Settings.MainFormPosition = new DrawingPoint(Position.X, Position.Y);
-        Program.Settings.MainFormSize = new DrawingSize((int)Math.Round(ClientSize.Width), (int)Math.Round(ClientSize.Height));
+        ApplicationState.Settings.MainFormPosition = new DrawingPoint(Position.X, Position.Y);
+        ApplicationState.Settings.MainFormSize = new DrawingSize((int)Math.Round(ClientSize.Width), (int)Math.Round(ClientSize.Height));
     }
 
     private static WindowIcon CreateWindowIcon()
     {
-        using MemoryStream stream = new();
-        ShareXResources.Icon.Save(stream);
-        stream.Position = 0;
+        using MemoryStream stream = new(ShareXResources.IconBytes, writable: false);
         return new WindowIcon(stream);
+    }
+
+    private static AvaloniaBitmap CreateTitleBarIcon()
+    {
+        using DrawingBitmap bitmap = SkiaImageHelpers.ByteArrayToBitmap(ShareXResources.IconBytes);
+        using MemoryStream stream = new();
+        bitmap.Save(stream, SkiaSharp.SKEncodedImageFormat.Png);
+        stream.Position = 0;
+        return new AvaloniaBitmap(stream);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == WindowStateProperty)
+        {
+            OnPropertyChanged(nameof(IsWindowMaximized));
+        }
     }
 
     public new event PropertyChangedEventHandler? PropertyChanged;

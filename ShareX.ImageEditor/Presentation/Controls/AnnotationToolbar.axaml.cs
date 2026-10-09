@@ -43,7 +43,17 @@ public partial class AnnotationToolbar : UserControl
     public static readonly StyledProperty<bool> ShowEditingActionsProperty =
         AvaloniaProperty.Register<AnnotationToolbar, bool>(nameof(ShowEditingActions), true);
 
+    public static readonly StyledProperty<bool> ShowToolOptionsProperty =
+        AvaloniaProperty.Register<AnnotationToolbar, bool>(nameof(ShowToolOptions), true);
+
+    public static readonly StyledProperty<Thickness> MainToolbarBorderThicknessProperty =
+        AvaloniaProperty.Register<AnnotationToolbar, Thickness>(nameof(MainToolbarBorderThickness), new Thickness(1));
+
+    public static readonly StyledProperty<CornerRadius> MainToolbarCornerRadiusProperty =
+        AvaloniaProperty.Register<AnnotationToolbar, CornerRadius>(nameof(MainToolbarCornerRadius), new CornerRadius(0, 0, 4, 4));
+
     private IAnnotationToolbarAdapter? _toolbarAdapter;
+    private ContentControl _mainToolbarLeadingContentHost = null!;
 
     public event EventHandler<IBrush>? ColorChanged;
     public event EventHandler<IBrush>? FillColorChanged;
@@ -68,6 +78,7 @@ public partial class AnnotationToolbar : UserControl
     public AnnotationToolbar()
     {
         InitializeComponent();
+        _mainToolbarLeadingContentHost = this.FindControl<ContentControl>("MainToolbarLeadingContentHost")!;
         WireCompatibilityEvents();
         DataContextChanged += OnDataContextChanged;
         Loaded += OnLoaded;
@@ -78,6 +89,34 @@ public partial class AnnotationToolbar : UserControl
     {
         get => GetValue(ShowEditingActionsProperty);
         set => SetValue(ShowEditingActionsProperty, value);
+    }
+
+    public bool ShowToolOptions
+    {
+        get => GetValue(ShowToolOptionsProperty);
+        set => SetValue(ShowToolOptionsProperty, value);
+    }
+
+    public Thickness MainToolbarBorderThickness
+    {
+        get => GetValue(MainToolbarBorderThicknessProperty);
+        set => SetValue(MainToolbarBorderThicknessProperty, value);
+    }
+
+    public CornerRadius MainToolbarCornerRadius
+    {
+        get => GetValue(MainToolbarCornerRadiusProperty);
+        set => SetValue(MainToolbarCornerRadiusProperty, value);
+    }
+
+    public Control? MainToolbarLeadingContent
+    {
+        get => _mainToolbarLeadingContentHost.Content as Control;
+        set
+        {
+            _mainToolbarLeadingContentHost.Content = value;
+            _mainToolbarLeadingContentHost.IsVisible = value != null;
+        }
     }
 
     public void OpenFileMenu()
@@ -273,16 +312,6 @@ public partial class AnnotationToolbar : UserControl
 
         FavoriteEffectsMenuRequested?.Invoke(this, control);
         e.Handled = true;
-    }
-
-    private void OnOpenOptionsClick(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is IAnnotationToolbarAdapter toolbar &&
-            toolbar.OpenOptionsPanelCommand.CanExecute(null))
-        {
-            toolbar.OpenOptionsPanelCommand.Execute(null);
-            e.Handled = true;
-        }
     }
 
     private void OnTextBoldClick(object? sender, RoutedEventArgs e)

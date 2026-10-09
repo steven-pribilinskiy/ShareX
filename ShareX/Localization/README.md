@@ -6,10 +6,10 @@ All translatable strings in the ShareX project use the shared `Strings.resx` res
 
 | Area | Resource prefixes | Source files | Keys | Status |
 | --- | --- | ---: | ---: | --- |
-| Main window | `MainWindow_`, `MainMenuBuilder_`, `ThumbnailItemViewModel_` | 4 | 142 | Complete |
+| Main window | `MainWindow_`, `MainMenuBuilder_`, `ThumbnailItemViewModel_` | 4 | 139 | Complete |
 | Application settings | `ApplicationSettingsWindow_` | 3 | 174 | Complete |
 | Hotkey settings | `HotkeySettingsWindow_` | 3 | 23 | Complete |
-| Task settings | `TaskSettingsWindow_` | 4 | 247 | Complete |
+| Task settings | `TaskSettingsWindow_` | 4 | 244 | Complete |
 | Drag and drop upload | `DragDropUploadWindow_` | 2 | 2 | Complete |
 | Clipboard upload | `ClipboardUploadWindow_` | 2 | 8 | Complete |
 | Notification | None (content supplied dynamically) | 4 | 0 | Reviewed |
@@ -17,8 +17,6 @@ All translatable strings in the ShareX project use the shared `Strings.resx` res
 | Large file upload warning | `LargeFileUploadWarningWindow_` | 2 | 5 | Complete |
 | Multi-upload confirmation | `MultiUploadConfirmationWindow_` | 2 | 5 | Complete |
 | Debug log | `DebugLogWindow_` | 2 | 9 | Complete |
-| First-time configuration | `FirstTimeConfigWindow_` | 2 | 11 | Complete |
-| Image editor selector | `ImageEditorSelectorWindow_` | 2 | 9 | Complete |
 | Shorten URL | `ShortenURLWindow_` | 2 | 6 | Complete |
 | URL upload | `URLUploadWindow_` | 2 | 7 | Complete |
 | Before upload | `BeforeUploadWindow_` | 2 | 10 | Complete |
@@ -33,11 +31,13 @@ All translatable strings in the ShareX project use the shared `Strings.resx` res
 | About | `AboutWindow_` | 2 | 15 | Complete |
 | Core runtime messages | `TaskHelpers_`, `SettingManager_`, `WorkerTask_`, `TaskManager_` | 4 | 18 | Complete |
 
-The repository-level `ValidateTranslations.ps1` verifies that:
+The repository-level `Scripts/ValidateTranslations.ps1` verifies that:
 
 - every supported language has a catalog in every localized project;
 - every localized catalog has the same entry count and keys as `Strings.resx`;
 - values are non-empty and format placeholders match the default value;
+- localized values do not match the English source after case, spacing, and punctuation normalization unless the resource/culture pair is explicitly reviewed in `Scripts/TranslationEnglishAllowlist.txt`;
+- non-Latin catalogs do not contain unreviewed English-only phrases in place of their expected script;
 - catalogs use valid UTF-8 and CRLF formatting without mojibake;
 - generated designers and source references agree with the catalogs;
 - Avalonia views contain no remaining user-visible literal text.
@@ -45,12 +45,21 @@ The repository-level `ValidateTranslations.ps1` verifies that:
 Run it from the repository root:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File ValidateTranslations.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts\ValidateTranslations.ps1
 ```
 
 ## Localizing another area
 
-1. Add directly scoped keys to `Strings.resx`, such as `AboutWindow_Title`.
-2. Add translated values to every `Strings.<culture>.resx` file.
-3. Use direct `Strings.<key>` references in AXAML and C#.
-4. Run `ValidateTranslations.ps1` and build ShareX.
+Add directly scoped keys to `Strings.resx`, such as `AboutWindow_Title`, and use direct `Strings.<key>` references in AXAML and C#. Keep the corresponding `Strings.Designer.cs` accessors up to date.
+
+Use the reusable batch helper with PowerShell 7.2 or newer to translate a particular project and resource prefix:
+
+```powershell
+pwsh -File Scripts/Resx.ps1 export -Project ShareX -Prefix AboutWindow_ -Path artifacts/about-translations.json
+pwsh -File Scripts/Resx.ps1 import -Path artifacts/about-translations.json
+pwsh -File Scripts/Resx.ps1 check -Project ShareX -Prefix AboutWindow_
+```
+
+Fill the exported JSON's `translations` values before importing. Missing values start as null; null cells remain pending. The helper discovers supported catalog cultures, suggests matching existing translations, checks placeholders and stale snapshots, and only writes changed catalogs. Use `find -Text 'Pause' -Culture tr,fr` for compact terminology lookup, `-IncludeExisting` when revising existing wording, or `import -WhatIf` for a preview. Batches default to at most 40 keys and can be split by `-Key`, `-Prefix`, or `-Culture`.
+
+The repository skill at `.agents/skills/sharex-resx/SKILL.md` documents the workflow for AI agents. Run `Scripts/ValidateTranslations.ps1` once after completing the requested translations and build ShareX when source or designer references changed. Test changes to the helper with `pwsh -File Scripts/Test-ResxTools.ps1`.

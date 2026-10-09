@@ -169,11 +169,11 @@ namespace ShareX.HelpersLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static byte[] Crosshair {
+        internal static byte[] ShareX_Icon {
             get {
-                object obj = ResourceManager.GetObject("Crosshair", resourceCulture);
+                object obj = ResourceManager.GetObject("ShareX_Icon", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -181,30 +181,20 @@ namespace ShareX.HelpersLib.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon ShareX_Icon {
-            get {
-                object obj = ResourceManager.GetObject("ShareX_Icon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon ShareX_Icon_White {
+        internal static byte[] ShareX_Icon_White {
             get {
                 object obj = ResourceManager.GetObject("ShareX_Icon_White", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ((byte[])(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized resource of type byte[].
         /// </summary>
-        internal static System.Drawing.Bitmap ShareX_Logo {
+        internal static byte[] ShareX_Logo {
             get {
                 object obj = ResourceManager.GetObject("ShareX_Logo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((byte[])(obj));
             }
         }
     }

@@ -11,6 +11,8 @@ namespace ShareX.HelpersLib.Localization {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
+        public static string HotkeyType_MouseHighlighter => ResourceManager.GetString("HotkeyType_MouseHighlighter", resourceCulture);
+
         private static global::System.Resources.ResourceManager resourceMan;
         private static global::System.Globalization.CultureInfo resourceCulture;
 
@@ -227,6 +229,12 @@ namespace ShareX.HelpersLib.Localization {
         public static string DownloaderWindow_Download {
             get { return ResourceManager.GetString("DownloaderWindow_Download", resourceCulture); }
         }
+        public static string DownloaderWindow_InvalidSignatureTitle {
+            get { return ResourceManager.GetString("DownloaderWindow_InvalidSignatureTitle", resourceCulture); }
+        }
+        public static string DownloaderWindow_InvalidSignatureWarning {
+            get { return ResourceManager.GetString("DownloaderWindow_InvalidSignatureWarning", resourceCulture); }
+        }
         public static string UpdateMessageWindow_View_changelog {
             get { return ResourceManager.GetString("UpdateMessageWindow_View_changelog", resourceCulture); }
         }
@@ -398,18 +406,6 @@ namespace ShareX.HelpersLib.Localization {
         public static string ImageHelpers_Image_files {
             get { return ResourceManager.GetString("ImageHelpers_Image_files", resourceCulture); }
         }
-        public static string CssFileNameEditor_Cascading_Style_Sheets {
-            get { return ResourceManager.GetString("CssFileNameEditor_Cascading_Style_Sheets", resourceCulture); }
-        }
-        public static string JsonFileNameEditor_JavaScript_Object_Notation_files {
-            get { return ResourceManager.GetString("JsonFileNameEditor_JavaScript_Object_Notation_files", resourceCulture); }
-        }
-        public static string WavFileNameEditor_Sound_file {
-            get { return ResourceManager.GetString("WavFileNameEditor_Sound_file", resourceCulture); }
-        }
-        public static string ExeFileNameEditor_Applications {
-            get { return ResourceManager.GetString("ExeFileNameEditor_Applications", resourceCulture); }
-        }
         public static string AppVeyorUpdateChecker_Latest_build_unsuccessful {
             get { return ResourceManager.GetString("AppVeyorUpdateChecker_Latest_build_unsuccessful", resourceCulture); }
         }
@@ -536,17 +532,11 @@ namespace ShareX.HelpersLib.Localization {
         public static string CMYK_ToString_Cyan___0_0_0____Magenta___1_0_0____Yellow___2_0_0____Key___3_0_0__ {
             get { return ResourceManager.GetString("CMYK_ToString_Cyan___0_0_0____Magenta___1_0_0____Yellow___2_0_0____Key___3_0_0__", resourceCulture); }
         }
-        public static string CodeMenu_Create_Close {
-            get { return ResourceManager.GetString("CodeMenu_Create_Close", resourceCulture); }
-        }
         public static string CodeMenuEntryFilename_RandomAdjective {
             get { return ResourceManager.GetString("CodeMenuEntryFilename_RandomAdjective", resourceCulture); }
         }
         public static string CodeMenuEntryFilename_RandomAnimal {
             get { return ResourceManager.GetString("CodeMenuEntryFilename_RandomAnimal", resourceCulture); }
-        }
-        public static string CssFileNameEditor_EditValue_Browse_for_a_Cascading_Style_Sheet___ {
-            get { return ResourceManager.GetString("CssFileNameEditor_EditValue_Browse_for_a_Cascading_Style_Sheet___", resourceCulture); }
         }
         public static string CustomUploaderDestinationType_FileUploader {
             get { return ResourceManager.GetString("CustomUploaderDestinationType_FileUploader", resourceCulture); }
@@ -574,9 +564,6 @@ namespace ShareX.HelpersLib.Localization {
         }
         public static string CutOutEffectType_ZigZag {
             get { return ResourceManager.GetString("CutOutEffectType_ZigZag", resourceCulture); }
-        }
-        public static string DirectoryNameEditor_EditValue_Browse_for_a_folder___ {
-            get { return ResourceManager.GetString("DirectoryNameEditor_EditValue_Browse_for_a_folder___", resourceCulture); }
         }
         public static string DownloaderForm_ChangeStatus_Status___0_ {
             get { return ResourceManager.GetString("DownloaderForm_ChangeStatus_Status___0_", resourceCulture); }
@@ -641,9 +628,6 @@ namespace ShareX.HelpersLib.Localization {
         public static string Error {
             get { return ResourceManager.GetString("Error", resourceCulture); }
         }
-        public static string ExeFileNameEditor_EditValue_Browse_for_executable___ {
-            get { return ResourceManager.GetString("ExeFileNameEditor_EditValue_Browse_for_executable___", resourceCulture); }
-        }
         public static string Extensions_AddContextMenu_Copy {
             get { return ResourceManager.GetString("Extensions_AddContextMenu_Copy", resourceCulture); }
         }
@@ -685,6 +669,9 @@ namespace ShareX.HelpersLib.Localization {
         }
         public static string FileExistAction_UniqueName {
             get { return ResourceManager.GetString("FileExistAction_UniqueName", resourceCulture); }
+        }
+        public static string GIFQuality_Adaptive {
+            get { return ResourceManager.GetString("GIFQuality_Adaptive", resourceCulture); }
         }
         public static string GIFQuality_Bit4 {
             get { return ResourceManager.GetString("GIFQuality_Bit4", resourceCulture); }
@@ -733,6 +720,9 @@ namespace ShareX.HelpersLib.Localization {
         }
         public static string HotkeyType_AutoCapture {
             get { return ResourceManager.GetString("HotkeyType_AutoCapture", resourceCulture); }
+        }
+        public static string HotkeyType_BackgroundRemover {
+            get { return ResourceManager.GetString("HotkeyType_BackgroundRemover", resourceCulture); }
         }
         public static string HotkeyType_BorderlessWindow {
             get { return ResourceManager.GetString("HotkeyType_BorderlessWindow", resourceCulture); }
@@ -800,11 +790,20 @@ namespace ShareX.HelpersLib.Localization {
         public static string HotkeyType_ImageComparer {
             get { return ResourceManager.GetString("HotkeyType_ImageComparer", resourceCulture); }
         }
+        public static string HotkeyType_ImageConverter {
+            get { return ResourceManager.GetString("HotkeyType_ImageConverter", resourceCulture); }
+        }
+        public static string HotkeyType_ImageWatermark {
+            get { return ResourceManager.GetString("HotkeyType_ImageWatermark", resourceCulture); }
+        }
         public static string HotkeyType_ImageEditor {
             get { return ResourceManager.GetString("HotkeyType_ImageEditor", resourceCulture); }
         }
         public static string HotkeyType_ImageEffects {
             get { return ResourceManager.GetString("HotkeyType_ImageEffects", resourceCulture); }
+        }
+        public static string HotkeyType_ImageResizer {
+            get { return ResourceManager.GetString("HotkeyType_ImageResizer", resourceCulture); }
         }
         public static string HotkeyType_ImageSplitter {
             get { return ResourceManager.GetString("HotkeyType_ImageSplitter", resourceCulture); }
@@ -829,6 +828,9 @@ namespace ShareX.HelpersLib.Localization {
         }
         public static string HotkeyType_MonitorTest {
             get { return ResourceManager.GetString("HotkeyType_MonitorTest", resourceCulture); }
+        }
+        public static string HotkeyType_NetworkMonitor {
+            get { return ResourceManager.GetString("HotkeyType_NetworkMonitor", resourceCulture); }
         }
         public static string HotkeyType_None {
             get { return ResourceManager.GetString("HotkeyType_None", resourceCulture); }
@@ -878,14 +880,8 @@ namespace ShareX.HelpersLib.Localization {
         public static string HotkeyType_QRCodeScanRegion {
             get { return ResourceManager.GetString("HotkeyType_QRCodeScanRegion", resourceCulture); }
         }
-        public static string HotkeyType_RectangleLight {
-            get { return ResourceManager.GetString("HotkeyType_RectangleLight", resourceCulture); }
-        }
         public static string HotkeyType_RectangleRegion {
             get { return ResourceManager.GetString("HotkeyType_RectangleRegion", resourceCulture); }
-        }
-        public static string HotkeyType_RectangleTransparent {
-            get { return ResourceManager.GetString("HotkeyType_RectangleTransparent", resourceCulture); }
         }
         public static string HotkeyType_Ruler {
             get { return ResourceManager.GetString("HotkeyType_Ruler", resourceCulture); }
@@ -965,21 +961,6 @@ namespace ShareX.HelpersLib.Localization {
         public static string ImageDestination_FileUploader {
             get { return ResourceManager.GetString("ImageDestination_FileUploader", resourceCulture); }
         }
-        public static string ImageEditorStartMode_AutoSize {
-            get { return ResourceManager.GetString("ImageEditorStartMode_AutoSize", resourceCulture); }
-        }
-        public static string ImageEditorStartMode_Fullscreen {
-            get { return ResourceManager.GetString("ImageEditorStartMode_Fullscreen", resourceCulture); }
-        }
-        public static string ImageEditorStartMode_Maximized {
-            get { return ResourceManager.GetString("ImageEditorStartMode_Maximized", resourceCulture); }
-        }
-        public static string ImageEditorStartMode_Normal {
-            get { return ResourceManager.GetString("ImageEditorStartMode_Normal", resourceCulture); }
-        }
-        public static string ImageEditorStartMode_PreviousState {
-            get { return ResourceManager.GetString("ImageEditorStartMode_PreviousState", resourceCulture); }
-        }
         public static string ImgurThumbnailType_Big_Square {
             get { return ResourceManager.GetString("ImgurThumbnailType_Big_Square", resourceCulture); }
         }
@@ -1010,18 +991,6 @@ namespace ShareX.HelpersLib.Localization {
         public static string MyMessageBox_MyMessageBox_Yes {
             get { return ResourceManager.GetString("MyMessageBox_MyMessageBox_Yes", resourceCulture); }
         }
-        public static string ObjectListView_ObjectListView_Copy_name {
-            get { return ResourceManager.GetString("ObjectListView_ObjectListView_Copy_name", resourceCulture); }
-        }
-        public static string ObjectListView_ObjectListView_Copy_value {
-            get { return ResourceManager.GetString("ObjectListView_ObjectListView_Copy_value", resourceCulture); }
-        }
-        public static string ObjectListView_ObjectListView_Name {
-            get { return ResourceManager.GetString("ObjectListView_ObjectListView_Name", resourceCulture); }
-        }
-        public static string ObjectListView_ObjectListView_Value {
-            get { return ResourceManager.GetString("ObjectListView_ObjectListView_Value", resourceCulture); }
-        }
         public static string PastebinExpiration_D1 {
             get { return ResourceManager.GetString("PastebinExpiration_D1", resourceCulture); }
         }
@@ -1051,6 +1020,15 @@ namespace ShareX.HelpersLib.Localization {
         }
         public static string PastebinPrivacy_Unlisted {
             get { return ResourceManager.GetString("PastebinPrivacy_Unlisted", resourceCulture); }
+        }
+        public static string BMPBitDepth_Automatic {
+            get { return ResourceManager.GetString("BMPBitDepth_Automatic", resourceCulture); }
+        }
+        public static string BMPBitDepth_Bit24 {
+            get { return ResourceManager.GetString("BMPBitDepth_Bit24", resourceCulture); }
+        }
+        public static string BMPBitDepth_Bit32 {
+            get { return ResourceManager.GetString("BMPBitDepth_Bit32", resourceCulture); }
         }
         public static string PNGBitDepth_Automatic {
             get { return ResourceManager.GetString("PNGBitDepth_Automatic", resourceCulture); }
@@ -1256,15 +1234,6 @@ namespace ShareX.HelpersLib.Localization {
         public static string ReplCodeMenuEntry_yy_Current_year__2_digits_ {
             get { return ResourceManager.GetString("ReplCodeMenuEntry_yy_Current_year__2_digits_", resourceCulture); }
         }
-        public static string ScreenRecordGIFEncoding_FFmpeg {
-            get { return ResourceManager.GetString("ScreenRecordGIFEncoding_FFmpeg", resourceCulture); }
-        }
-        public static string ScreenRecordGIFEncoding_NET {
-            get { return ResourceManager.GetString("ScreenRecordGIFEncoding_NET", resourceCulture); }
-        }
-        public static string ScreenRecordGIFEncoding_OctreeQuantizer {
-            get { return ResourceManager.GetString("ScreenRecordGIFEncoding_OctreeQuantizer", resourceCulture); }
-        }
         public static string ScrollMethod_DownArrow {
             get { return ResourceManager.GetString("ScrollMethod_DownArrow", resourceCulture); }
         }
@@ -1276,96 +1245,6 @@ namespace ShareX.HelpersLib.Localization {
         }
         public static string ScrollMethod_ScrollMessage {
             get { return ResourceManager.GetString("ScrollMethod_ScrollMessage", resourceCulture); }
-        }
-        public static string ShapeType_DrawingArrow {
-            get { return ResourceManager.GetString("ShapeType_DrawingArrow", resourceCulture); }
-        }
-        public static string ShapeType_DrawingCursor {
-            get { return ResourceManager.GetString("ShapeType_DrawingCursor", resourceCulture); }
-        }
-        public static string ShapeType_DrawingEllipse {
-            get { return ResourceManager.GetString("ShapeType_DrawingEllipse", resourceCulture); }
-        }
-        public static string ShapeType_DrawingFreehand {
-            get { return ResourceManager.GetString("ShapeType_DrawingFreehand", resourceCulture); }
-        }
-        public static string ShapeType_DrawingFreehandArrow {
-            get { return ResourceManager.GetString("ShapeType_DrawingFreehandArrow", resourceCulture); }
-        }
-        public static string ShapeType_DrawingImage {
-            get { return ResourceManager.GetString("ShapeType_DrawingImage", resourceCulture); }
-        }
-        public static string ShapeType_DrawingImageScreen {
-            get { return ResourceManager.GetString("ShapeType_DrawingImageScreen", resourceCulture); }
-        }
-        public static string ShapeType_DrawingLine {
-            get { return ResourceManager.GetString("ShapeType_DrawingLine", resourceCulture); }
-        }
-        public static string ShapeType_DrawingMagnify {
-            get { return ResourceManager.GetString("ShapeType_DrawingMagnify", resourceCulture); }
-        }
-        public static string ShapeType_DrawingRectangle {
-            get { return ResourceManager.GetString("ShapeType_DrawingRectangle", resourceCulture); }
-        }
-        public static string ShapeType_DrawingSmartEraser {
-            get { return ResourceManager.GetString("ShapeType_DrawingSmartEraser", resourceCulture); }
-        }
-        public static string ShapeType_DrawingSpeechBalloon {
-            get { return ResourceManager.GetString("ShapeType_DrawingSpeechBalloon", resourceCulture); }
-        }
-        public static string ShapeType_DrawingStep {
-            get { return ResourceManager.GetString("ShapeType_DrawingStep", resourceCulture); }
-        }
-        public static string ShapeType_DrawingTextBackground {
-            get { return ResourceManager.GetString("ShapeType_DrawingTextBackground", resourceCulture); }
-        }
-        public static string ShapeType_DrawingTextOutline {
-            get { return ResourceManager.GetString("ShapeType_DrawingTextOutline", resourceCulture); }
-        }
-        public static string ShapeType_EffectBlur {
-            get { return ResourceManager.GetString("ShapeType_EffectBlur", resourceCulture); }
-        }
-        public static string ShapeType_EffectHighlight {
-            get { return ResourceManager.GetString("ShapeType_EffectHighlight", resourceCulture); }
-        }
-        public static string ShapeType_EffectPixelate {
-            get { return ResourceManager.GetString("ShapeType_EffectPixelate", resourceCulture); }
-        }
-        public static string ShapeType_RegionEllipse {
-            get { return ResourceManager.GetString("ShapeType_RegionEllipse", resourceCulture); }
-        }
-        public static string ShapeType_RegionFreehand {
-            get { return ResourceManager.GetString("ShapeType_RegionFreehand", resourceCulture); }
-        }
-        public static string ShapeType_RegionRectangle {
-            get { return ResourceManager.GetString("ShapeType_RegionRectangle", resourceCulture); }
-        }
-        public static string ShapeType_ToolCrop {
-            get { return ResourceManager.GetString("ShapeType_ToolCrop", resourceCulture); }
-        }
-        public static string ShapeType_ToolCutOut {
-            get { return ResourceManager.GetString("ShapeType_ToolCutOut", resourceCulture); }
-        }
-        public static string ShapeType_ToolSelect {
-            get { return ResourceManager.GetString("ShapeType_ToolSelect", resourceCulture); }
-        }
-        public static string ShapeType_ToolSpotlight {
-            get { return ResourceManager.GetString("ShapeType_ToolSpotlight", resourceCulture); }
-        }
-        public static string StepType_LettersLowercase {
-            get { return ResourceManager.GetString("StepType_LettersLowercase", resourceCulture); }
-        }
-        public static string StepType_LettersUppercase {
-            get { return ResourceManager.GetString("StepType_LettersUppercase", resourceCulture); }
-        }
-        public static string StepType_Numbers {
-            get { return ResourceManager.GetString("StepType_Numbers", resourceCulture); }
-        }
-        public static string StepType_RomanNumeralsLowercase {
-            get { return ResourceManager.GetString("StepType_RomanNumeralsLowercase", resourceCulture); }
-        }
-        public static string StepType_RomanNumeralsUppercase {
-            get { return ResourceManager.GetString("StepType_RomanNumeralsUppercase", resourceCulture); }
         }
         public static string SupportedLanguage_Automatic {
             get { return ResourceManager.GetString("SupportedLanguage_Automatic", resourceCulture); }
@@ -1478,9 +1357,6 @@ namespace ShareX.HelpersLib.Localization {
         public static string UrlShortenerType_CustomURLShortener {
             get { return ResourceManager.GetString("UrlShortenerType_CustomURLShortener", resourceCulture); }
         }
-        public static string WavFileNameEditor_EditValue_Browse_for_a_sound_file___ {
-            get { return ResourceManager.GetString("WavFileNameEditor_EditValue_Browse_for_a_sound_file___", resourceCulture); }
-        }
         public static string YouTubeVideoPrivacy_Private {
             get { return ResourceManager.GetString("YouTubeVideoPrivacy_Private", resourceCulture); }
         }
@@ -1490,5 +1366,15 @@ namespace ShareX.HelpersLib.Localization {
         public static string YouTubeVideoPrivacy_Unlisted {
             get { return ResourceManager.GetString("YouTubeVideoPrivacy_Unlisted", resourceCulture); }
         }
+        /// <summary>
+        ///   Video trimmer
+        /// </summary>
+        public static string HotkeyType_VideoTrimmer {
+            get {
+                return ResourceManager.GetString("HotkeyType_VideoTrimmer", resourceCulture);
+            }
+        }
+
+        public static string HotkeyType_AnimatedGifTrimmer => ResourceManager.GetString("HotkeyType_AnimatedGifTrimmer", resourceCulture);
     }
 }

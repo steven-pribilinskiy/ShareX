@@ -3,6 +3,22 @@
 /*
     ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -37,13 +53,15 @@ public sealed class DestinationSettingsViewModel : INotifyPropertyChanged
             Page("ftp", "FTP / FTPS / SFTP", "FTP", "FTP", "FTPS", "SFTP"),
             Page("dropbox", "Dropbox", "Dropbox"), Page("onedrive", "OneDrive", "OneDrive"),
             Page("google-drive", "Google Drive", "GoogleDrive"), Page("puush", "puush", "Puush"),
-            Page("box", "Box", "Box"), Page("amazon-s3", "Amazon S3", "AmazonS3"),
+            Page("box", "Box", "Box"), Page("mega", "MEGA", "Mega"), Page("amazon-s3", "Amazon S3", "AmazonS3"),
             Page("google-cloud-storage", "Google Cloud Storage", "GoogleCloudStorage"),
             Page("azure-storage", "Azure Storage", "AzureStorage"), Page("backblaze-b2", "Backblaze B2", "B2", "BackblazeB2"),
             Page("owncloud", "ownCloud / Nextcloud", "OwnCloud", "ownCloud", "Nextcloud"),
+            Page("immich", "Immich", "Immich"),
             Page("mediafire", "MediaFire", "MediaFire"), Page("pushbullet", "Pushbullet", "Pushbullet"),
             Page("sendspace", "SendSpace", "SendSpace"), Page("hostr", "Hostr", "Localhostr", "Hostr"),
-            Page("lambda", "Lambda", "Lambda"), Page("lobfile", "LobFile", "Lithiio", "LobFile"),
+            Page("lambda", "Lambda", "Lambda"), Page("img-fish", "img.fish", "ImgFish", "imgfish"),
+            Page("lobfile", "LobFile", "Lithiio", "LobFile"),
             Page("pomf", "Pomf", "Pomf"), Page("seafile", "Seafile", "Seafile"), Page("sul", "s-ul", "Sul", "sul"),
             Page("streamable", "Streamable", "Streamable"), Page("plik", "Plik", "Plik"),
             Page("youtube", "YouTube", "YouTube"),
@@ -82,7 +100,7 @@ public sealed class DestinationSettingsViewModel : INotifyPropertyChanged
     {
         foreach (DestinationCategoryDefinition category in Categories)
         {
-            NavigationItems.Add(new SettingsNavigationItem(category.Id, category.Title, category.Icon,
+            NavigationItems.Add(new SettingsNavigationItem(category.Id, category.Title,
                 children: category.Pages.Select(page => new SettingsNavigationItem(page.Id, page.Title))));
         }
 

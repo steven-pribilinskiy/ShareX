@@ -3,21 +3,37 @@
 /*
     ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
 
 #nullable enable
 
+using ShareX.AvaloniaUI.Theming;
 using ShareX.HelpersLib;
+using ShareX.Localization;
 using ShareX.UploadersLib;
 using ShareX.UploadersLib.FileUploaders;
 using ShareX.UploadersLib.ImageUploaders;
 using ShareX.UploadersLib.SharingServices;
 using ShareX.UploadersLib.TextUploaders;
 using ShareX.UploadersLib.URLShorteners;
-using ShareX.AvaloniaUI.Theming;
-using ShareX.Localization;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -369,7 +385,7 @@ public sealed class CustomUploaderSettingsViewModel : CustomUploaderNotifyObject
         SelectedUploader = Uploaders[index];
         StatusMessage = string.Format(Strings.CustomUploaderSettingsWindow_Testing, SelectedUploader.Title);
 
-        UploadResult? result = await Task.Run(() => RunTest(type, _config.CustomUploadersList[index], textInput));
+        UploadResult? result = await RunTestAsync(type, _config.CustomUploadersList[index], textInput);
         LastResult = result;
         IsTesting = false;
         StatusMessage = result == null
@@ -408,7 +424,7 @@ public sealed class CustomUploaderSettingsViewModel : CustomUploaderNotifyObject
 
     public void CloseSyntaxTest() => IsSyntaxTestVisible = false;
 
-    private static UploadResult? RunTest(CustomUploaderDestinationType type, CustomUploaderItem item, string? textInput)
+    private static async Task<UploadResult?> RunTestAsync(CustomUploaderDestinationType type, CustomUploaderItem item, string? textInput)
     {
         try
         {
@@ -419,32 +435,32 @@ public sealed class CustomUploaderSettingsViewModel : CustomUploaderNotifyObject
                     using (Stream stream = ShareXResources.Logo.GetStream())
                     {
                         CustomImageUploader uploader = new(item);
-                        result = uploader.Upload(stream, "Test.png");
+                        result = await uploader.UploadAsync(stream, "Test.png");
                         result.Errors.Add(uploader.Errors);
                     }
                     break;
                 case CustomUploaderDestinationType.TextUploader:
                     if (string.IsNullOrEmpty(textInput)) return null;
                     CustomTextUploader textUploader = new(item);
-                    result = textUploader.UploadText(textInput, "Test.txt");
+                    result = await textUploader.UploadTextAsync(textInput, "Test.txt");
                     result.Errors.Add(textUploader.Errors);
                     break;
                 case CustomUploaderDestinationType.FileUploader:
                     using (Stream stream = ShareXResources.Logo.GetStream())
                     {
                         CustomFileUploader uploader = new(item);
-                        result = uploader.Upload(stream, "Test.png");
+                        result = await uploader.UploadAsync(stream, "Test.png");
                         result.Errors.Add(uploader.Errors);
                     }
                     break;
                 case CustomUploaderDestinationType.URLShortener:
                     CustomURLShortener shortener = new(item);
-                    result = shortener.ShortenURL(Links.Website);
+                    result = await shortener.ShortenURLAsync(Links.Website);
                     result.Errors.Add(shortener.Errors);
                     break;
                 case CustomUploaderDestinationType.URLSharingService:
                     CustomURLSharer sharer = new(item);
-                    result = sharer.ShareURL(Links.Website);
+                    result = await sharer.ShareURLAsync(Links.Website);
                     result.Errors.Add(sharer.Errors);
                     break;
             }

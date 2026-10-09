@@ -3,6 +3,22 @@
 /*
     ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -21,8 +37,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DrawingBitmap = System.Drawing.Bitmap;
-using DrawingImageFormat = System.Drawing.Imaging.ImageFormat;
+using DrawingBitmap = SkiaSharp.SKBitmap;
+using DrawingImageFormat = SkiaSharp.SKEncodedImageFormat;
 
 namespace ShareX;
 
@@ -61,7 +77,7 @@ public partial class AfterCaptureWindow : Window
             fileName = Path.GetFileNameWithoutExtension(filePath);
             if (FileHelpers.IsImageFile(filePath))
             {
-                _ownedSourceImage = ImageHelpers.LoadImage(filePath);
+                _ownedSourceImage = SkiaImageHelpers.LoadImage(filePath);
                 _sourceImage = _ownedSourceImage;
             }
         }
@@ -133,7 +149,7 @@ public partial class AfterCaptureWindow : Window
         foreach (ImageDestination destination in Helpers.GetEnums<ImageDestination>())
         {
             if (destination == ImageDestination.FileUploader ||
-                !UploadersConfigValidator.Validate<ImageDestination>((int)destination, Program.UploadersConfig))
+                !UploadersConfigValidator.Validate<ImageDestination>((int)destination, ApplicationState.UploadersConfig))
             {
                 continue;
             }
@@ -141,7 +157,7 @@ public partial class AfterCaptureWindow : Window
             string label = destination.GetLocalizedDescription();
             if (destination == ImageDestination.CustomImageUploader)
             {
-                label = GetCustomDestinationLabel(Program.UploadersConfig.CustomImageUploaderSelected, taskSettings, label);
+                label = GetCustomDestinationLabel(ApplicationState.UploadersConfig.CustomImageUploaderSelected, taskSettings, label);
             }
 
             bool selected = taskSettings.ImageDestination == destination;
@@ -150,7 +166,7 @@ public partial class AfterCaptureWindow : Window
 
         foreach (FileDestination destination in Helpers.GetEnums<FileDestination>())
         {
-            if (!UploadersConfigValidator.Validate<FileDestination>((int)destination, Program.UploadersConfig))
+            if (!UploadersConfigValidator.Validate<FileDestination>((int)destination, ApplicationState.UploadersConfig))
             {
                 continue;
             }
@@ -158,7 +174,7 @@ public partial class AfterCaptureWindow : Window
             string label = destination.GetLocalizedDescription();
             if (destination == FileDestination.CustomFileUploader)
             {
-                label = GetCustomDestinationLabel(Program.UploadersConfig.CustomFileUploaderSelected, taskSettings, label);
+                label = GetCustomDestinationLabel(ApplicationState.UploadersConfig.CustomFileUploaderSelected, taskSettings, label);
             }
 
             bool selected = taskSettings.ImageDestination == ImageDestination.FileUploader &&
@@ -177,10 +193,10 @@ public partial class AfterCaptureWindow : Window
     {
         if (taskSettings.OverrideCustomUploader)
         {
-            index = taskSettings.CustomUploaderIndex.BetweenOrDefault(0, Program.UploadersConfig.CustomUploadersList.Count - 1);
+            index = taskSettings.CustomUploaderIndex.BetweenOrDefault(0, ApplicationState.UploadersConfig.CustomUploadersList.Count - 1);
         }
 
-        CustomUploaderItem? uploader = Program.UploadersConfig.CustomUploadersList.ReturnIfValidIndex(index);
+        CustomUploaderItem? uploader = ApplicationState.UploadersConfig.CustomUploadersList.ReturnIfValidIndex(index);
         return uploader == null
             ? fallback
             : string.Format(Strings.AfterCaptureWindow_CustomUploader, uploader);

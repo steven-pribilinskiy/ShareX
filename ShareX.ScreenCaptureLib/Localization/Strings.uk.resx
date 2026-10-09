@@ -58,748 +58,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FFmpegOptionsWindow_Title" xml:space="preserve">
-    <value>ShareX — Параметри запису екрана</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Screen_recording" xml:space="preserve">
-    <value>Запис екрана</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Description" xml:space="preserve">
-    <value>Виберіть, що захоплювати та як FFmpeg має це кодувати.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Reset_encoding_options" xml:space="preserve">
-    <value>Скинути параметри кодування</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Reset_options" xml:space="preserve">
-    <value>Скинути параметри</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Reset_all_options" xml:space="preserve">
-    <value>Скинути всі параметри?</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Cancel" xml:space="preserve">
-    <value>Скасувати</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Reset" xml:space="preserve">
-    <value>Скинути</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Sources" xml:space="preserve">
-    <value>Джерела</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Video" xml:space="preserve">
-    <value>Відео</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Audio" xml:space="preserve">
-    <value>Аудіо</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Advanced" xml:space="preserve">
-    <value>Додатково</value>
-  </data>
-  <data name="FFmpegOptionsWindow_FFmpeg_executable" xml:space="preserve">
-    <value>Виконуваний файл FFmpeg</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Use_custom_path" xml:space="preserve">
-    <value>Використовувати власний шлях до FFmpeg</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Path_to_ffmpeg" xml:space="preserve">
-    <value>Шлях до ffmpeg.exe</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Browse_for_ffmpeg" xml:space="preserve">
-    <value>Вибрати ffmpeg.exe</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Capture_sources" xml:space="preserve">
-    <value>Джерела захоплення</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Refresh_devices" xml:space="preserve">
-    <value>Оновити пристрої</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Video_source" xml:space="preserve">
-    <value>Джерело відео</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Choose_video_source" xml:space="preserve">
-    <value>Виберіть джерело відео</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Audio_source" xml:space="preserve">
-    <value>Джерело аудіо</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Choose_audio_source" xml:space="preserve">
-    <value>Виберіть джерело аудіо</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Looking_for_devices" xml:space="preserve">
-    <value>Пошук пристроїв захоплення...</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Get_recorder_devices" xml:space="preserve">
-    <value>Отримати пристрої запису</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Video_encoder" xml:space="preserve">
-    <value>Відеокодек</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Encoder_settings" xml:space="preserve">
-    <value>Параметри кодека</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset" xml:space="preserve">
-    <value>Передустановка</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Faster_presets_hint" xml:space="preserve">
-    <value>Швидші передустановки надійніше кодують у реальному часі, але створюють більші файли.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Slow_presets_warning" xml:space="preserve">
-    <value>Повільні передустановки можуть спричинити пропуск кадрів під час запису екрана. Рекомендовано «fast» або швидше.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Use_target_bitrate" xml:space="preserve">
-    <value>Використовувати цільовий бітрейт замість постійної якості</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Constant_rate_factor" xml:space="preserve">
-    <value>Постійний коефіцієнт якості (CRF)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_CRF_hint" xml:space="preserve">
-    <value>Менші значення підвищують якість і розмір файлу. 0 — без втрат; типове значення ShareX — 28.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Target_bitrate" xml:space="preserve">
-    <value>Цільовий бітрейт (кбіт/с)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Variable_bitrate_quality" xml:space="preserve">
-    <value>Якість змінного бітрейту</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Variable_bitrate_hint" xml:space="preserve">
-    <value>1 дає найвищу якість і найбільший файл; 31 — найнижчу якість і найменший файл.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Tune" xml:space="preserve">
-    <value>Налаштування</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Palette_mode" xml:space="preserve">
-    <value>Режим палітри</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Dithering_mode" xml:space="preserve">
-    <value>Режим згладжування</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Bayer_scale" xml:space="preserve">
-    <value>Масштаб Байєра</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Bayer_scale_hint" xml:space="preserve">
-    <value>Більші значення створюють помітніші смуги. Типове значення — 2.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Usage" xml:space="preserve">
-    <value>Призначення</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Quality" xml:space="preserve">
-    <value>Якість</value>
-  </data>
-  <data name="FFmpegOptionsWindow_No_additional_settings" xml:space="preserve">
-    <value>Цей кодек не потребує додаткових налаштувань.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Audio_encoder" xml:space="preserve">
-    <value>Аудіокодек</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Animated_formats_no_audio" xml:space="preserve">
-    <value>Анімовані формати зображень не містять аудіо. Виберіть відеоформат, щоб увімкнути кодування аудіо.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Bitrate" xml:space="preserve">
-    <value>Бітрейт (кбіт/с)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Lower_values_higher_quality" xml:space="preserve">
-    <value>Менші значення дають вищу якість.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Additional_arguments" xml:space="preserve">
-    <value>Додаткові аргументи</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Arguments_example" xml:space="preserve">
-    <value>Приклад: -vf scale=1920:-2</value>
-  </data>
-  <data name="FFmpegOptionsWindow_FFmpeg_command" xml:space="preserve">
-    <value>Команда FFmpeg</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Use_custom_commands" xml:space="preserve">
-    <value>Використовувати власні команди</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Custom_command_placeholders" xml:space="preserve">
-    <value>Заповнювачі власних команд: $fps$, $area_x$, $area_y$, $area_width$, $area_height$, $cursor$, $duration$ і $output$.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_FFmpeg_not_found" xml:space="preserve">
-    <value>FFmpeg не знайдено за шляхом {0}</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Device_enumeration_failed" xml:space="preserve">
-    <value>FFmpeg не вдалося перелічити пристрої DirectShow. Захоплення робочого стола й надалі доступне.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_One_device_found" xml:space="preserve">
-    <value>Знайдено пристроїв DirectShow: {0}.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Multiple_devices_found" xml:space="preserve">
-    <value>Знайдено пристроїв DirectShow: {0}.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_No_devices_found" xml:space="preserve">
-    <value>Пристрої DirectShow не знайдено. Захоплення робочого стола готове.</value>
-  </data>
-  <data name="ScreenRecordWindow_Title" xml:space="preserve">
-    <value>ShareX — Запис екрана</value>
-  </data>
-  <data name="ScreenRecordWindow_Start" xml:space="preserve">
-    <value>Почати</value>
-  </data>
-  <data name="ScreenRecordWindow_Pause" xml:space="preserve">
-    <value>Пауза</value>
-  </data>
-  <data name="ScreenRecordWindow_Abort" xml:space="preserve">
-    <value>Перервати</value>
-  </data>
-  <data name="ScreenRecordWindow_Abort_this_recording" xml:space="preserve">
-    <value>Перервати цей запис?</value>
-  </data>
-  <data name="ScreenRecordWindow_Cancel" xml:space="preserve">
-    <value>Скасувати</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Title" xml:space="preserve">
-    <value>ShareX — Захоплення з прокручуванням</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Capture" xml:space="preserve">
-    <value>Захопити...</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Upload_Save" xml:space="preserve">
-    <value>Надіслати / Зберегти</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Copy" xml:space="preserve">
-    <value>Копіювати</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Options" xml:space="preserve">
-    <value>Параметри...</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Help" xml:space="preserve">
-    <value>Довідка щодо знімка з прокручуванням</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Select_scrollable_window" xml:space="preserve">
-    <value>Виберіть вікно з прокручуванням, щоб почати</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Ready" xml:space="preserve">
-    <value>Готово</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Options_heading" xml:space="preserve">
-    <value>Параметри захоплення з прокручуванням</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Start_delay" xml:space="preserve">
-    <value>Затримка запуску:</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Milliseconds" xml:space="preserve">
-    <value>мс</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Scroll_delay" xml:space="preserve">
-    <value>Затримка прокручування:</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Scroll_method" xml:space="preserve">
-    <value>Спосіб прокручування:</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Scroll_amount" xml:space="preserve">
-    <value>Кількість прокручувань:</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Times" xml:space="preserve">
-    <value>разів</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Automatically_scroll_to_top" xml:space="preserve">
-    <value>Автоматично прокрутити вгору</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Auto_ignore_bottom_edge" xml:space="preserve">
-    <value>Автоматично ігнорувати нижній край</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Show_capture_region" xml:space="preserve">
-    <value>Показувати область захоплення з прокручуванням</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Automatically_upload_save" xml:space="preserve">
-    <value>Автоматично надсилати / зберігати</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Cancel" xml:space="preserve">
-    <value>Скасувати</value>
-  </data>
-  <data name="ScrollingCaptureWindow_OK" xml:space="preserve">
-    <value>ОК</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Stopping_capture" xml:space="preserve">
-    <value>Зупинення захоплення...</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Selection_cancelled" xml:space="preserve">
-    <value>Вибір вікна скасовано</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Capturing" xml:space="preserve">
-    <value>Виконується захоплення...</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Capture_failed" xml:space="preserve">
-    <value>Помилка захоплення</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Capture_partially_successful" xml:space="preserve">
-    <value>Захоплення частково успішне</value>
-  </data>
-  <data name="ScrollingCaptureWindow_Capture_successful" xml:space="preserve">
-    <value>Захоплення успішне</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_CancelTaskEsc" xml:space="preserve">
-    <value>Скасування завдання (Esc)</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_UploadImage" xml:space="preserve">
-    <value>Вивантажити зображення</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Highlight_color___" xml:space="preserve">
-    <value>Колір підсвічування...</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_SwitchToDrawingToolAfterSelection" xml:space="preserve">
-    <value>Переключитися на інструмент малювання після виділення фігури</value>
-  </data>
-  <data name="CutOutEffectSize" xml:space="preserve">
-    <value>Розмір ефекту вирізання:</value>
-  </data>
-  <data name="ImageEffects" xml:space="preserve">
-    <value>Додати ефекти зображення...</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_FlipHorizontal" xml:space="preserve">
-    <value>Віддзеркалити по горизонталі</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Multi_region_mode" xml:space="preserve">
-    <value>Захоплення кількох областей</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Pixel_size_" xml:space="preserve">
-    <value>Розмір пікселя:</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_ImageSize" xml:space="preserve">
-    <value>Розмір зображення...</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_Delete" xml:space="preserve">
-    <value>Видалити</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_ApplyChangesContinueTaskEnter" xml:space="preserve">
-    <value>Застосувати зміни та продовжити завдання (Enter)</value>
-  </data>
-  <data name="OpenKeybindsPage" xml:space="preserve">
-    <value>Відкрити веб-сторінку клавішних сполучень...</value>
-  </data>
-  <data name="Duplicate" xml:space="preserve">
-    <value>Дублювати</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_Edit" xml:space="preserve">
-    <value>Змінити</value>
-  </data>
-  <data name="ImageSaved" xml:space="preserve">
-    <value>Зображення збережено</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_AutoCloseEditorOnTask" xml:space="preserve">
-    <value>Автозакриття редактора за завданням</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_Undo" xml:space="preserve">
-    <value>Скасувати</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_Redo" xml:space="preserve">
-    <value>Повторити</value>
-  </data>
-  <data name="RegionCaptureForm_InitializeComponent_ImageEditor" xml:space="preserve">
-    <value>Редактор зображень</value>
-  </data>
   <data name="BaseRegionForm_InitializeComponent_Region_capture" xml:space="preserve">
     <value>Захоплення області</value>
   </data>
-  <data name="ShapeManager_CreateContextMenu_Fixed_size_region_mode" xml:space="preserve">
-    <value>Режим області фіксованого розміру</value>
-  </data>
-  <data name="EditorStartupForm_ClipboardDoesNotContainAnImage" xml:space="preserve">
-    <value>Буфер обміну не містить зображень.</value>
-  </data>
-  <data name="NewLineCtrlEnterOKEnter" xml:space="preserve">
-    <value>Новий рядок: Ctrl + Enter, OK: Enter</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Capture_monitor" xml:space="preserve">
-    <value>Захоплення монітора</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_SendToBack" xml:space="preserve">
-    <value>На задній план</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Capture_active_monitor" xml:space="preserve">
-    <value>Захоплення активного монітора</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_BringForward" xml:space="preserve">
-    <value>Перемістити вперед</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_Rotate90CounterClockwise" xml:space="preserve">
-    <value>Повернути на 90° проти годинникової стрілки</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_InterpolationMode" xml:space="preserve">
-    <value>Режим інтерполяції:</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Width_" xml:space="preserve">
-    <value>Ширина:</value>
-  </data>
-  <data name="ScreenRecordForm_StartRecording_Click_tray_icon_to_stop_recording_" xml:space="preserve">
-    <value>Натисніть, щоб зупинити запис.</value>
-  </data>
-  <data name="ShapeManager_CenterPoints" xml:space="preserve">
-    <value>Центральні точки:</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Options" xml:space="preserve">
-    <value>Налаштування</value>
-  </data>
-  <data name="ShapeManager_BorderStyle" xml:space="preserve">
-    <value>Стиль рамки:</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Capture" xml:space="preserve">
-    <value>Захоплення</value>
-  </data>
-  <data name="RectangleRegion_GetAreaText_Area" xml:space="preserve">
-    <value>X: {0} Y: {1} Ш: {2} В: {3}</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_OpenImageFile" xml:space="preserve">
-    <value>Відкрити файл зображення...</value>
-  </data>
-  <data name="Processing" xml:space="preserve">
-    <value>Обробка...</value>
-  </data>
-  <data name="ScreenRecordForm_StartRecording_Waiting___" xml:space="preserve">
-    <value>Очікування...</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_Rotate90Clockwise" xml:space="preserve">
-    <value>Повернути на 90° за годинниковою стрілкою</value>
-  </data>
-  <data name="CloseEsc" xml:space="preserve">
-    <value>Закрити (Esc)</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_StartingStepValue" xml:space="preserve">
-    <value>Значення на першому кроці:</value>
-  </data>
-  <data name="Highlight" xml:space="preserve">
-    <value>Підсвічування</value>
-  </data>
-  <data name="MagnifyStrength" xml:space="preserve">
-    <value>Ступінь збільшення:</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Corner_radius_" xml:space="preserve">
-    <value>Радіус скруглення:</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_PrintImage" xml:space="preserve">
-    <value>Друк зображення... (Ctrl + P)</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Show_FPS" xml:space="preserve">
-    <value>Показати FPS</value>
-  </data>
-  <data name="NewLineEnterOKCtrlEnter" xml:space="preserve">
-    <value>Новий рядок: Enter, OK: Ctrl + Enter</value>
-  </data>
-  <data name="ShapeManager_CursorType" xml:space="preserve">
-    <value>Тип курсора:</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_DropShadow" xml:space="preserve">
-    <value>Тінь</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Square_shape_magnifier" xml:space="preserve">
-    <value>Квадратна лупа</value>
-  </data>
-  <data name="Resume" xml:space="preserve">
-    <value>Продовжити</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_EditorStartMode" xml:space="preserve">
-    <value>Режим редактора при запуску:</value>
-  </data>
-  <data name="ImageSavedAs" xml:space="preserve">
-    <value>Зображення збережено</value>
-  </data>
-  <data name="ShapeManager_ArrowHeadDirection" xml:space="preserve">
-    <value>Напрямок стрілки:</value>
-  </data>
-  <data name="ShapeManager_FreehandSmoothing" xml:space="preserve">
-    <value>Згладжування:</value>
-  </data>
-  <data name="ShapeManager_FreehandCurveInterpolation" xml:space="preserve">
-    <value>Інтерполяція кривої</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Capture_fullscreen" xml:space="preserve">
-    <value>Захоплення всього екрану</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_CaptureRegions" xml:space="preserve">
-    <value>Захоплення областей</value>
-  </data>
-  <data name="RectangleLight_InitializeComponent_Rectangle_capture_light" xml:space="preserve">
-    <value>Прямокутне захоплення з підсвічуванням</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_SaveImage" xml:space="preserve">
-    <value>Зберегти зображення</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_NewImage" xml:space="preserve">
-    <value>Нове зображення...</value>
-  </data>
-  <data name="Blur" xml:space="preserve">
-    <value>Розмиття</value>
-  </data>
-  <data name="ScreenRecordForm_StartRecording_Encoding___" xml:space="preserve">
-    <value>Кодування...</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Blur_radius_" xml:space="preserve">
-    <value>Сила розмивання:</value>
-  </data>
-  <data name="ImageUploading" xml:space="preserve">
-    <value>Зображення вивантажується</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_EnableAnimations" xml:space="preserve">
-    <value>Увімкнути анімації</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_SendBackward" xml:space="preserve">
-    <value>Перемістити назад</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Height_" xml:space="preserve">
-    <value>Висота:</value>
-  </data>
-  <data name="ImageCopied" xml:space="preserve">
-    <value>Зображення скопійовано</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Fill_color___" xml:space="preserve">
-    <value>Колір заливки...</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_SaveImageAs" xml:space="preserve">
-    <value>Зберегти зображення як... (Ctrl + Shift + S)</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_ContinueTaskSpaceOrRightClick" xml:space="preserve">
-    <value>Продовжити завдання (пробіл або ПКМ)</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_FontSize" xml:space="preserve">
-    <value>Розмір шрифту:</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_CanvasSize" xml:space="preserve">
-    <value>Розмір полотна...</value>
-  </data>
-  <data name="MenuIconSize" xml:space="preserve">
-    <value>Розмір іконок меню:</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_FlipVertical" xml:space="preserve">
-    <value>Віддзеркалити по вертикалі</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_AutoCropImage" xml:space="preserve">
-    <value>Автообрізання...</value>
-  </data>
-  <data name="Pixelate" xml:space="preserve">
-    <value>Пікселювання</value>
-  </data>
-  <data name="LockMenu" xml:space="preserve">
-    <value>Зафіксувати меню</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_BringToFront" xml:space="preserve">
-    <value>На передній план</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_Rotate180" xml:space="preserve">
-    <value>Повернути на 180°</value>
-  </data>
-  <data name="LightResizeNodes" xml:space="preserve">
-    <value>Легкі елементи для зміни розміру</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_LastRegion" xml:space="preserve">
-    <value>Захопити останню область</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_InsertImageFromScreen" xml:space="preserve">
-    <value>Вставити зображення з екрану...</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_DeleteAll" xml:space="preserve">
-    <value>Видалити все</value>
-  </data>
-  <data name="AutoCopyImageToClipboard" xml:space="preserve">
-    <value>Автоматично копіювати зображення до буфера обміну</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Border_size_" xml:space="preserve">
-    <value>Товщина меж:</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_AnnotateMenu" xml:space="preserve">
-    <value>Меню нотаток</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_PasteImageText" xml:space="preserve">
-    <value>Вставити зображення/текст</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_CropImage" xml:space="preserve">
-    <value>Обрізати...</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Border_color___" xml:space="preserve">
-    <value>Колір меж...</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Show_magnifier" xml:space="preserve">
-    <value>Показувати лупу</value>
-  </data>
-  <data name="Pause" xml:space="preserve">
-    <value>Пауза</value>
-  </data>
-  <data name="RegionCaptureForm_ShowExitConfirmation_ShareXImageEditor" xml:space="preserve">
-    <value>ShareX — Редактор зображень</value>
-  </data>
-  <data name="DropShadowColor" xml:space="preserve">
-    <value>Колір тіні...</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_SwitchToSelectionToolAfterDrawing" xml:space="preserve">
-    <value>Переключитися на інструмент виділення після малювання фігури</value>
-  </data>
-  <data name="RectangleTransparent_RectangleTransparent_Rectangle_capture_transparent" xml:space="preserve">
-    <value>Прозоре прямокутне захоплення</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Show_position_and_size_info" xml:space="preserve">
-    <value>Показувати інформацію про положення та розмір</value>
-  </data>
-  <data name="ScreenRecordForm_Start" xml:space="preserve">
-    <value>Почати</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_StepType" xml:space="preserve">
-    <value>Тип кроку:</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_CopyImageToClipboard" xml:space="preserve">
-    <value>Скопіювати зображення в буфер обміну (Ctrl + C)</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Show_center_crosshair" xml:space="preserve">
-    <value>Показувати центральний приціл</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Show_screen_wide_crosshair" xml:space="preserve">
-    <value>Показувати широке перехрестя на екрані</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_Image" xml:space="preserve">
-    <value>Зображення</value>
-  </data>
-  <data name="RectangleRegion_GetColorPickerText" xml:space="preserve">
-    <value>RGB: {0}, {1}, {2}
-Hex: {3}
-X: {4} Y: {5}</value>
-    <comment>@Invariant</comment>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Magnifier_pixel_count_" xml:space="preserve">
-    <value>Кількість пікселів у лупі:</value>
-  </data>
-  <data name="ThisWindowWillCloseBeforeOpeningKeybindsPageWantContinue" xml:space="preserve">
-    <value>Це вікно закриється перед відкриттям веб-сторінки сполучень клавіш. Ви хочете продовжити?</value>
-  </data>
-  <data name="FPSLimit" xml:space="preserve">
-    <value>Обмеження FPS:</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_InsertImageFile" xml:space="preserve">
-    <value>Вставити файл зображення...</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_ZoomToFitOnOpen" xml:space="preserve">
-    <value>Масштабувати до розміру вікна при відкриванні</value>
-  </data>
-  <data name="RegionCaptureForm_TipYouCanPanImageByHoldingMouseMiddleButtonAndDragging" xml:space="preserve">
-    <value>Порада: Ви можете переміщувати зображення, утримуючи середню кнопку миші.</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_RunAfterCaptureTasks" xml:space="preserve">
-    <value>Виконати завдання після захоплення (Enter)</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_RememberMenuState" xml:space="preserve">
-    <value>Памʼятати стан меню</value>
-  </data>
-  <data name="CutOutEffectType" xml:space="preserve">
-    <value>Ефект вирізання:</value>
-  </data>
-  <data name="ShapeManager_CreateContextMenu_Magnifier_pixel_size_" xml:space="preserve">
-    <value>Розмір пікселя в лупі:</value>
-  </data>
-  <data name="ShapeManager_CreateToolbar_ToolOptions" xml:space="preserve">
-    <value>Налаштування інструменту</value>
-  </data>
-  <data name="ScreenRecordForm_Stop" xml:space="preserve">
-    <value>Зупинити</value>
-  </data>
-  <data name="ScreenRecordForm_StartRecording_Click_tray_icon_to_start_recording_" xml:space="preserve">
-    <value>Натисніть, щоб почати запис.</value>
-  </data>
-  <data name="ImageURL" xml:space="preserve">
-    <value>URL-адреса зображення</value>
-  </data>
-  <data name="RegionCaptureForm_SaveChangesBeforeClosingEditor" xml:space="preserve">
-    <value>Залишилися незбережені зміни.
-
-Бажаєте зберегти зміни перед закриттям редактора зображень?</value>
-  </data>
-  <data name="CutOutBackgroundColor" xml:space="preserve">
-    <value>Колір вирізаного тла...</value>
-  </data>
-  <data name="RulerAngle" xml:space="preserve">
-    <value>Кут</value>
-  </data>
-  <data name="RulerPerimeter" xml:space="preserve">
-    <value>Периметр</value>
-  </data>
-  <data name="RulerArea" xml:space="preserve">
-    <value>Площа</value>
-  </data>
-  <data name="RulerWidth" xml:space="preserve">
-    <value>Ширина</value>
-  </data>
-  <data name="RulerHeight" xml:space="preserve">
-    <value>Висота</value>
-  </data>
-  <data name="RulerDistance" xml:space="preserve">
-    <value>Відстань</value>
-  </data>
-  <data name="RulerRight" xml:space="preserve">
-    <value>Право</value>
-  </data>
-  <data name="RulerBottom" xml:space="preserve">
-    <value>Низ</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_ultra_fast" xml:space="preserve">
-    <value>Надшвидко</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_super_fast" xml:space="preserve">
-    <value>Супершвидко</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_very_fast" xml:space="preserve">
-    <value>Дуже швидко</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_faster" xml:space="preserve">
-    <value>Швидше</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_fast" xml:space="preserve">
-    <value>Швидко</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_medium" xml:space="preserve">
-    <value>Середньо</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_slow" xml:space="preserve">
-    <value>Повільно</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_slower" xml:space="preserve">
-    <value>Повільніше</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_very_slow" xml:space="preserve">
-    <value>Дуже повільно</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Preset_placebo" xml:space="preserve">
-    <value>Плацебо</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_fastest_lowest_quality" xml:space="preserve">
-    <value>Найшвидше (найнижча якість)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_faster_lower_quality" xml:space="preserve">
-    <value>Швидше (нижча якість)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_fast_low_quality" xml:space="preserve">
-    <value>Швидко (низька якість)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_medium_medium_quality" xml:space="preserve">
-    <value>Середньо (середня якість)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_slow_good_quality" xml:space="preserve">
-    <value>Повільно (добра якість)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_slower_better_quality" xml:space="preserve">
-    <value>Повільніше (краща якість)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_slowest_best_quality" xml:space="preserve">
-    <value>Найповільніше (найкраща якість)</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_high_quality" xml:space="preserve">
-    <value>Висока якість</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_low_latency" xml:space="preserve">
-    <value>Низька затримка</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_ultra_low_latency" xml:space="preserve">
-    <value>Наднизька затримка</value>
-  </data>
-  <data name="FFmpegOptionsWindow_NVENC_lossless" xml:space="preserve">
-    <value>Без втрат</value>
+  <data name="FFmpegOptionsWindow_AMF_balanced" xml:space="preserve">
+    <value>Збалансовано</value>
   </data>
   <data name="FFmpegOptionsWindow_AMF_generic_transcoding" xml:space="preserve">
     <value>Звичайне перекодування</value>
-  </data>
-  <data name="FFmpegOptionsWindow_AMF_ultra_low_latency_transcoding" xml:space="preserve">
-    <value>Перекодування з наднизькою затримкою</value>
-  </data>
-  <data name="FFmpegOptionsWindow_AMF_low_latency_transcoding" xml:space="preserve">
-    <value>Перекодування з низькою затримкою</value>
-  </data>
-  <data name="FFmpegOptionsWindow_AMF_webcam" xml:space="preserve">
-    <value>Вебкамера</value>
   </data>
   <data name="FFmpegOptionsWindow_AMF_high_quality_transcoding" xml:space="preserve">
     <value>Високоякісне перекодування</value>
@@ -807,14 +73,86 @@ X: {4} Y: {5}</value>
   <data name="FFmpegOptionsWindow_AMF_low_latency_high_quality_transcoding" xml:space="preserve">
     <value>Перекодування з низькою затримкою та високою якістю</value>
   </data>
-  <data name="FFmpegOptionsWindow_AMF_prefer_speed" xml:space="preserve">
-    <value>Віддати перевагу швидкості</value>
-  </data>
-  <data name="FFmpegOptionsWindow_AMF_balanced" xml:space="preserve">
-    <value>Збалансовано</value>
+  <data name="FFmpegOptionsWindow_AMF_low_latency_transcoding" xml:space="preserve">
+    <value>Перекодування з низькою затримкою</value>
   </data>
   <data name="FFmpegOptionsWindow_AMF_prefer_quality" xml:space="preserve">
     <value>Віддати перевагу якості</value>
+  </data>
+  <data name="FFmpegOptionsWindow_AMF_prefer_speed" xml:space="preserve">
+    <value>Віддати перевагу швидкості</value>
+  </data>
+  <data name="FFmpegOptionsWindow_AMF_ultra_low_latency_transcoding" xml:space="preserve">
+    <value>Перекодування з наднизькою затримкою</value>
+  </data>
+  <data name="FFmpegOptionsWindow_AMF_webcam" xml:space="preserve">
+    <value>Вебкамера</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Additional_arguments" xml:space="preserve">
+    <value>Додаткові аргументи</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Advanced" xml:space="preserve">
+    <value>Додатково</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Animated_formats_no_audio" xml:space="preserve">
+    <value>Анімовані формати зображень не містять аудіо. Виберіть відеоформат, щоб увімкнути кодування аудіо.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Arguments_example" xml:space="preserve">
+    <value>Приклад: -vf scale=1920:-2</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Audio" xml:space="preserve">
+    <value>Аудіо</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Audio_encoder" xml:space="preserve">
+    <value>Аудіокодек</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Audio_source" xml:space="preserve">
+    <value>Джерело аудіо</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Bayer_scale" xml:space="preserve">
+    <value>Масштаб Байєра</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Bayer_scale_hint" xml:space="preserve">
+    <value>Більші значення створюють помітніші смуги. Типове значення — 2.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Bitrate" xml:space="preserve">
+    <value>Бітрейт (кбіт/с)</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Browse_for_ffmpeg" xml:space="preserve">
+    <value>Вибрати ffmpeg.exe</value>
+  </data>
+  <data name="FFmpegOptionsWindow_CRF_hint" xml:space="preserve">
+    <value>Менші значення підвищують якість і розмір файлу. 0 — без втрат; типове значення ShareX — 28.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Capture_sources" xml:space="preserve">
+    <value>Джерела захоплення</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Choose_audio_source" xml:space="preserve">
+    <value>Виберіть джерело аудіо</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Choose_video_source" xml:space="preserve">
+    <value>Виберіть джерело відео</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_H264_AMD" xml:space="preserve">
+    <value>Кодування H.264 AMD</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_H264_AMD_hint" xml:space="preserve">
+    <value>Використовує підтримуваний графічний процесор AMD для зменшення навантаження на ЦП.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_H264_Intel_Quick_Sync" xml:space="preserve">
+    <value>H.264 Intel Quick Sync</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_H264_Intel_Quick_Sync_hint" xml:space="preserve">
+    <value>Використовує підтримуване графічне обладнання Intel для зменшення навантаження на ЦП.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_H264_NVIDIA" xml:space="preserve">
+    <value>Кодування H.264 NVIDIA</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_H264_NVIDIA_hint" xml:space="preserve">
+    <value>Використовує підтримуваний графічний процесор NVIDIA для зменшення навантаження на ЦП.</value>
   </data>
   <data name="FFmpegOptionsWindow_Codec_H264_software" xml:space="preserve">
     <value>Програмне кодування H.264</value>
@@ -828,6 +166,30 @@ X: {4} Y: {5}</value>
   <data name="FFmpegOptionsWindow_Codec_H265_software_hint" xml:space="preserve">
     <value>Файли менші, ніж H.264, але кодування повільніше, а підтримка відтворення обмеженіша.</value>
   </data>
+  <data name="FFmpegOptionsWindow_Codec_HEVC_AMD" xml:space="preserve">
+    <value>Кодування HEVC AMD</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_HEVC_AMD_hint" xml:space="preserve">
+    <value>Ефективне кодування на GPU з більш обмеженою сумісністю відтворення.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_HEVC_Intel_Quick_Sync" xml:space="preserve">
+    <value>HEVC Intel Quick Sync</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_HEVC_Intel_Quick_Sync_hint" xml:space="preserve">
+    <value>Ефективне апаратне кодування Intel з більш обмеженою сумісністю відтворення.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_HEVC_NVIDIA" xml:space="preserve">
+    <value>Кодування HEVC NVIDIA</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_HEVC_NVIDIA_hint" xml:space="preserve">
+    <value>Ефективне кодування на GPU з більш обмеженою сумісністю відтворення.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_MPEG4_Xvid" xml:space="preserve">
+    <value>MPEG-4 / Xvid</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_MPEG4_Xvid_hint" xml:space="preserve">
+    <value>Застарілий кодувальник для сумісності з AVI.</value>
+  </data>
   <data name="FFmpegOptionsWindow_Codec_VP8_software" xml:space="preserve">
     <value>Програмне кодування VP8</value>
   </data>
@@ -840,59 +202,11 @@ X: {4} Y: {5}</value>
   <data name="FFmpegOptionsWindow_Codec_VP9_software_hint" xml:space="preserve">
     <value>Ефективний вивід WebM із вищим навантаженням на процесор.</value>
   </data>
-  <data name="FFmpegOptionsWindow_Codec_MPEG4_Xvid" xml:space="preserve">
-    <value>MPEG-4 / Xvid</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_MPEG4_Xvid_hint" xml:space="preserve">
-    <value>Застарілий кодувальник для сумісності з AVI.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_H264_NVIDIA" xml:space="preserve">
-    <value>Кодування H.264 NVIDIA</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_H264_NVIDIA_hint" xml:space="preserve">
-    <value>Використовує підтримуваний графічний процесор NVIDIA для зменшення навантаження на ЦП.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_HEVC_NVIDIA" xml:space="preserve">
-    <value>Кодування HEVC NVIDIA</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_HEVC_NVIDIA_hint" xml:space="preserve">
-    <value>Ефективне кодування на GPU з більш обмеженою сумісністю відтворення.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_H264_AMD" xml:space="preserve">
-    <value>Кодування H.264 AMD</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_H264_AMD_hint" xml:space="preserve">
-    <value>Використовує підтримуваний графічний процесор AMD для зменшення навантаження на ЦП.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_HEVC_AMD" xml:space="preserve">
-    <value>Кодування HEVC AMD</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_HEVC_AMD_hint" xml:space="preserve">
-    <value>Ефективне кодування на GPU з більш обмеженою сумісністю відтворення.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_H264_Intel_Quick_Sync" xml:space="preserve">
-    <value>H.264 Intel Quick Sync</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_H264_Intel_Quick_Sync_hint" xml:space="preserve">
-    <value>Використовує підтримуване графічне обладнання Intel для зменшення навантаження на ЦП.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_HEVC_Intel_Quick_Sync" xml:space="preserve">
-    <value>HEVC Intel Quick Sync</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_HEVC_Intel_Quick_Sync_hint" xml:space="preserve">
-    <value>Ефективне апаратне кодування Intel з більш обмеженою сумісністю відтворення.</value>
-  </data>
   <data name="FFmpegOptionsWindow_Codec_animated_GIF" xml:space="preserve">
     <value>Анімований GIF</value>
   </data>
   <data name="FFmpegOptionsWindow_Codec_animated_GIF_hint" xml:space="preserve">
     <value>Широко підтримується, але створює більші файли й не містить звуку.</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_animated_WebP" xml:space="preserve">
-    <value>Анімований WebP</value>
-  </data>
-  <data name="FFmpegOptionsWindow_Codec_animated_WebP_hint" xml:space="preserve">
-    <value>Компактні анімовані зображення без звукової доріжки.</value>
   </data>
   <data name="FFmpegOptionsWindow_Codec_animated_PNG" xml:space="preserve">
     <value>Анімований PNG</value>
@@ -900,16 +214,328 @@ X: {4} Y: {5}</value>
   <data name="FFmpegOptionsWindow_Codec_animated_PNG_hint" xml:space="preserve">
     <value>Високоякісна анімація з великими файлами та без звукової доріжки.</value>
   </data>
+  <data name="FFmpegOptionsWindow_Codec_animated_WebP" xml:space="preserve">
+    <value>Анімований WebP</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Codec_animated_WebP_hint" xml:space="preserve">
+    <value>Компактні анімовані зображення без звукової доріжки.</value>
+  </data>
   <data name="FFmpegOptionsWindow_Codec_video_encoding" xml:space="preserve">
     <value>Кодування відео</value>
   </data>
-  <data name="ShapeManager_Spotlight_dim" xml:space="preserve">
-    <value>Затемнення:</value>
+  <data name="FFmpegOptionsWindow_Constant_rate_factor" xml:space="preserve">
+    <value>Постійний коефіцієнт якості (CRF)</value>
   </data>
-  <data name="ShapeManager_Spotlight_blur" xml:space="preserve">
-    <value>Розмиття:</value>
+  <data name="FFmpegOptionsWindow_Custom_command_placeholders" xml:space="preserve">
+    <value>Заповнювачі власних команд: $fps$, $area_x$, $area_y$, $area_width$, $area_height$, $cursor$, $duration$ і $output$.</value>
   </data>
-  <data name="ShapeManager_Spotlight_ellipse_shape" xml:space="preserve">
-    <value>Еліптична форма</value>
+  <data name="FFmpegOptionsWindow_Description" xml:space="preserve">
+    <value>Виберіть, що захоплювати та як FFmpeg має це кодувати.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Device_enumeration_failed" xml:space="preserve">
+    <value>FFmpeg не вдалося перелічити пристрої DirectShow. Захоплення робочого стола й надалі доступне.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Dithering_mode" xml:space="preserve">
+    <value>Режим згладжування</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Encoder_settings" xml:space="preserve">
+    <value>Параметри кодека</value>
+  </data>
+  <data name="FFmpegOptionsWindow_FFmpeg_command" xml:space="preserve">
+    <value>Команда FFmpeg</value>
+  </data>
+  <data name="FFmpegOptionsWindow_FFmpeg_executable" xml:space="preserve">
+    <value>Виконуваний файл FFmpeg</value>
+  </data>
+  <data name="FFmpegOptionsWindow_FFmpeg_not_found" xml:space="preserve">
+    <value>FFmpeg не знайдено за шляхом {0}</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Faster_presets_hint" xml:space="preserve">
+    <value>Швидші передустановки надійніше кодують у реальному часі, але створюють більші файли.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Get_recorder_devices" xml:space="preserve">
+    <value>Отримати пристрої запису</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Looking_for_devices" xml:space="preserve">
+    <value>Пошук пристроїв захоплення...</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Lower_values_higher_quality" xml:space="preserve">
+    <value>Менші значення дають вищу якість.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Multiple_devices_found" xml:space="preserve">
+    <value>Знайдено пристроїв DirectShow: {0}.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_fast_low_quality" xml:space="preserve">
+    <value>Швидко (низька якість)</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_faster_lower_quality" xml:space="preserve">
+    <value>Швидше (нижча якість)</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_fastest_lowest_quality" xml:space="preserve">
+    <value>Найшвидше (найнижча якість)</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_high_quality" xml:space="preserve">
+    <value>Висока якість</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_lossless" xml:space="preserve">
+    <value>Без втрат</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_low_latency" xml:space="preserve">
+    <value>Низька затримка</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_medium_medium_quality" xml:space="preserve">
+    <value>Середньо (середня якість)</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_slow_good_quality" xml:space="preserve">
+    <value>Повільно (добра якість)</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_slower_better_quality" xml:space="preserve">
+    <value>Повільніше (краща якість)</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_slowest_best_quality" xml:space="preserve">
+    <value>Найповільніше (найкраща якість)</value>
+  </data>
+  <data name="FFmpegOptionsWindow_NVENC_ultra_low_latency" xml:space="preserve">
+    <value>Наднизька затримка</value>
+  </data>
+  <data name="FFmpegOptionsWindow_No_additional_settings" xml:space="preserve">
+    <value>Цей кодек не потребує додаткових налаштувань.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_No_devices_found" xml:space="preserve">
+    <value>Пристрої DirectShow не знайдено. Захоплення робочого стола готове.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_One_device_found" xml:space="preserve">
+    <value>Знайдено пристроїв DirectShow: {0}.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Palette_mode" xml:space="preserve">
+    <value>Режим палітри</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Path_to_ffmpeg" xml:space="preserve">
+    <value>Шлях до ffmpeg.exe</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset" xml:space="preserve">
+    <value>Передустановка</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_fast" xml:space="preserve">
+    <value>Швидко</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_faster" xml:space="preserve">
+    <value>Швидше</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_medium" xml:space="preserve">
+    <value>Середньо</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_placebo" xml:space="preserve">
+    <value>Плацебо</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_slow" xml:space="preserve">
+    <value>Повільно</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_slower" xml:space="preserve">
+    <value>Повільніше</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_super_fast" xml:space="preserve">
+    <value>Супершвидко</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_ultra_fast" xml:space="preserve">
+    <value>Надшвидко</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_very_fast" xml:space="preserve">
+    <value>Дуже швидко</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Preset_very_slow" xml:space="preserve">
+    <value>Дуже повільно</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Quality" xml:space="preserve">
+    <value>Якість</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Refresh_devices" xml:space="preserve">
+    <value>Оновити пристрої</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Reset" xml:space="preserve">
+    <value>Скинути</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Reset_all_options" xml:space="preserve">
+    <value>Скинути всі параметри?</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Reset_encoding_options" xml:space="preserve">
+    <value>Скинути параметри кодування</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Reset_options" xml:space="preserve">
+    <value>Скинути параметри</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Screen_recording" xml:space="preserve">
+    <value>Запис екрана</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Slow_presets_warning" xml:space="preserve">
+    <value>Повільні передустановки можуть спричинити пропуск кадрів під час запису екрана. Рекомендовано «fast» або швидше.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Sources" xml:space="preserve">
+    <value>Джерела</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Target_bitrate" xml:space="preserve">
+    <value>Цільовий бітрейт (кбіт/с)</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Title" xml:space="preserve">
+    <value>ShareX — Параметри запису екрана</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Tune" xml:space="preserve">
+    <value>Налаштування</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Usage" xml:space="preserve">
+    <value>Призначення</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Use_custom_commands" xml:space="preserve">
+    <value>Використовувати власні команди</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Use_custom_path" xml:space="preserve">
+    <value>Використовувати власний шлях до FFmpeg</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Use_target_bitrate" xml:space="preserve">
+    <value>Використовувати цільовий бітрейт замість постійної якості</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Variable_bitrate_hint" xml:space="preserve">
+    <value>1 дає найвищу якість і найбільший файл; 31 — найнижчу якість і найменший файл.</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Variable_bitrate_quality" xml:space="preserve">
+    <value>Якість змінного бітрейту</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Video" xml:space="preserve">
+    <value>Відео</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Video_encoder" xml:space="preserve">
+    <value>Відеокодек</value>
+  </data>
+  <data name="FFmpegOptionsWindow_Video_source" xml:space="preserve">
+    <value>Джерело відео</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Пауза</value>
+  </data>
+  <data name="RegionCaptureWindow_RectangleRegionTab" xml:space="preserve">
+    <value>Захоплення області (Tab)</value>
+  </data>
+  <data name="Resume" xml:space="preserve">
+    <value>Продовжити</value>
+  </data>
+  <data name="ScreenRecordForm_Start" xml:space="preserve">
+    <value>Почати</value>
+  </data>
+  <data name="ScreenRecordForm_StartRecording_Click_tray_icon_to_start_recording_" xml:space="preserve">
+    <value>Натисніть, щоб почати запис.</value>
+  </data>
+  <data name="ScreenRecordForm_StartRecording_Click_tray_icon_to_stop_recording_" xml:space="preserve">
+    <value>Натисніть, щоб зупинити запис.</value>
+  </data>
+  <data name="ScreenRecordForm_StartRecording_Encoding___" xml:space="preserve">
+    <value>Кодування...</value>
+  </data>
+  <data name="ScreenRecordForm_StartRecording_Waiting___" xml:space="preserve">
+    <value>Очікування...</value>
+  </data>
+  <data name="ScreenRecordForm_Stop" xml:space="preserve">
+    <value>Зупинити</value>
+  </data>
+  <data name="ScreenRecordWindow_Abort" xml:space="preserve">
+    <value>Перервати</value>
+  </data>
+  <data name="ScreenRecordWindow_Abort_this_recording" xml:space="preserve">
+    <value>Перервати цей запис?</value>
+  </data>
+  <data name="ScreenRecordWindow_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="ScreenRecordWindow_Pause" xml:space="preserve">
+    <value>Пауза</value>
+  </data>
+  <data name="ScreenRecordWindow_Restart" xml:space="preserve">
+    <value>Заново</value>
+  </data>
+  <data name="ScreenRecordWindow_Start" xml:space="preserve">
+    <value>Почати</value>
+  </data>
+  <data name="ScreenRecordWindow_Title" xml:space="preserve">
+    <value>ShareX — Запис екрана</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Auto_ignore_bottom_edge" xml:space="preserve">
+    <value>Автоматично ігнорувати нижній край</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Automatically_scroll_to_top" xml:space="preserve">
+    <value>Автоматично прокрутити вгору</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Automatically_upload_save" xml:space="preserve">
+    <value>Автоматично надсилати / зберігати</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Capture" xml:space="preserve">
+    <value>Захопити...</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Capture_failed" xml:space="preserve">
+    <value>Помилка захоплення</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Capture_partially_successful" xml:space="preserve">
+    <value>Захоплення частково успішне</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Capture_successful" xml:space="preserve">
+    <value>Захоплення успішне</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Capturing" xml:space="preserve">
+    <value>Виконується захоплення...</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Copy" xml:space="preserve">
+    <value>Копіювати</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Help" xml:space="preserve">
+    <value>Довідка щодо знімка з прокручуванням</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Milliseconds" xml:space="preserve">
+    <value>мс</value>
+  </data>
+  <data name="ScrollingCaptureWindow_OK" xml:space="preserve">
+    <value>ОК</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Options" xml:space="preserve">
+    <value>Параметри...</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Options_heading" xml:space="preserve">
+    <value>Параметри захоплення з прокручуванням</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Ready" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Scroll_amount" xml:space="preserve">
+    <value>Кількість прокручувань:</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Scroll_delay" xml:space="preserve">
+    <value>Затримка прокручування:</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Scroll_method" xml:space="preserve">
+    <value>Спосіб прокручування:</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Select_scrollable_window" xml:space="preserve">
+    <value>Виберіть вікно з прокручуванням, щоб почати</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Selection_cancelled" xml:space="preserve">
+    <value>Вибір вікна скасовано</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Show_capture_region" xml:space="preserve">
+    <value>Показувати область захоплення з прокручуванням</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Start_delay" xml:space="preserve">
+    <value>Затримка запуску:</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Stopping_capture" xml:space="preserve">
+    <value>Зупинення захоплення...</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Times" xml:space="preserve">
+    <value>разів</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Title" xml:space="preserve">
+    <value>ShareX — Захоплення з прокручуванням</value>
+  </data>
+  <data name="ScrollingCaptureWindow_Upload_Save" xml:space="preserve">
+    <value>Надіслати / Зберегти</value>
   </data>
 </root>

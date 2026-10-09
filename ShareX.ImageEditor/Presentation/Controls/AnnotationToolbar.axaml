@@ -22,12 +22,14 @@
         <Border Padding="4"
                 Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
                 BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                BorderThickness="1"
-                CornerRadius="0,0,4,4"
+                BorderThickness="{Binding MainToolbarBorderThickness, ElementName=AnnotationToolbarRoot}"
+                CornerRadius="{Binding MainToolbarCornerRadius, ElementName=AnnotationToolbarRoot}"
                 HorizontalAlignment="Center">
             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Disabled">
                 <StackPanel Orientation="Horizontal" Spacing="4">
+                    <ContentControl x:Name="MainToolbarLeadingContentHost"
+                                    IsVisible="False"/>
                     <ItemsControl ItemsSource="{ReflectionBinding VisibleToolbarItems}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -38,7 +40,6 @@
                             <DataTemplate x:DataType="vm:ToolbarCustomizationItemViewModel">
                                 <StackPanel Orientation="Horizontal" Spacing="4">
                                     <Border Width="1"
-                                            Margin="4,0"
                                             Background="{DynamicResource ShareX.Brush.Separator}"
                                             IsVisible="{Binding IsGroupSeparatorVisible}"/>
                                     <Button Classes="toolbar-button"
@@ -104,14 +105,6 @@
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                                 <Separator/>
-                                                <MenuItem Header="{x:Static res:Strings.AnnotationToolbar_Options}"
-                                                          IsVisible="{Binding #AnnotationToolbarRoot.DataContext.ShowOptionsButton}"
-                                                          Click="OnOpenOptionsClick">
-                                                    <MenuItem.Icon>
-                                                        <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static icons:LucideIcons.settings}"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                                <Separator IsVisible="{Binding #AnnotationToolbarRoot.DataContext.ShowOptionsButton}"/>
                                                 <MenuItem Header="{x:Static res:Strings.AnnotationToolbar_Exit}"
                                                           Command="{Binding #AnnotationToolbarRoot.DataContext.ExitEditorCommand}"
                                                           InputGesture="Escape">
@@ -138,7 +131,7 @@
                     <StackPanel Orientation="Horizontal"
                                 Spacing="4"
                                 IsVisible="{Binding ShowEditingActions, ElementName=AnnotationToolbarRoot}">
-                        <Border Width="1" Margin="4,0" Background="{DynamicResource ShareX.Brush.Separator}"/>
+                        <Border Width="1" Background="{DynamicResource ShareX.Brush.Separator}"/>
                         <Button Classes="toolbar-button"
                                 IsEnabled="{Binding CanUndo}"
                                 Click="OnUndoClick"
@@ -164,14 +157,15 @@
             </ScrollViewer>
         </Border>
 
-        <Border Padding="4,0,4,4"
-                Margin="0,-1,0,0"
-                Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
-                BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                BorderThickness="1,0,1,1"
-                CornerRadius="0,0,4,4"
-                HorizontalAlignment="Center"
-                IsVisible="{Binding ShowToolOptionsSeparator}">
+        <Grid IsVisible="{Binding ShowToolOptions, ElementName=AnnotationToolbarRoot}">
+            <Border Padding="4,0,4,4"
+                    Margin="0,-1,0,0"
+                    Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
+                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                    BorderThickness="1,0,1,1"
+                    CornerRadius="0,0,4,4"
+                    HorizontalAlignment="Center"
+                    IsVisible="{Binding ShowToolOptionsSeparator}">
             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Disabled">
                 <StackPanel Orientation="Horizontal"
@@ -437,7 +431,8 @@
                         </Popup>
                     </Grid>
                 </StackPanel>
-            </ScrollViewer>
-        </Border>
+                </ScrollViewer>
+            </Border>
+        </Grid>
     </StackPanel>
 </UserControl>

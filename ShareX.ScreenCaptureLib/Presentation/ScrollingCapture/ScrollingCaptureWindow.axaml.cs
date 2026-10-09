@@ -8,6 +8,17 @@
     modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation; either version 2
     of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -21,11 +32,11 @@ using Avalonia.Media;
 using ShareX.AvaloniaUI.Theming;
 using ShareX.HelpersLib;
 using System;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
-using DrawingBitmap = System.Drawing.Bitmap;
+using DrawingBitmap = SkiaSharp.SKBitmap;
+using ImageFormat = SkiaSharp.SKEncodedImageFormat;
 
 namespace ShareX.ScreenCaptureLib;
 
@@ -124,7 +135,7 @@ public partial class ScrollingCaptureWindow : Window
         {
             await Task.Delay(250);
 
-            if (_service.SelectWindow())
+            if (await _service.SelectWindowAsync())
             {
                 await CaptureSelectedWindowAsync();
             }
@@ -266,7 +277,7 @@ public partial class ScrollingCaptureWindow : Window
     {
         if (_service.Result != null)
         {
-            _uploadRequested?.Invoke((DrawingBitmap)_service.Result.Clone());
+            _uploadRequested?.Invoke((DrawingBitmap)_service.Result.Copy());
         }
     }
 

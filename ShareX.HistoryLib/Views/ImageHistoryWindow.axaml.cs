@@ -3,6 +3,22 @@
 /*
     ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -22,7 +38,6 @@ using ShareX.HistoryLib.Localization;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -72,8 +87,6 @@ public partial class ImageHistoryWindow : Window
         InitializeComponent();
         RequestedThemeVariant = ThemeManager.GetCurrentTheme();
         ThumbnailRows.ItemsSource = _rows;
-        ThumbnailRows.AddHandler(PointerWheelChangedEvent, OnThumbnailRowsPointerWheelChanged,
-            RoutingStrategies.Tunnel, true);
         _filterTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(220) };
         _filterTimer.Tick += OnFilterTimerTick;
     }
@@ -216,7 +229,9 @@ public partial class ImageHistoryWindow : Window
         {
             List<HistoryItem> items = await _historyManager.GetHistoryItemsAsync();
             items.Reverse();
+            string[] processNames = await Task.Run(() => HistoryHelpers.GetProcessNames(items));
             _allHistoryItems = items;
+            SearchTextBox.ItemsSource = processNames;
             _historyLoaded = true;
             await ApplyFilterAsync();
         }
@@ -355,24 +370,6 @@ public partial class ImageHistoryWindow : Window
         if (!_settings.AutoLoadMoreItems || _scrollViewer == null) return;
         double remaining = _scrollViewer.Extent.Height - _scrollViewer.Viewport.Height - _scrollViewer.Offset.Y;
         if (remaining <= Math.Max(120, _settings.ThumbnailSize.Height)) LoadNextBatch();
-    }
-
-    private void OnThumbnailRowsPointerWheelChanged(object? sender, PointerWheelEventArgs e)
-    {
-        if (_scrollViewer == null || e.Delta.Y == 0) return;
-
-        int lines = System.Windows.Forms.SystemInformation.MouseWheelScrollLines;
-        if (lines == 0)
-        {
-            e.Handled = true;
-            return;
-        }
-
-        double distance = lines < 0 ? _scrollViewer.Viewport.Height : lines * 16.0;
-        double maximum = Math.Max(0, _scrollViewer.Extent.Height - _scrollViewer.Viewport.Height);
-        double offset = Math.Clamp(_scrollViewer.Offset.Y - e.Delta.Y * distance, 0, maximum);
-        _scrollViewer.Offset = new Vector(_scrollViewer.Offset.X, offset);
-        e.Handled = true;
     }
 
     private void CheckLoadMoreIfViewportNotFilled()
@@ -772,6 +769,7 @@ public partial class ImageHistoryWindow : Window
         item.ShortenedURL = EditShortUrlTextBox.Text;
         item.Tags = ParseTags(EditTagsTextBox.Text);
         _historyManager.Edit(item);
+        SearchTextBox.ItemsSource = HistoryHelpers.GetProcessNames(_allHistoryItems);
         RefreshVisibleItem(item);
         CloseModal();
     }
@@ -850,6 +848,7 @@ public partial class ImageHistoryWindow : Window
                 _historyManager.Delete(items);
                 HashSet<long> ids = items.Select(item => item.Id).ToHashSet();
                 _allHistoryItems.RemoveAll(item => ids.Contains(item.Id));
+                SearchTextBox.ItemsSource = HistoryHelpers.GetProcessNames(_allHistoryItems);
                 await ApplyFilterAsync();
             });
     }

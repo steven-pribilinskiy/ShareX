@@ -26,14 +26,62 @@
             <Setter Property="MinWidth" Value="86"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="Margin" Value="0"/>
             <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.recorder-action /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="Button.recorder-action:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="Button.recorder-action:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="Button.recorder-action:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="Button.recorder-action.left-rounded">
+            <Setter Property="CornerRadius" Value="7,0,0,7"/>
+        </Style>
+        <Style Selector="Button.recorder-action.left-rounded /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="CornerRadius" Value="7,0,0,7"/>
+        </Style>
+        <Style Selector="Button.recorder-action.left-rounded:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="CornerRadius" Value="7,0,0,7"/>
+        </Style>
+        <Style Selector="Button.recorder-action.left-rounded:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="CornerRadius" Value="7,0,0,7"/>
+        </Style>
+        <Style Selector="Button.recorder-action.right-rounded">
+            <Setter Property="CornerRadius" Value="0,7,7,0"/>
+        </Style>
+        <Style Selector="Button.recorder-action.right-rounded /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="CornerRadius" Value="0,7,7,0"/>
+        </Style>
+        <Style Selector="Button.recorder-action.right-rounded:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="CornerRadius" Value="0,7,7,0"/>
+        </Style>
+        <Style Selector="Button.recorder-action.right-rounded:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="CornerRadius" Value="0,7,7,0"/>
         </Style>
         <Style Selector="TextBlock.action-icon">
             <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Accent}"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style Selector="TextBlock.action-label">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="StackPanel.action-content">
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </Window.Styles>
@@ -47,24 +95,27 @@
 
             <Border x:Name="Toolbar"
                     Canvas.Left="0"
-                    Width="474"
-                    Height="48"
-                    Padding="4"
-                    CornerRadius="7"
+                    Width="461"
+                    Height="42"
+                    Padding="0"
+                    CornerRadius="8"
+                    ClipToBounds="True"
                     Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
                     BorderBrush="{DynamicResource ShareX.Brush.Border}"
                     BorderThickness="1">
                 <Grid>
-                    <Grid x:Name="RecorderControls"
-                          ColumnDefinitions="112,*"
-                          ColumnSpacing="2">
+                    <Grid x:Name="RecorderControls">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="112"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
                         <Border x:Name="TimerDragHandle"
                                 Grid.Column="0"
-                                CornerRadius="4"
+                                CornerRadius="7,0,0,7"
                                 Background="{DynamicResource ShareX.Brush.Background.Panel}"
                                 Cursor="SizeAll">
                             <StackPanel Orientation="Horizontal"
-                                        Spacing="8"
+                                        Spacing="9"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center">
                                 <Border x:Name="StatusIndicator"
@@ -83,10 +134,10 @@
 
                         <StackPanel Grid.Column="1"
                                     Orientation="Horizontal"
-                                    Spacing="2">
+                                    Spacing="1">
                             <Button x:Name="StartButton"
-                                    Classes="recorder-action">
-                                <StackPanel Orientation="Horizontal" Spacing="7">
+                                    Classes="recorder-action left-rounded">
+                                <StackPanel Classes="action-content" Orientation="Horizontal" Spacing="7">
                                     <TextBlock x:Name="StartIcon"
                                                Classes="icon action-icon"
                                                Text="{x:Static theming:LucideIcons.circle_play}"/>
@@ -98,7 +149,7 @@
 
                             <Button x:Name="PauseButton"
                                     Classes="recorder-action">
-                                <StackPanel Orientation="Horizontal" Spacing="7">
+                                <StackPanel Classes="action-content" Orientation="Horizontal" Spacing="7">
                                     <TextBlock x:Name="PauseIcon"
                                                Classes="icon action-icon"
                                                Text="{x:Static theming:LucideIcons.pause}"/>
@@ -111,20 +162,23 @@
                             <Button x:Name="RestartButton"
                                     Classes="recorder-action"
                                     IsEnabled="False">
-                                <StackPanel Orientation="Horizontal" Spacing="7">
+                                <StackPanel Classes="action-content" Orientation="Horizontal" Spacing="7">
                                     <TextBlock Classes="icon action-icon"
                                                Text="{x:Static theming:LucideIcons.rotate_ccw}"/>
-                                    <TextBlock Classes="action-label"
+                                    <TextBlock x:Name="RestartText"
+                                               Classes="action-label"
                                                Text="{x:Static localization:Strings.ScreenRecordWindow_Restart}"/>
                                 </StackPanel>
                             </Button>
 
                             <Button x:Name="AbortButton"
-                                    Classes="recorder-action">
-                                <StackPanel Orientation="Horizontal" Spacing="7">
+                                    Classes="recorder-action right-rounded">
+                                <StackPanel Classes="action-content" Orientation="Horizontal" Spacing="7">
                                     <TextBlock Classes="icon action-icon"
                                                Text="{x:Static theming:LucideIcons.x}"/>
-                                    <TextBlock Classes="action-label" Text="{x:Static localization:Strings.ScreenRecordWindow_Abort}"/>
+                                    <TextBlock x:Name="AbortText"
+                                               Classes="action-label"
+                                               Text="{x:Static localization:Strings.ScreenRecordWindow_Abort}"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -132,7 +186,7 @@
 
                     <Grid x:Name="AbortConfirmation"
                           ColumnDefinitions="*,Auto,Auto"
-                          ColumnSpacing="8"
+                          ColumnSpacing="1"
                           IsVisible="False">
                         <TextBlock Grid.Column="0"
                                    Margin="10,0"
@@ -145,7 +199,7 @@
                                 Content="{x:Static localization:Strings.ScreenRecordWindow_Cancel}"/>
                         <Button x:Name="ConfirmAbortButton"
                                 Grid.Column="2"
-                                Classes="recorder-action"
+                                Classes="recorder-action right-rounded"
                                 Content="{x:Static localization:Strings.ScreenRecordWindow_Abort}"/>
                     </Grid>
                 </Grid>

@@ -23,11 +23,10 @@
 
 #endregion License Information (GPL v3)
 
-using ShareX.Localization;
 using ShareX.HelpersLib;
+using ShareX.Localization;
 using System;
 using System.IO;
-using System.Windows.Forms;
 using MessageBox = ShareX.AvaloniaUI.MessageBox;
 using MessageBoxButtons = ShareX.AvaloniaUI.MessageBoxButtons;
 using MessageBoxIcon = ShareX.AvaloniaUI.MessageBoxIcon;
@@ -36,7 +35,7 @@ namespace ShareX
 {
     public static class IntegrationHelpers
     {
-        private static readonly string ApplicationPath = $"\"{Application.ExecutablePath}\"";
+        private static readonly string ApplicationPath = $"\"{Environment.ProcessPath}\"";
         private static readonly string FileIconPath = $"\"{FileHelpers.GetAbsolutePath("ShareX_File_Icon.ico")}\"";
 
         private static readonly string ShellExtMenuName = "ShareX";
@@ -368,22 +367,22 @@ namespace ShareX
 
         public static bool CheckSendToMenuButton()
         {
-            return ShortcutHelpers.CheckShortcut(Environment.SpecialFolder.SendTo, "ShareX", Application.ExecutablePath);
+            return ShortcutHelpers.CheckShortcut(Environment.SpecialFolder.SendTo, "ShareX", Environment.ProcessPath);
         }
 
         public static bool CreateSendToMenuButton(bool create)
         {
-            return ShortcutHelpers.SetShortcut(create, Environment.SpecialFolder.SendTo, "ShareX", Application.ExecutablePath);
+            return ShortcutHelpers.SetShortcut(create, Environment.SpecialFolder.SendTo, "ShareX", Environment.ProcessPath);
         }
 
         public static bool CheckSteamShowInApp()
         {
-            return File.Exists(Program.SteamInAppFilePath);
+            return File.Exists(AppPaths.SteamInAppFilePath);
         }
 
         public static void SteamShowInApp(bool showInApp)
         {
-            string path = Program.SteamInAppFilePath;
+            string path = AppPaths.SteamInAppFilePath;
 
             try
             {

@@ -14,7 +14,8 @@
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
              x:Class="ShareX.ImageEditor.Presentation.Views.EditorView"
              x:DataType="vm:MainViewModel"
-             Focusable="True">
+             Focusable="True"
+             FocusAdorner="{x:Null}">
 
     <UserControl.Styles>
         <Style Selector="Border.gradient-preview-half">
@@ -63,7 +64,8 @@
             <views:InsertImageDialogView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:EmojiPickerDialogViewModel}" x:DataType="vm:EmojiPickerDialogViewModel">
-            <views:EmojiPickerDialogView />
+            <views:EmojiPickerDialogView MaxWidth="{Binding MaxWidth, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+                                         MaxHeight="{Binding MaxHeight, RelativeSource={RelativeSource AncestorType=ContentControl}}"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:StartScreenDialogViewModel}" x:DataType="vm:StartScreenDialogViewModel">
             <views:StartScreenDialogView />
@@ -477,7 +479,7 @@
             </Border>
 
             <!-- Central Preview Canvas -->
-            <Grid Grid.Column="1" Margin="8">
+            <Grid x:Name="EditorCanvasHost" Grid.Column="1" Margin="8">
                 <ScrollViewer Name="CanvasScrollViewer"
                               Background="Transparent"
                               HorizontalScrollBarVisibility="Auto"
@@ -567,11 +569,6 @@
                                     </Border>
                                 </Border>
                             </Border>
-
-                            <!-- Isolated visual host for the optional Konami-code shader animation. -->
-                            <easterEggs:ShaderEasterEggOverlay x:Name="EasterEggOverlay"
-                                                                  IsVisible="False"
-                                                                  IsHitTestVisible="False"/>
                         </Grid>
                     </LayoutTransformControl>
                 </ScrollViewer>
@@ -622,142 +619,39 @@
 
         </Grid>
 
-        <!-- Row 0: Shared Annotation Toolbar - OVERLAY -->
-        <Border Grid.Row="0"
-            Classes="editor-toolbar-host top"
-            Classes.hidden="{Binding AreToolbarsHidden}"
-            Margin="0,0,0,0"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Center"
-            IsHitTestVisible="{Binding ShowToolbars}">
-            <controls:AnnotationToolbar x:Name="AnnotationToolbarControl"
-                                        DataContext="{Binding ToolbarAdapter}"
-                                        ShowEditingActions="False"
-                                        MaxWidth="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
-        </Border>
+        <!-- The normal editor opts into this lazy host; embedded workspaces leave it empty. -->
+        <ContentControl x:Name="BuiltInToolbarsHost" Grid.Row="0"/>
 
-        <!-- Row 0: Export Actions Toolbar (Bottom Centered, Floating) -->
-        <Border Grid.Row="0"
-            Classes="editor-toolbar-host bottom"
-            Classes.hidden="{Binding AreToolbarsHidden}"
-            VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,0"
-                Padding="4" Background="{DynamicResource ShareX.Brush.Background.Toolbar}" BorderBrush="{DynamicResource ShareX.Brush.Border}" BorderThickness="1" CornerRadius="4,4,0,0"
-                MaxWidth="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=UserControl}}"
-            ClipToBounds="False"
-            IsHitTestVisible="{Binding ShowToolbars}">
-            <StackPanel Orientation="Horizontal" Spacing="4" ClipToBounds="False">
-                <!-- Zoom Picker -->
-                <controls:ZoomPickerDropdown
-                    SelectedZoom="{Binding Zoom}"
-                    ZoomChanged="OnZoomChanged"
-                    ZoomToFitRequested="OnZoomPickerZoomToFitRequested"
-                    Height="40"
-                    ToolTip.Tip="{x:Static res:Strings.EditorView_ZoomCtrlWheel}" ToolTip.Placement="Top" ToolTip.VerticalOffset="-5"/>
-
-                <!-- Separator -->
-                <Border Width="1" Height="38" Background="{DynamicResource ShareX.Brush.Separator}" Margin="4,0"
-                        IsVisible="{Binding ShowBottomToolbar}"/>
-
-                <!-- Task Mode Buttons -->
-                <Grid Width="90" Height="40" Margin="4,0,10,0" ClipToBounds="False" VerticalAlignment="Bottom"
-                      IsVisible="{Binding ShowTaskButtons}">
-                    <!-- Cancel Button: Red Rectangle (Behind) -->
-                    <Button Command="{Binding CancelCommand}"
-                            Classes="task-mode-button danger"
-                            BorderThickness="1"
-                            Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                            Width="55" Margin="0,0,0,0" Padding="27,0,10,0" CornerRadius="0,4,4,0"
-                            ToolTip.Tip="{x:Static res:Strings.EditorView_CancelEsc}" ToolTip.Placement="Top" ToolTip.VerticalOffset="-5"
-                            ZIndex="0">
-                        <TextBlock Text="{x:Static editorTheming:EditorIcons.ActionCancel}"
-                                   FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                   FontSize="18" FontWeight="Normal"
-                                   VerticalAlignment="Center"/>
-                    </Button>
-
-                    <!-- Continue Button: Big Green Circle (Front) -->
-                    <Button Command="{Binding ContinueCommand}"
-                            Classes="task-mode-button success"
-                            Width="56" Height="56" CornerRadius="28"
-                            BorderThickness="1"
-                            HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                            Margin="0,0,0,-8"
-                            ToolTip.Tip="{Binding ContinueButtonTooltip}" ToolTip.Placement="Top" ToolTip.VerticalOffset="-5"
-                            ZIndex="20">
-                        <TextBlock Text="{x:Static editorTheming:EditorIcons.ActionContinue}"
-                                   FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                   FontSize="22" FontWeight="Normal"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   Margin="4,0,0,0"/>
-                    </Button>
+        <Grid x:Name="EditorNotificationHost"
+              Grid.Row="0"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Bottom"
+              Margin="16,0,16,68"
+              ZIndex="28">
+            <Border Classes="popup-surface zoom-upward app-toast"
+                    Classes.open="{Binding IsNotificationOpen}"
+                    MaxWidth="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    IsVisible="{Binding IsNotificationVisible}"
+                    Cursor="Hand"
+                    PointerEntered="OnNotificationPointerEntered"
+                    PointerExited="OnNotificationPointerExited"
+                    PointerPressed="OnNotificationPointerPressed">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding NotificationIcon}"
+                               FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                               FontWeight="Normal"
+                               FontSize="18"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding HasNotificationIcon}"/>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding NotificationMessage}"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource ShareX.Brush.Text}"/>
                 </Grid>
-
-                <Button Command="{Binding CopyCommand}" Width="40" Padding="0"
-                        IsVisible="{Binding ShowBottomToolbar}"
-                        ToolTip.Tip="{x:Static res:Strings.EditorView_CopyimagetoclipboardCtrlC}" ToolTip.Placement="Top" ToolTip.VerticalOffset="-5">
-                    <TextBlock Text="{x:Static editorTheming:EditorIcons.ActionCopy}" FontSize="18" FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal"/>
-                </Button>
-
-                <Button Command="{Binding SaveCommand}" Width="40" Padding="0"
-                        IsVisible="{Binding ShowBottomToolbar}"
-                        ToolTip.Tip="{x:Static res:Strings.EditorView_SaveimageCtrlS}" ToolTip.Placement="Top" ToolTip.VerticalOffset="-5">
-                    <TextBlock Text="{x:Static editorTheming:EditorIcons.ActionSave}" FontSize="18" FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal"/>
-                </Button>
-
-                <Button Command="{Binding SaveAsCommand}" Width="40" Padding="0"
-                        IsVisible="{Binding ShowBottomToolbar}"
-                        ToolTip.Tip="{x:Static res:Strings.EditorView_SaveimageasEllipsisCtrlShiftS}" ToolTip.Placement="Top" ToolTip.VerticalOffset="-5">
-                    <TextBlock Text="{x:Static editorTheming:EditorIcons.ActionSaveAs}" FontSize="18" FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal"/>
-                </Button>
-
-                <Button Command="{Binding PinToScreenCommand}" IsEnabled="{Binding HasPreviewImage}" Width="40" Padding="0"
-                        IsVisible="{Binding ShowBottomToolbar}"
-                        ToolTip.Tip="{x:Static res:Strings.EditorView_PinimagetoscreenCtrlP}" ToolTip.Placement="Top" ToolTip.VerticalOffset="-5">
-                    <TextBlock Text="{x:Static editorTheming:EditorIcons.ActionPinToScreen}" FontSize="18" FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal"/>
-                </Button>
-
-                <Button Command="{Binding PrintCommand}" IsEnabled="{Binding HasPreviewImage}" Width="40" Padding="0"
-                        IsVisible="{Binding ShowBottomToolbar}"
-                        ToolTip.Tip="{x:Static res:Strings.EditorView_PrintimageEllipsisCtrlShiftP}" ToolTip.Placement="Top" ToolTip.VerticalOffset="-5">
-                    <TextBlock Text="{x:Static editorTheming:EditorIcons.ActionPrint}" FontSize="18" FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal"/>
-                </Button>
-
-                <Button Command="{Binding UploadCommand}" IsEnabled="{Binding HasPreviewImage}" Width="40" Padding="0"
-                        IsVisible="{Binding ShowBottomToolbar}"
-                        ToolTip.Tip="{x:Static res:Strings.EditorView_UploadimageCtrlU}" ToolTip.Placement="Top" ToolTip.VerticalOffset="-5">
-                    <TextBlock Text="{x:Static editorTheming:EditorIcons.ActionUpload}" FontSize="18" FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal"/>
-                </Button>
-            </StackPanel>
-        </Border>
-
-        <Border Classes="popup-surface zoom-upward app-toast"
-                Classes.open="{Binding IsNotificationOpen}"
-                Grid.Row="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Margin="16,0,16,68"
-                MaxWidth="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                IsVisible="{Binding IsNotificationVisible}"
-                Cursor="Hand"
-                PointerEntered="OnNotificationPointerEntered"
-                PointerExited="OnNotificationPointerExited"
-                PointerPressed="OnNotificationPointerPressed"
-                ZIndex="28">
-            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                <TextBlock Grid.Column="0"
-                           Text="{Binding NotificationIcon}"
-                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                           FontWeight="Normal"
-                           FontSize="18"
-                           VerticalAlignment="Center"
-                           IsVisible="{Binding HasNotificationIcon}"/>
-                <TextBlock Grid.Column="1"
-                           Text="{Binding NotificationMessage}"
-                           TextWrapping="Wrap"
-                           VerticalAlignment="Center"
-                           Foreground="{DynamicResource ShareX.Brush.Text}"/>
-            </Grid>
-        </Border>
+            </Border>
+        </Grid>
 
         <Border x:Name="InteractionCaptureLayer"
                 Grid.Row="0"
@@ -811,10 +705,17 @@
                         PointerPressed="OnModalBackgroundPressed"/>
 
                 <!-- Modal Content -->
-                <ContentControl Content="{Binding ModalContent}"
+                <ContentControl x:Name="ModalContentHost"
+                                Content="{Binding ModalContent}"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"/>
             </Grid>
         </Border>
+
+        <!-- Post-process the entire live editor, independently of image zoom and export. -->
+        <easterEggs:ShaderEasterEggOverlay x:Name="EasterEggOverlay"
+                                          ZIndex="1000"
+                                          IsVisible="False"
+                                          IsHitTestVisible="False"/>
     </Grid>
 </UserControl>

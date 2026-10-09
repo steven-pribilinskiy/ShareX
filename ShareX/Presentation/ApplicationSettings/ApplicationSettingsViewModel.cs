@@ -8,6 +8,17 @@
     modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation; either version 2
     of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -15,6 +26,7 @@
 #nullable enable
 
 using Avalonia.Platform;
+using Avalonia.Threading;
 using ShareX.AvaloniaUI.Controls;
 using ShareX.AvaloniaUI.Theming;
 using ShareX.HelpersLib;
@@ -30,6 +42,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 using AvaloniaColor = Avalonia.Media.Color;
+using Image = SkiaSharp.SKBitmap;
 using MessageBox = ShareX.AvaloniaUI.MessageBox;
 using MessageBoxButtons = ShareX.AvaloniaUI.MessageBoxButtons;
 using MessageBoxIcon = ShareX.AvaloniaUI.MessageBoxIcon;
@@ -61,7 +74,7 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
     private string _statusMessage = string.Empty;
     private bool _disposed;
 
-    private ApplicationConfig Settings => Program.Settings;
+    private ApplicationConfig Settings => ApplicationState.Settings;
 
     public ObservableCollection<SettingsNavigationItem> NavigationItems { get; private set; } = [];
     public ObservableCollection<ClipboardFormatItem> ClipboardFormats { get; private set; } = [];
@@ -71,17 +84,17 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
     public IReadOnlyList<EnumOption<ThumbnailTitleLocation>> ThumbnailTitleLocationOptions { get; } = CreateEnumOptions<ThumbnailTitleLocation>();
     public IReadOnlyList<EnumOption<ThumbnailViewClickAction>> ThumbnailClickActionOptions { get; } = CreateEnumOptions<ThumbnailViewClickAction>();
     public IReadOnlyList<EnumOption<ProxyMethod>> ProxyMethodOptions { get; } = CreateEnumOptions<ProxyMethod>();
-    public IReadOnlyList<EnumOption<ContentAlignment>> DropAlignmentOptions { get; } =
+    public IReadOnlyList<EnumOption<ImageContentAlignment>> DropAlignmentOptions { get; } =
     [
-        new(ContentAlignment.TopLeft, Strings.ApplicationSettingsWindow_TopLeft),
-        new(ContentAlignment.TopCenter, Strings.ApplicationSettingsWindow_TopCenter),
-        new(ContentAlignment.TopRight, Strings.ApplicationSettingsWindow_TopRight),
-        new(ContentAlignment.MiddleLeft, Strings.ApplicationSettingsWindow_MiddleLeft),
-        new(ContentAlignment.MiddleCenter, Strings.ApplicationSettingsWindow_MiddleCenter),
-        new(ContentAlignment.MiddleRight, Strings.ApplicationSettingsWindow_MiddleRight),
-        new(ContentAlignment.BottomLeft, Strings.ApplicationSettingsWindow_BottomLeft),
-        new(ContentAlignment.BottomCenter, Strings.ApplicationSettingsWindow_BottomCenter),
-        new(ContentAlignment.BottomRight, Strings.ApplicationSettingsWindow_BottomRight)
+        new(ImageContentAlignment.TopLeft, Strings.ApplicationSettingsWindow_TopLeft),
+        new(ImageContentAlignment.TopCenter, Strings.ApplicationSettingsWindow_TopCenter),
+        new(ImageContentAlignment.TopRight, Strings.ApplicationSettingsWindow_TopRight),
+        new(ImageContentAlignment.MiddleLeft, Strings.ApplicationSettingsWindow_MiddleLeft),
+        new(ImageContentAlignment.MiddleCenter, Strings.ApplicationSettingsWindow_MiddleCenter),
+        new(ImageContentAlignment.MiddleRight, Strings.ApplicationSettingsWindow_MiddleRight),
+        new(ImageContentAlignment.BottomLeft, Strings.ApplicationSettingsWindow_BottomLeft),
+        new(ImageContentAlignment.BottomCenter, Strings.ApplicationSettingsWindow_BottomCenter),
+        new(ImageContentAlignment.BottomRight, Strings.ApplicationSettingsWindow_BottomRight)
     ];
     public IReadOnlyList<EnumOption<int>> BufferSizeOptions { get; private set; } = [];
     public IReadOnlyList<EnumOption<string>> ThemeOptions { get; } =
@@ -215,7 +228,7 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
         {
             if (SetSetting(Settings.UseWhiteShareXIcon, value, x => Settings.UseWhiteShareXIcon = x))
             {
-                InvokeOnMainThread(Program.MainForm.UpdateTheme);
+                InvokeOnMainThread(ApplicationSettingsRuntime.UpdateTrayIcon);
             }
         }
     }
@@ -236,6 +249,13 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
     }
 
     public bool CanEditTheme => !UseSystemTheme;
+
+    public void RefreshThemeSettings()
+    {
+        OnPropertyChanged(nameof(UseSystemTheme));
+        OnPropertyChanged(nameof(CanEditTheme));
+        OnPropertyChanged(nameof(SelectedTheme));
+    }
 
     public EnumOption<string>? SelectedTheme
     {
@@ -625,7 +645,7 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
     public decimal DropSize { get => Settings.DropSize; set => SetSetting(Settings.DropSize, decimal.ToInt32(value), x => Settings.DropSize = x); }
     public decimal DropOffset { get => Settings.DropOffset; set => SetSetting(Settings.DropOffset, decimal.ToInt32(value), x => Settings.DropOffset = x); }
 
-    public EnumOption<ContentAlignment>? SelectedDropAlignment
+    public EnumOption<ImageContentAlignment>? SelectedDropAlignment
     {
         get => Find(DropAlignmentOptions, Settings.DropAlignment);
         set { if (value != null) SetSetting(Settings.DropAlignment, value.Value, x => Settings.DropAlignment = x); }
@@ -764,7 +784,7 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
             {
                 LanguageHelper.ChangeLanguage(Settings.Language);
                 Reload();
-                await UpdateMainFormAsync();
+                await UpdateApplicationAsync();
                 StatusMessage = string.Format(Strings.ApplicationSettingsWindow_BackupImportedFrom, path);
             }
             else
@@ -807,7 +827,7 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
             });
             LanguageHelper.ChangeLanguage(Settings.Language);
             Reload();
-            await UpdateMainFormAsync();
+            await UpdateApplicationAsync();
             StatusMessage = Strings.ApplicationSettingsWindow_SettingsReset;
         }
         catch (Exception e)
@@ -821,11 +841,11 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
         }
     }
 
-    public void Restart() => InvokeOnMainThread(() => Program.Restart());
+    public void Restart() => InvokeOnMainThread(() => ApplicationLifecycle.Restart());
 
     public void Reload()
     {
-        _personalFolderPath = Program.ReadPersonalPathConfig();
+        _personalFolderPath = PersonalPathManager.ReadConfig();
         UpdatePersonalFolderPreview();
         UpdateScreenshotsFolderPreview();
         RefreshIntegrations();
@@ -928,7 +948,7 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
             string path = FileHelpers.SanitizePath(_personalFolderPath);
             if (string.IsNullOrEmpty(path))
             {
-                path = Program.Portable ? Program.PortablePersonalFolder : Program.DefaultPersonalFolder;
+                path = StartupOptions.Portable ? AppPaths.PortablePersonalFolder : AppPaths.DefaultPersonalFolder;
             }
             else
             {
@@ -1005,7 +1025,7 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
 
         try
         {
-            bool changed = InvokeOnMainThread(() => Program.WritePersonalPathConfig(FileHelpers.SanitizePath(_personalFolderPath)));
+            bool changed = InvokeOnMainThread(() => PersonalPathManager.WriteConfig(FileHelpers.SanitizePath(_personalFolderPath)));
             if (changed)
             {
                 RestartRequired = true;
@@ -1018,9 +1038,9 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
         }
     }
 
-    private async Task UpdateMainFormAsync()
+    private async Task UpdateApplicationAsync()
     {
-        Task updateTask = InvokeOnMainThread(() => Program.MainForm.UpdateControls());
+        Task updateTask = InvokeOnMainThread(ApplicationSettingsRuntime.ReloadAsync);
         await updateTask;
     }
 
@@ -1057,34 +1077,24 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
 
     private static void InvokeOnMainThread(Action action)
     {
-        if (Program.MainForm == null || Program.MainForm.IsDisposed)
+        if (Dispatcher.UIThread.CheckAccess())
         {
-            return;
-        }
-
-        if (Program.MainForm.InvokeRequired)
-        {
-            Program.MainForm.Invoke(action);
+            action();
         }
         else
         {
-            action();
+            Dispatcher.UIThread.Invoke(action);
         }
     }
 
     private static T InvokeOnMainThread<T>(Func<T> action)
     {
-        if (Program.MainForm == null || Program.MainForm.IsDisposed)
+        if (Dispatcher.UIThread.CheckAccess())
         {
             return action();
         }
 
-        if (Program.MainForm.InvokeRequired)
-        {
-            return (T)Program.MainForm.Invoke(action);
-        }
-
-        return action();
+        return Dispatcher.UIThread.Invoke(action);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -1117,10 +1127,10 @@ public sealed class ApplicationSettingsViewModel : INotifyPropertyChanged, IDisp
             language.Flag?.Dispose();
         }
 
-        if (!Program.MainForm.IsClosing)
+        if (!ApplicationLifecycle.IsClosing)
         {
             FlushPersonalPath();
-            InvokeOnMainThread(Program.MainForm.ApplyApplicationSettings);
+            InvokeOnMainThread(ApplicationSettingsRuntime.Apply);
             SettingManager.SaveApplicationConfigAsync();
         }
     }

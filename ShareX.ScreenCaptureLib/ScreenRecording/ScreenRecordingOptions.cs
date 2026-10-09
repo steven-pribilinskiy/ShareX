@@ -30,7 +30,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 
 namespace ShareX.ScreenCaptureLib
 {
@@ -45,6 +44,39 @@ namespace ShareX.ScreenCaptureLib
         public float Duration { get; set; }
         public bool DrawCursor { get; set; }
         public FFmpegOptions FFmpeg { get; set; } = new FFmpegOptions();
+
+        // Shrink the capture so it fits FFmpeg.MaxVideoDimension instead of failing to encode.
+        public bool DownscaleToCodecLimit { get; set; }
+
+        /// <summary>
+        /// ddagrab captures a single monitor, so the recorded area is the requested region clipped to
+        /// whichever monitor it covers most, in that monitor's coordinates. Callers that need to know
+        /// the size that will actually be encoded must use this rather than the requested region.
+        /// </summary>
+        public static Rectangle GetDDAGrabCaptureArea(Rectangle captureArea, out int monitorIndex)
+        {
+            DesktopScreen[] screens = DesktopScreen.AllScreens.OrderBy(x => !x.Primary).ToArray();
+            monitorIndex = 0;
+            Rectangle result = screens[0].Bounds;
+            int maxIntersectionArea = 0;
+
+            for (int i = 0; i < screens.Length; i++)
+            {
+                DesktopScreen screen = screens[i];
+                Rectangle intersection = Rectangle.Intersect(screen.Bounds, captureArea);
+                int intersectionArea = intersection.Width * intersection.Height;
+
+                if (intersectionArea > maxIntersectionArea)
+                {
+                    maxIntersectionArea = intersectionArea;
+
+                    monitorIndex = i;
+                    result = new Rectangle(intersection.X - screen.Bounds.X, intersection.Y - screen.Bounds.Y, intersection.Width, intersection.Height);
+                }
+            }
+
+            return result;
+        }
 
         public string GetFFmpegCommands()
         {
@@ -129,25 +161,7 @@ namespace ShareX.ScreenCaptureLib
                             args.Append($"-i audio={Helpers.EscapeCLIText(FFmpeg.AudioSource)} ");
                         }
 
-                        Screen[] screens = Screen.AllScreens.OrderBy(x => !x.Primary).ToArray();
-                        int monitorIndex = 0;
-                        Rectangle captureArea = screens[0].Bounds;
-                        int maxIntersectionArea = 0;
-
-                        for (int i = 0; i < screens.Length; i++)
-                        {
-                            Screen screen = screens[i];
-                            Rectangle intersection = Rectangle.Intersect(screen.Bounds, CaptureArea);
-                            int intersectionArea = intersection.Width * intersection.Height;
-
-                            if (intersectionArea > maxIntersectionArea)
-                            {
-                                maxIntersectionArea = intersectionArea;
-
-                                monitorIndex = i;
-                                captureArea = new Rectangle(intersection.X - screen.Bounds.X, intersection.Y - screen.Bounds.Y, intersection.Width, intersection.Height);
-                            }
-                        }
+                        Rectangle captureArea = GetDDAGrabCaptureArea(CaptureArea, out int monitorIndex);
 
                         if (FFmpeg.IsEvenSizeRequired)
                         {
@@ -165,10 +179,22 @@ namespace ShareX.ScreenCaptureLib
                         args.Append($"video_size={captureArea.Width}x{captureArea.Height}:"); // Specify the size of the captured video.
                         args.Append("output_fmt=bgra"); // Desired filter output format.
 
-                        if (FFmpeg.VideoCodec != FFmpegVideoCodec.h264_nvenc && FFmpeg.VideoCodec != FFmpegVideoCodec.hevc_nvenc)
+                        bool isNVENC = FFmpeg.VideoCodec == FFmpegVideoCodec.h264_nvenc || FFmpeg.VideoCodec == FFmpegVideoCodec.hevc_nvenc;
+                        bool downscale = DownscaleToCodecLimit && !FFmpeg.IsVideoSizeSupported(captureArea.Width, captureArea.Height);
+
+                        // NVENC consumes the d3d11 frames directly, but no GPU scaler accepts them
+                        // (scale_cuda wants CUDA frames, scale_d3d11 rejects this format), so downscaling
+                        // has to come back to system memory first. NVENC re-uploads internally.
+                        if (!isNVENC || downscale)
                         {
                             args.Append(",hwdownload");
                             args.Append(",format=bgra");
+                        }
+
+                        if (downscale)
+                        {
+                            Size size = FFmpeg.GetSizeWithinLimit(captureArea.Width, captureArea.Height);
+                            args.Append($",scale={size.Width}:{size.Height}");
                         }
 
                         args.Append(" ");

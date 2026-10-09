@@ -8,17 +8,28 @@
     modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation; either version 2
     of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
 
 using ShareX.HelpersLib;
-using System.Drawing;
-using System.Drawing.Imaging;
 using Windows.Globalization;
 using Windows.Graphics.Imaging;
 using Windows.Media.Ocr;
 using Windows.Storage.Streams;
+using Bitmap = SkiaSharp.SKBitmap;
+using ImageFormat = SkiaSharp.SKEncodedImageFormat;
 
 namespace ShareX.Tools;
 
@@ -56,7 +67,7 @@ public static class OCRHelper
 
         return await Task.Run(async () =>
         {
-            using Bitmap scaledBitmap = ImageHelpers.ScaleImageFast(bitmap, scaleFactor);
+            using Bitmap scaledBitmap = SkiaImageHelpers.ScaleImageFast(bitmap, scaleFactor);
             return await OCRInternal(scaledBitmap, languageTag, singleLine);
         });
     }
@@ -71,7 +82,8 @@ public static class OCRHelper
 
         OcrEngine engine = OcrEngine.TryCreateFromLanguage(language);
         using InMemoryRandomAccessStream stream = new();
-        bitmap.Save(stream.AsStream(), ImageFormat.Bmp);
+        bitmap.Save(stream.AsStream(), ImageFormat.Png);
+        stream.Seek(0);
         BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
         using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
         OcrResult result = await engine.RecognizeAsync(softwareBitmap);

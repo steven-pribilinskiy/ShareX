@@ -79,7 +79,6 @@ namespace ShareX.UploadersLib.Localization
 
         public static string BrowserProtocol_sftp => ResourceManager.GetString("BrowserProtocol_sftp", resourceCulture) ?? string.Empty;
 
-        public static string CertFileNameEditor_Browse_for_certificate_file => ResourceManager.GetString("CertFileNameEditor_Browse_for_certificate_file", resourceCulture) ?? string.Empty;
 
         public static string Common_API_key_is_missing => ResourceManager.GetString("Common_API_key_is_missing", resourceCulture) ?? string.Empty;
 
@@ -297,6 +296,8 @@ namespace ShareX.UploadersLib.Localization
 
         public static string DestinationSettings_Field_Exposure => ResourceManager.GetString("DestinationSettings_Field_Exposure", resourceCulture) ?? string.Empty;
 
+        public static string DestinationSettings_Field_File_ID_Length => ResourceManager.GetString("DestinationSettings_Field_File_ID_Length", resourceCulture) ?? string.Empty;
+
         public static string DestinationSettings_Field_Files => ResourceManager.GetString("DestinationSettings_Field_Files", resourceCulture) ?? string.Empty;
 
         public static string DestinationSettings_Field_Folder_ID => ResourceManager.GetString("DestinationSettings_Field_Folder_ID", resourceCulture) ?? string.Empty;
@@ -397,6 +398,8 @@ namespace ShareX.UploadersLib.Localization
 
         public static string DestinationSettings_Field_Show_Dialog => ResourceManager.GetString("DestinationSettings_Field_Show_Dialog", resourceCulture) ?? string.Empty;
 
+        public static string DestinationSettings_Field_Show_Metadata => ResourceManager.GetString("DestinationSettings_Field_Show_Metadata", resourceCulture) ?? string.Empty;
+
         public static string DestinationSettings_Field_Signature => ResourceManager.GetString("DestinationSettings_Field_Signature", resourceCulture) ?? string.Empty;
 
         public static string DestinationSettings_Field_Signed_Payload => ResourceManager.GetString("DestinationSettings_Field_Signed_Payload", resourceCulture) ?? string.Empty;
@@ -424,6 +427,8 @@ namespace ShareX.UploadersLib.Localization
         public static string DestinationSettings_Field_Title => ResourceManager.GetString("DestinationSettings_Field_Title", resourceCulture) ?? string.Empty;
 
         public static string DestinationSettings_Field_Token => ResourceManager.GetString("DestinationSettings_Field_Token", resourceCulture) ?? string.Empty;
+
+        public static string DestinationSettings_Enter_current_two_factor_authentication_code => ResourceManager.GetString("DestinationSettings_Enter_current_two_factor_authentication_code", resourceCulture) ?? string.Empty;
 
         public static string DestinationSettings_Field_TTL => ResourceManager.GetString("DestinationSettings_Field_TTL", resourceCulture) ?? string.Empty;
 
@@ -456,6 +461,8 @@ namespace ShareX.UploadersLib.Localization
         public static string DestinationSettings_Field_Use_GIFV => ResourceManager.GetString("DestinationSettings_Field_Use_GIFV", resourceCulture) ?? string.Empty;
 
         public static string DestinationSettings_Field_Use_Long_Link => ResourceManager.GetString("DestinationSettings_Field_Use_Long_Link", resourceCulture) ?? string.Empty;
+
+        public static string DestinationSettings_Field_Use_Multipart_Upload => ResourceManager.GetString("DestinationSettings_Field_Use_Multipart_Upload", resourceCulture) ?? string.Empty;
 
         public static string DestinationSettings_Field_Use_Path_Style => ResourceManager.GetString("DestinationSettings_Field_Use_Path_Style", resourceCulture) ?? string.Empty;
 
@@ -506,6 +513,8 @@ namespace ShareX.UploadersLib.Localization
         public static string DestinationSettings_Password => ResourceManager.GetString("DestinationSettings_Password", resourceCulture) ?? string.Empty;
 
         public static string DestinationSettings_Public_profile => ResourceManager.GetString("DestinationSettings_Public_profile", resourceCulture) ?? string.Empty;
+
+        public static string DestinationSettings_Remote_storage_browser => ResourceManager.GetString("DestinationSettings_Remote_storage_browser", resourceCulture) ?? string.Empty;
 
         public static string DestinationSettings_Refresh => ResourceManager.GetString("DestinationSettings_Refresh", resourceCulture) ?? string.Empty;
 
@@ -585,11 +594,17 @@ namespace ShareX.UploadersLib.Localization
 
         public static string FileDestination_GoogleDrive => ResourceManager.GetString("FileDestination_GoogleDrive", resourceCulture) ?? string.Empty;
 
+        public static string FileDestination_ImgFish => ResourceManager.GetString("FileDestination_ImgFish", resourceCulture) ?? string.Empty;
+
+        public static string FileDestination_Immich => ResourceManager.GetString("FileDestination_Immich", resourceCulture) ?? string.Empty;
+
         public static string FileDestination_Lambda => ResourceManager.GetString("FileDestination_Lambda", resourceCulture) ?? string.Empty;
 
         public static string FileDestination_Lithiio => ResourceManager.GetString("FileDestination_Lithiio", resourceCulture) ?? string.Empty;
 
         public static string FileDestination_Localhostr => ResourceManager.GetString("FileDestination_Localhostr", resourceCulture) ?? string.Empty;
+
+        public static string FileDestination_Mega => ResourceManager.GetString("FileDestination_Mega", resourceCulture) ?? string.Empty;
 
         public static string FileDestination_MediaFire => ResourceManager.GetString("FileDestination_MediaFire", resourceCulture) ?? string.Empty;
 
@@ -618,8 +633,6 @@ namespace ShareX.UploadersLib.Localization
         public static string FileDestination_Transfersh => ResourceManager.GetString("FileDestination_Transfersh", resourceCulture) ?? string.Empty;
 
         public static string FileDestination_Uguu => ResourceManager.GetString("FileDestination_Uguu", resourceCulture) ?? string.Empty;
-
-        public static string FileDestination_Vault_ooo => ResourceManager.GetString("FileDestination_Vault_ooo", resourceCulture) ?? string.Empty;
 
         public static string FileDestination_YouTube => ResourceManager.GetString("FileDestination_YouTube", resourceCulture) ?? string.Empty;
 
@@ -665,7 +678,6 @@ namespace ShareX.UploadersLib.Localization
 
         public static string ImgurThumbnailType_Small_Thumbnail => ResourceManager.GetString("ImgurThumbnailType_Small_Thumbnail", resourceCulture) ?? string.Empty;
 
-        public static string KeyFileNameEditor_Browse_for_key_file => ResourceManager.GetString("KeyFileNameEditor_Browse_for_key_file", resourceCulture) ?? string.Empty;
 
         public static string Lambda_Upload_failed_check_API_key => ResourceManager.GetString("Lambda_Upload_failed_check_API_key", resourceCulture) ?? string.Empty;
 
@@ -784,26 +796,6 @@ namespace ShareX.UploadersLib.Localization
         public static string Puush_Connection_error => ResourceManager.GetString("Puush_Connection_error", resourceCulture) ?? string.Empty;
 
         public static string Puush_Insufficient_account_storage => ResourceManager.GetString("Puush_Insufficient_account_storage", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_Cancel => ResourceManager.GetString("PuushLoginWindow_Cancel", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_Email => ResourceManager.GetString("PuushLoginWindow_Email", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_Enter_both_your_email_and_password => ResourceManager.GetString("PuushLoginWindow_Enter_both_your_email_and_password", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_Forgotten_password => ResourceManager.GetString("PuushLoginWindow_Forgotten_password", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_Logging_in => ResourceManager.GetString("PuushLoginWindow_Logging_in", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_Login => ResourceManager.GetString("PuushLoginWindow_Login", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_Login_failed => ResourceManager.GetString("PuushLoginWindow_Login_failed", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_name_example_com => ResourceManager.GetString("PuushLoginWindow_name_example_com", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_Password => ResourceManager.GetString("PuushLoginWindow_Password", resourceCulture) ?? string.Empty;
-
-        public static string PuushLoginWindow_ShareX_puush_login => ResourceManager.GetString("PuushLoginWindow_ShareX_puush_login", resourceCulture) ?? string.Empty;
 
         public static string ResponseWindow_Copy_deletion_URL => ResourceManager.GetString("ResponseWindow_Copy_deletion_URL", resourceCulture) ?? string.Empty;
 
@@ -986,8 +978,6 @@ namespace ShareX.UploadersLib.Localization
         public static string UrlShortenerType_YOURLS => ResourceManager.GetString("UrlShortenerType_YOURLS", resourceCulture) ?? string.Empty;
 
         public static string UrlShortenerType_ZeroWidthShortener => ResourceManager.GetString("UrlShortenerType_ZeroWidthShortener", resourceCulture) ?? string.Empty;
-
-        public static string Vault_No_valid_metadata_returned => ResourceManager.GetString("Vault_No_valid_metadata_returned", resourceCulture) ?? string.Empty;
 
         public static string Yourls_Credentials_missing => ResourceManager.GetString("Yourls_Credentials_missing", resourceCulture) ?? string.Empty;
 

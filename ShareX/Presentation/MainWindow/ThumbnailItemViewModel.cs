@@ -3,6 +3,22 @@
 /*
     ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
 */
 
 #endregion License Information (GPL v3)
@@ -11,17 +27,17 @@
 
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using ShareX.AvaloniaUI.Imaging;
 using ShareX.AvaloniaUI.Theming;
 using ShareX.HelpersLib;
 using ShareX.Localization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using DrawingBitmap = System.Drawing.Bitmap;
+using DrawingBitmap = SkiaSharp.SKBitmap;
 
 namespace ShareX;
 
@@ -40,11 +56,11 @@ internal sealed class ThumbnailItemViewModel : INotifyPropertyChanged, IDisposab
     private bool _isCombineTarget;
 
     public WorkerTask Task { get; }
-    public int Width => Math.Max(96, Program.Settings.ThumbnailSize.Width);
-    public int Height => Math.Max(72, Program.Settings.ThumbnailSize.Height);
-    public bool ShowTitle => Program.Settings.ShowThumbnailTitle;
-    public bool ShowTitleAbove => ShowTitle && Program.Settings.ThumbnailTitleLocation == ThumbnailTitleLocation.Top;
-    public bool ShowTitleBelow => ShowTitle && Program.Settings.ThumbnailTitleLocation == ThumbnailTitleLocation.Bottom;
+    public int Width => Math.Max(96, ApplicationState.Settings.ThumbnailSize.Width);
+    public int Height => Math.Max(72, ApplicationState.Settings.ThumbnailSize.Height);
+    public bool ShowTitle => ApplicationState.Settings.ShowThumbnailTitle;
+    public bool ShowTitleAbove => ShowTitle && ApplicationState.Settings.ThumbnailTitleLocation == ThumbnailTitleLocation.Top;
+    public bool ShowTitleBelow => ShowTitle && ApplicationState.Settings.ThumbnailTitleLocation == ThumbnailTitleLocation.Bottom;
 
     public Bitmap? Thumbnail
     {
@@ -77,7 +93,7 @@ internal sealed class ThumbnailItemViewModel : INotifyPropertyChanged, IDisposab
             TaskInfo? info = Task.Info;
             string? filePath = info?.FilePath;
 
-            return Program.Settings.ThumbnailClickAction switch
+            return ApplicationState.Settings.ThumbnailClickAction switch
             {
                 ThumbnailViewClickAction.Default => !string.IsNullOrEmpty(filePath) && File.Exists(filePath),
                 ThumbnailViewClickAction.OpenImageViewer => !string.IsNullOrEmpty(filePath) &&
@@ -238,10 +254,7 @@ internal sealed class ThumbnailItemViewModel : INotifyPropertyChanged, IDisposab
         {
             if (image != null)
             {
-                using MemoryStream stream = new();
-                image.Save(stream, ImageFormat.Png);
-                stream.Position = 0;
-                return Bitmap.DecodeToWidth(stream, width, BitmapInterpolationMode.HighQuality);
+                return BitmapConversionHelpers.CreatePreview(image, new Avalonia.PixelSize(width, height));
             }
 
             if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath) && FileHelpers.IsImageFile(filePath))
@@ -256,10 +269,7 @@ internal sealed class ThumbnailItemViewModel : INotifyPropertyChanged, IDisposab
 
                 if (shellThumbnail != null)
                 {
-                    using MemoryStream stream = new();
-                    shellThumbnail.Save(stream, ImageFormat.Png);
-                    stream.Position = 0;
-                    return new Bitmap(stream);
+                    return BitmapConversionHelpers.CreatePreview(shellThumbnail, new Avalonia.PixelSize(width, height));
                 }
             }
         }
